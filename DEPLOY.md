@@ -1,9 +1,9 @@
 # ChainPlus — Deployment Guide
 
 ## Live now
-- GitHub Pages: https://ny48x.github.io/chainpulse/
-- Worker API: https://chainpulse-api.miketembo828.workers.dev
-- Repo: https://github.com/NY48X/chainpulse
+- GitHub Pages: https://ny48x.github.io/chainplus/
+- Worker API: https://chainplus-api.miketembo828.workers.dev
+- Repo: https://github.com/NY48X/chainplus
 
 ## Point your .tech domain to GitHub Pages
 1. In your domain registrar (GitHub Student Pack gives you the .tech domain via Namecheap/Name.com), add these DNS records:
@@ -22,9 +22,9 @@ The site falls back to RSS when cryptocurrency.cv returns 403, but trending/cate
 2. Install wrangler: `npm install -g wrangler`
 3. Authenticate: `npx wrangler login`
 4. Deploy: `cd worker && npx wrangler deploy`
-5. You'll get a URL like `https://chainpulse-api.<your-subdomain>.workers.dev`
+5. You'll get a URL like `https://chainplus-api.<your-subdomain>.workers.dev`
 6. Point the frontend at it: in the browser console on your site run:
-   `localStorage.setItem('cp-api-base', 'https://chainpulse-api.<your-subdomain>.workers.dev')`
+   `localStorage.setItem('cp-api-base', 'https://chainplus-api.<your-subdomain>.workers.dev')`
    Or set `window.CHAINPULSE_API` in index.html before app.js loads.
 7. (Optional) Bind your .tech domain to the worker for a clean API URL.
 
