@@ -1,3 +1,1 @@
-# ads.txt for ChainPulse
-# Replace pub-XXXXXXXXXXXXXXXX with your real AdSense publisher ID once approved.
-google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+google.com, pub-8503915493262909, DIRECT, f08c47fec0942fa0
