@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>ChainPulse — Topic</title>
+<meta name="description" content="ChainPulse is a real-time blockchain and cryptocurrency news aggregator. Breaking headlines, market data, trending topics, fear &amp; greed index and trending open-source projects — live flowing updates from 300+ verified sources." />
+<meta name="keywords" content="crypto news, blockchain news, bitcoin news, ethereum news, defi news, solana news, crypto market, fear and greed index, crypto open source" />
+<meta name="author" content="ChainPulse" />
+<meta name="robots" content="index,follow,max-image-preview:large" />
+<link rel="canonical" href="https://chainpulse.example/" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="ChainPulse — Live Blockchain & Crypto News" />
+<meta property="og:description" content="Real-time blockchain and crypto news from 300+ sources, plus markets, sentiment and trending open-source projects." />
+<meta property="og:site_name" content="ChainPulse" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="ChainPulse — Live Blockchain & Crypto News" />
+<meta name="twitter:description" content="Real-time blockchain and crypto news from 300+ sources." />
+<meta name="theme-color" content="#0a0a0c" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0a0c'/%3E%3Cpath d='M6 22 L16 8 L26 22' fill='none' stroke='%2300e5a0' stroke-width='2.5' stroke-linejoin='round'/%3E%3Ccircle cx='16' cy='16' r='2.2' fill='%23ff5c7a'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "ChainPulse",
+  "url": "https://chainpulse.example/",
+  "description": "Real-time blockchain and cryptocurrency news aggregator.",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://chainpulse.example/?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+</head>
+<body data-page="topic">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="masthead-top container">
+    <a class="brand" href="index.html" aria-label="ChainPulse home">ChainPulse<span class="dot">.</span></a>
+    <span class="brand-tag">Live</span>
+    <button id="mobileMenuBtn" class="iconbtn mobile-only" aria-label="Open menu" aria-expanded="false" style="margin-left:auto">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+    </button>
+    <nav class="mast-nav" aria-label="Primary">
+      <a href="index.html" class="active">News</a>
+      <a href="markets.html">Markets</a>
+      <a href="opensource.html">Open source</a>
+      <a href="breaking.html">Breaking</a>
+      <a href="methodology.html">Methodology</a>
+      <a href="about.html">About</a>
+    </nav>
+    <div class="mast-actions">
+      <div class="searchbox">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="searchInput" type="search" placeholder="Search headlines, coins, topics…" autocomplete="off" aria-label="Search" />
+        <kbd class="kbd">/</kbd>
+      </div>
+      <button id="themeToggle" class="iconbtn" aria-label="Toggle theme" title="Toggle theme">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <button id="termToggle" class="iconbtn" aria-label="Terminal mode" title="Terminal mode (dense Bloomberg-style)">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+      </button>
+      <select id="langSelect" class="lang-select" aria-label="Language" title="Translate summaries">
+        <option value="en">EN</option>
+        <option value="es">ES</option>
+        <option value="fr">FR</option>
+        <option value="de">DE</option>
+        <option value="pt">PT</option>
+        <option value="zh">ZH</option>
+        <option value="ja">JA</option>
+        <option value="ru">RU</option>
+        <option value="ar">AR</option>
+        <option value="hi">HI</option>
+      </select>
+      <button id="refreshBtn" class="iconbtn" aria-label="Refresh" title="Refresh data">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <nav class="mobile-nav container" id="mobileNav" aria-label="Mobile">
+    <a href="index.html">News</a>
+    <a href="markets.html">Markets</a>
+    <a href="opensource.html">Open source</a>
+    <a href="breaking.html">Breaking</a>
+    <a href="methodology.html">Methodology</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+
+  <div class="ticker">
+    <span class="ticker-label"><span class="pulse"></span>Breaking</span>
+    <div class="ticker-track" id="tickerTrack">
+      <span class="ticker-item">Loading breaking headlines…</span>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div class="hero-main" id="heroMain">
+        <div class="hero-eyebrow"><span class="live"></span>Live · flowing updates · <span id="lastUpdated">—</span></div>
+        <h1 class="hero-headline">Loading the latest…</h1>
+        <p class="hero-dek">Aggregating real-time blockchain and cryptocurrency news from over 300 verified sources.</p>
+        <div class="hero-meta">
+          <span class="src" id="heroSource">—</span>
+          <span class="dot"></span>
+          <span id="heroTime">—</span>
+          <span class="dot"></span>
+          <span id="heroCat">—</span>
+        </div>
+        <a class="hero-cta" id="heroCta" href="#" target="_blank" rel="noopener">Read full story →</a>
+      </div>
+      <aside class="hero-rail" id="heroRail">
+        <div class="skeleton skeleton-card"></div>
+        <div class="skeleton skeleton-card"></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<div class="container" style="padding-top:16px">
+  <div class="ad-slot leaderboard"><span class="ad-label">Advertisement</span>728×90 / responsive</div>
+</div>
+
+<div class="container">
+  <div class="chips-bar" id="categoryChips" role="tablist" aria-label="Categories"></div>
+</div>
+
+<main id="main">
+  <div class="container">
+    <div id="searchBanner" class="search-banner hidden"></div>
+
+    <section class="section" style="padding-top:24px">
+      <div class="layout">
+        <div class="main-col">
+          <div class="section-head">
+            <h2 id="sectionTitle">Latest headlines</h2>
+            <p class="sub" id="sectionSub">Fresh from 300+ sources · sorted by recency</p>
+          </div>
+          <div id="storiesGrid" class="stories-grid">
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+          </div>
+          <div id="loadMoreWrap" class="center" style="margin-top:24px">
+            <button id="loadMoreBtn" class="btn-ghost" style="padding:10px 18px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text-2);font-size:13px;font-weight:500">Load more headlines</button>
+            <div id="loadStatus" class="muted small" style="margin-top:8px"></div>
+          </div>
+        </div>
+
+        <aside class="rail">
+          <div class="ad-slot sidebar"><span class="ad-label">Advertisement</span>300×250</div>
+
+          <div class="widget">
+            <div class="widget-head"><h3>Fear &amp; Greed</h3><span class="sub">index</span></div>
+            <div class="fg-gauge" id="fgWidget"><div class="skeleton skeleton-line"></div></div>
+          </div>
+
+          <div class="widget">
+            <div class="widget-head"><h3>Trending now</h3><span class="sub">topics</span></div>
+            <div id="trendingList"><div class="skeleton skeleton-line"></div></div>
+          </div>
+
+          <div class="ad-slot infeed"><span class="ad-label">Advertisement</span>in-feed</div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="markets">
+      <div class="section-head">
+        <h2>Markets</h2>
+        <p class="sub">Live prices via CoinGecko · click a coin to filter headlines</p>
+      </div>
+      <div class="market-strip" id="marketStrip">
+        <div class="skeleton skeleton-card"></div>
+      </div>
+    </section>
+
+    <section class="section" id="open-source">
+      <div class="section-head">
+        <h2>Open source, trending</h2>
+        <p class="sub">Popular blockchain repositories on GitHub · cached 1 hour</p>
+      </div>
+      <div class="oss-grid" id="ossGrid">
+        <div class="skeleton skeleton-card"></div>
+        <div class="skeleton skeleton-card"></div>
+        <div class="skeleton skeleton-card"></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2>Latest in brief</h2>
+        <p class="sub">Compact view of the freshest headlines</p>
+      </div>
+      <div class="layout">
+        <div class="main-col">
+          <div class="compact-list" id="compactList"></div>
+        </div>
+        <aside class="rail">
+          <div class="ad-slot rectangle"><span class="ad-label">Advertisement</span>300×250</div>
+          <div class="widget">
+            <div class="widget-head"><h3>Editor's note</h3><span class="sub">original</span></div>
+            <p class="small muted" style="margin:0;line-height:1.6">
+              ChainPulse aggregates headlines and short excerpts from independent publishers and links to the original reporting. We do not republish full articles. Excerpts are limited and always attributed. See our <a href="methodology.html" style="color:var(--accent)">methodology</a> for details on sourcing, ranking and update cadence.
+            </p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<section class="section">
+  <div class="container">
+    <div class="cta-widget">
+      <h3 style="font-family:var(--font-display);font-size:24px;margin:0 0 8px">Stay in the loop</h3>
+      <p class="muted small" style="margin:0 0 16px">Get the top crypto headlines in your inbox. No spam, unsubscribe anytime.</p>
+      <form class="form" style="max-width:420px;margin:0 auto" onsubmit="event.preventDefault(); window.__toast('Thanks! Wire this form to your email provider (Mailchimp, ConvertKit, etc.).');">
+        <input type="email" placeholder="you@example.com" required />
+        <button type="submit">Subscribe</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">ChainPulse<span class="dot">.</span></div>
+        <p class="footer-desc">Real-time blockchain and cryptocurrency news, market data and sentiment — aggregated from 300+ verified sources and refreshed live every 45 seconds.</p>
+      </div>
+      <div>
+        <h4>Site</h4>
+        <a href="index.html">Home</a>
+        <a href="index.html#markets">Markets</a>
+        <a href="methodology.html">Methodology</a>
+        <a href="about.html">About</a>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Use</a>
+        <a href="contact.html">Contact</a>
+        <a href="faq.html">FAQ</a>
+      </div>
+      <div>
+        <h4>Data</h4>
+        <a href="https://cryptocurrency.cv" target="_blank" rel="noopener">News API</a>
+        <a href="https://www.coingecko.com" target="_blank" rel="noopener">CoinGecko</a>
+        <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
+        <a href="ads.txt">ads.txt</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 ChainPulse. Not financial advice.</span>
+      <span>Live · flowing updates · 300+ sources</span>
+    </div>
+  </div>
+</footer>
+
+<div id="modal" class="modal" aria-hidden="true" role="dialog" aria-modal="true">
+  <div class="modal-backdrop" id="modalBackdrop"></div>
+  <div class="modal-panel" id="modalPanel">
+    <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<button id="backToTop" class="back-to-top" aria-label="Back to top">↑</button>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

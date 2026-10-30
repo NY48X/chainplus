@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Methodology — ChainPulse</title>
+<meta name="description" content="How ChainPulse collects, ranks, updates and presents blockchain news." />
+<meta name="robots" content="index,follow" />
+<link rel="canonical" href="https://chainpulse.example/methodology.html" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<script>(function(){var s=localStorage.getItem('cp-theme');if(s==='light')document.documentElement.classList.add('light');})();</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="masthead">
+  <div class="masthead-top">
+    <a class="brand" href="index.html">ChainPulse<span class="dot">.</span></a>
+    <span class="brand-tag">Live</span>
+    <nav class="mast-nav" aria-label="Primary">
+      <a href="index.html">News</a>
+      <a href="index.html#markets">Markets</a>
+      <a href="methodology.html" class="active">Methodology</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <button onclick="(function(){var h=document.documentElement;var l=h.classList.toggle('light');localStorage.setItem('cp-theme',l?'light':'dark');})()" class="iconbtn" aria-label="Toggle theme" title="Toggle theme" style="margin-left:auto">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </div>
+</header>
+<main id="main">
+  <div class="container page">
+    <h1>Methodology</h1>
+    <p class="lead">How ChainPulse collects, ranks, updates and presents blockchain news — and how we stay compliant with publisher rights.</p>
+
+    <h2>How news is collected</h2>
+    <p>ChainPulse aggregates headlines and short excerpts from over 300 verified RSS and Atom feeds operated by independent publishers. We poll these feeds continuously on the server side and store only the metadata needed to display a headline, a short excerpt, a timestamp, the source and a link back to the original article.</p>
+
+    <h2>How new news is implemented</h2>
+    <p>New items appear automatically. When a publisher publishes a new article, it enters our feed within minutes. The site fetches the latest bundle from our news endpoint on load and merges it into the feed ordered by recency. No manual curation is required for breaking news to surface.</p>
+
+    <h2>How the feed is updated</h2>
+    <ul>
+      <li><strong>On load:</strong> the latest headlines are fetched immediately.</li>
+      <li><strong>Live flowing updates:</strong> the feed polls every 45 seconds and prepends new headlines to the top without a full page refresh.</li>
+      <li><strong>Manual refresh:</strong> the refresh button in the masthead forces an immediate update and clears the local cache.</li>
+      <li><strong>Breaking ticker:</strong> a separate stream of items published in the last 2 hours scrolls across the top of every page.</li>
+    </ul>
+
+    <h2>Ranking</h2>
+    <p>Items are sorted by publication time (newest first). Each item carries a source credibility score derived from the publisher's track record. Trending topics are extracted from recent headlines and tagged with sentiment (bullish, bearish, neutral).</p>
+
+    <h2>Market data</h2>
+    <p>Live prices and 24-hour changes come from CoinGecko's free API for the top cryptocurrencies. Prices refresh on the same live cadence (every 45 seconds).</p>
+
+    <h2>Sentiment and fear &amp; greed</h2>
+    <p>The fear &amp; greed index and trending topics are provided by the news API and reflect aggregate market sentiment. They are indicators, not predictions.</p>
+
+    <h2>Publisher rights and originality</h2>
+    <p>We display only headlines and short excerpts (never full articles) and always link to the original source. We do not republish, mirror or frame third-party content. This site adds original value through aggregation, ranking, categorization, market context and editorial notes.</p>
+
+    <h2>Errors and availability</h2>
+    <p>If a data source is temporarily unavailable, the affected section shows a graceful fallback and retries automatically. We are not responsible for the accuracy or availability of third-party data.</p>
+  </div>
+</main>
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">ChainPulse<span class="dot">.</span></div>
+        <p class="footer-desc">Real-time blockchain and cryptocurrency news, market data and sentiment.</p>
+      </div>
+      <div>
+        <h4>Site</h4>
+        <a href="index.html">Home</a>
+        <a href="methodology.html">Methodology</a>
+        <a href="about.html">About</a>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Use</a>
+        <a href="contact.html">Contact</a>
+        <a href="faq.html">FAQ</a>
+      </div>
+      <div>
+        <h4>Data</h4>
+        <a href="ads.txt">ads.txt</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 ChainPulse. Not financial advice.</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
