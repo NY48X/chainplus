@@ -2,6 +2,7 @@
 
 ## Live now
 - GitHub Pages: https://ny48x.github.io/chainpulse/
+- Worker API: https://chainpulse-api.miketembo828.workers.dev
 - Repo: https://github.com/NY48X/chainpulse
 
 ## Point your .tech domain to GitHub Pages
