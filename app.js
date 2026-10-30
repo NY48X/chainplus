@@ -1,8 +1,8 @@
-/* ============ ChainPulse app v4 — live feed ============ */
+/* ============ ChainPlus app v4 — live feed ============ */
 (function(){
   'use strict';
 
-  const API = (window.CHAINPULSE_API) || (localStorage.getItem('cp-api-base')) || 'https://chainpulse-api.miketembo828.workers.dev';
+  const API = (window.CHAINPLUS_API) || (localStorage.getItem('cp-api-base')) || 'https://chainpulse-api.miketembo828.workers.dev';
   const CG = 'https://api.coingecko.com/api/v3';
   const RSS_BACKUPS = [
     'https://www.coindesk.com/arc/outboundfeeds/rss/',

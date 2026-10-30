@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://chainpulse.example/</loc><changefreq>hourly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://chainpulse.example/about.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://chainpulse.example/methodology.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://chainpulse.example/faq.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://chainpulse.example/contact.html</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
-  <url><loc>https://chainpulse.example/privacy.html</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
-  <url><loc>https://chainpulse.example/terms.html</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://chainplus.tech/</loc><changefreq>hourly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://chainplus.tech/about.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://chainplus.tech/methodology.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://chainplus.tech/faq.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://chainplus.tech/contact.html</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://chainplus.tech/privacy.html</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://chainplus.tech/terms.html</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
 </urlset>

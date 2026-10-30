@@ -1,4 +1,4 @@
-# ChainPulse — Live Blockchain & Crypto News
+# ChainPlus — Live Blockchain & Crypto News
 
 A real-time blockchain and cryptocurrency news website. Headlines and short excerpts from 300+ sources, live market data, trending topics, fear & greed index, and trending open-source projects — with flowing live updates (no full-page refresh).
 

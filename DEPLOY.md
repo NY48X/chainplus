@@ -1,4 +1,4 @@
-# ChainPulse — Deployment Guide
+# ChainPlus — Deployment Guide
 
 ## Live now
 - GitHub Pages: https://ny48x.github.io/chainpulse/

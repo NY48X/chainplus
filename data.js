@@ -1,4 +1,4 @@
-/* ============ ChainPulse data ============ */
+/* ============ ChainPlus data ============ */
 window.CP_DATA = {
   coins: [
     {id:"bitcoin",sym:"BTC",name:"Bitcoin"},{id:"ethereum",sym:"ETH",name:"Ethereum"},
