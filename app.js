@@ -430,9 +430,11 @@
       all.className = 'chip active'; all.dataset.cat='all'; all.textContent='All';
       chips.appendChild(all);
       state.categories.forEach(c=>{
+        const id = (typeof c === 'string') ? c : (c.id || c.name || c);
+        const name = (typeof c === 'string') ? c.charAt(0).toUpperCase()+c.slice(1) : (c.name || c.id || c);
         const b = document.createElement('button');
-        b.className = 'chip'; b.dataset.cat = c.id;
-        b.textContent = c.name + (c.sourceCount ? ` (${c.sourceCount})` : '');
+        b.className = 'chip'; b.dataset.cat = id;
+        b.textContent = name + (c.sourceCount ? ` (${c.sourceCount})` : '');
         chips.appendChild(b);
       });
       chips.addEventListener('click', (e)=>{
