@@ -197,27 +197,30 @@
     const seen = new Set();
     await Promise.all(RSS_BACKUPS.map(async (url)=>{
       try{
-        const r = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}`);
+        const r = await fetch(url, {headers:{'User-Agent':'ChainPlus/1.0'}});
         if(!r.ok) return;
-        const d = await r.json();
-        if(d.status !== 'ok' || !Array.isArray(d.items)) return;
-        const src = (d.feed && d.feed.title) || url;
-        d.items.forEach(it=>{
-          const link = it.link || it.guid;
-          if(!link || seen.has(link)) return;
+        const x = await r.text();
+        const items = x.match(/<item[\s\S]*?<\/item>/gi) || [];
+        items.forEach(it=>{
+          const t = (it.match(/<title[^>]*>([\s\S]*?)<\/title>/i)||[])[1]||'';
+          const l = ((it.match(/<link[^>]*>([\s\S]*?)<\/link>/i)||[])[1]||'').trim() || ((it.match(/<guid[^>]*>([\s\S]*?)<\/guid>/i)||[])[1]||'').trim();
+          const d = (it.match(/<description[^>]*>([\s\S]*?)<\/description>/i)||[])[1]||'';
+          const p = (it.match(/<pubDate[^>]*>([\s\S]*?)<\/pubDate>/i)||[])[1]||'';
+          const title = t.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g,'$1').trim();
+          const link = l.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g,'$1').trim();
+          if(!title || !link || seen.has(link)) return;
           seen.add(link);
           out.push({
-            title: it.title || '',
+            title: title,
             link: link,
-            description: (it.description||it.content||'').replace(/<[^>]+>/g,'').slice(0,240),
-            pubDate: it.pubDate || it.published || '',
-            source: src,
+            description: d.replace(/<[^>]+>/g,'').replace(/<!\[CDATA\[|\]\]>/g,'').slice(0,240).trim(),
+            pubDate: p.trim(),
+            source: new URL(url).hostname,
             category: 'general'
           });
         });
       }catch(e){ console.error('RSS backup failed:', url, e); }
     }));
-    // sort newest first
     out.sort((a,b)=> new Date(b.pubDate||0) - new Date(a.pubDate||0));
     return out.slice(0, state.limit);
   }

@@ -25,7 +25,7 @@ The site falls back to RSS when cryptocurrency.cv returns 403, but trending/cate
 5. You'll get a URL like `https://chainplus-api.<your-subdomain>.workers.dev`
 6. Point the frontend at it: in the browser console on your site run:
    `localStorage.setItem('cp-api-base', 'https://chainplus-api.<your-subdomain>.workers.dev')`
-   Or set `window.CHAINPULSE_API` in index.html before app.js loads.
+   Or set `window.CHAINPLUS_API` in index.html before app.js loads.
 7. (Optional) Bind your .tech domain to the worker for a clean API URL.
 
 ## Redeploy after changes
