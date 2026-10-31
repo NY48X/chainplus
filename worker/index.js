@@ -1,5 +1,5 @@
 const F=['https://cointelegraph.com/rss','https://www.coindesk.com/arc/outboundfeeds/rss/','https://decrypt.co/feed','https://bitcoinmagazine.com/feed'];
-const CORS={'Access-Control-Allow-Origin':'*','Access-Control-Allow-Methods':'GET, OPTIONS','Content-Type':'application/json'};
+const CORS={'Access-Control-Allow-Origin':'*','Access-Control-Allow-Methods':'GET, POST, OPTIONS','Content-Type':'application/json'};
 function j(d,s){s=s||200;return new Response(JSON.stringify(d),{status:s,headers:{...CORS,'Cache-Control':'public, max-age=300'}});}
 function cat(title,desc){const t=((title||'')+' '+(desc||'')).toLowerCase();if(/bitcoin|btc/.test(t))return'bitcoin';if(/ethereum|eth\b|ether/.test(t))return'ethereum';if(/solana|sol\b/.test(t))return'solana';if(/defi|dex|yield|liquidity|amm|staking/.test(t))return'defi';if(/nft|tokeniz/.test(t))return'nft';if(/regulat|sec|cftc|law|legal|court|sue|ban|policy/.test(t))return'regulation';if(/market|price|surge|rally|crash|etf|stock|trade/.test(t))return'markets';return'general';}
 function tag(xml,t){const m=xml.match(new RegExp('<'+t+'[^>]*>([\\s\\S]*?)</'+t+'>','i'));return m?m[1].replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g,'$1').trim():'';}
@@ -27,12 +27,28 @@ function trend(arts){
   arts.forEach(function(a){(a.title||'').toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).forEach(function(w){if(w.length<4||st.has(w))return;c[w]=(c[w]||0)+1;});});
   return Object.entries(c).sort(function(a,b){return b[1]-a[1];}).slice(0,10).map(function(e){return{topic:e[0].charAt(0).toUpperCase()+e[0].slice(1),count:e[1],sentiment:'neutral',recentHeadlines:arts.filter(function(a){return (a.title||'').toLowerCase().includes(e[0]);}).slice(0,2).map(function(a){return a.title;})};});
 }
-async function handle(req){
+function clamp(v,lo,hi,d){v=parseInt(v);if(isNaN(v))v=d;return Math.max(lo,Math.min(hi,v));}
+async function handle(req, env){
   const u=new URL(req.url);const p=u.pathname;
   if(req.method==='OPTIONS')return new Response(null,{status:204,headers:CORS});
   try{
+    if(p==='/api/subscribe' && req.method==='POST'){
+      try{
+        const body=await req.json();
+        const email=(body.email||'').trim().toLowerCase();
+        if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return j({error:'invalid email'},400);
+        if(env && env.SUBSCRIBERS){
+          const existing=await env.SUBSCRIBERS.get(email);
+          if(existing)return j({ok:true,message:'already subscribed'});
+          await env.SUBSCRIBERS.put(email, JSON.stringify({email:email,subscribedAt:new Date().toISOString()}));
+        }
+        return j({ok:true,message:'subscribed'});
+      }catch(e){return j({error:e.message||'subscribe failed'},500);}
+    }
     if(p==='/api/news'||p==='/api/news/'){
-      const lim=Math.max(1,Math.min(100,parseInt(u.searchParams.get('limit')||'20')||20)),pg=Math.max(1,parseInt(u.searchParams.get('page')||'1')||1),cat=u.searchParams.get('category');
+      const lim=clamp(u.searchParams.get('limit'),1,100,20);
+      const pg=clamp(u.searchParams.get('page'),1,1000,1);
+      const cat=u.searchParams.get('category');
       let a=await rss();
       if(cat&&cat!=='all'){const q=cat.toLowerCase();a=a.filter(function(x){return (x.category||'').toLowerCase()===q||(x.title||'').toLowerCase().includes(q);});}
       const s=(pg-1)*lim;const pgd=a.slice(s,s+lim);
@@ -45,16 +61,21 @@ async function handle(req){
       return j({categories:['all','bitcoin','ethereum','defi','solana','nft','regulation','markets']});
     }
     if(p==='/api/breaking'||p==='/api/breaking/'){
-      const lim=Math.max(1,Math.min(50,parseInt(u.searchParams.get('limit')||'12')||12));const a=await rss();return j({articles:a.slice(0,lim),totalCount:a.length});
+      const lim=clamp(u.searchParams.get('limit'),1,50,12);
+      const a=await rss();return j({articles:a.slice(0,lim),totalCount:a.length});
     }
     if(p==='/api/fear-greed'||p==='/api/fear-greed/'){
       try{const r=await fetch('https://api.alternative.me/fng/?limit=1');if(r.ok){const d=await r.json();const v=d&&d.data&&d.data[0];if(v)return j({value:parseInt(v.value),classification:v.value_classification,timestamp:v.timestamp});}}catch(e){}
       return j({value:50,classification:'Neutral'});
     }
     if(p==='/api/search'||p==='/api/search/'){
-      const q=(u.searchParams.get('q')||'').toLowerCase(),lim=Math.max(1,Math.min(50,parseInt(u.searchParams.get('limit')||'20')||20));const a=await rss();const f=a.filter(function(x){return (x.title||'').toLowerCase().includes(q)||(x.description||'').toLowerCase().includes(q);}).slice(0,lim);return j({articles:f,totalCount:f.length});
+      const q=(u.searchParams.get('q')||'').toLowerCase();
+      const lim=clamp(u.searchParams.get('limit'),1,50,20);
+      const a=await rss();
+      const f=a.filter(function(x){return (x.title||'').toLowerCase().includes(q)||(x.description||'').toLowerCase().includes(q);}).slice(0,lim);
+      return j({articles:f,totalCount:f.length});
     }
     return j({error:'not found'},404);
   }catch(e){return j({error:e.message||'internal error'},500);}
 }
-addEventListener('fetch',function(event){event.respondWith(handle(event.request));});
+export default { async fetch(request, env) { return handle(request, env); } };
