@@ -32,7 +32,7 @@ async function handle(req){
   if(req.method==='OPTIONS')return new Response(null,{status:204,headers:CORS});
   try{
     if(p==='/api/news'||p==='/api/news/'){
-      const lim=parseInt(u.searchParams.get('limit')||'20'),pg=parseInt(u.searchParams.get('page')||'1'),cat=u.searchParams.get('category');
+      const lim=Math.max(1,Math.min(100,parseInt(u.searchParams.get('limit')||'20')||20)),pg=Math.max(1,parseInt(u.searchParams.get('page')||'1')||1),cat=u.searchParams.get('category');
       let a=await rss();
       if(cat&&cat!=='all'){const q=cat.toLowerCase();a=a.filter(function(x){return (x.category||'').toLowerCase()===q||(x.title||'').toLowerCase().includes(q);});}
       const s=(pg-1)*lim;const pgd=a.slice(s,s+lim);
@@ -45,14 +45,14 @@ async function handle(req){
       return j({categories:['all','bitcoin','ethereum','defi','solana','nft','regulation','markets']});
     }
     if(p==='/api/breaking'||p==='/api/breaking/'){
-      const lim=parseInt(u.searchParams.get('limit')||'12');const a=await rss();return j({articles:a.slice(0,lim),totalCount:a.length});
+      const lim=Math.max(1,Math.min(50,parseInt(u.searchParams.get('limit')||'12')||12));const a=await rss();return j({articles:a.slice(0,lim),totalCount:a.length});
     }
     if(p==='/api/fear-greed'||p==='/api/fear-greed/'){
       try{const r=await fetch('https://api.alternative.me/fng/?limit=1');if(r.ok){const d=await r.json();const v=d&&d.data&&d.data[0];if(v)return j({value:parseInt(v.value),classification:v.value_classification,timestamp:v.timestamp});}}catch(e){}
       return j({value:50,classification:'Neutral'});
     }
     if(p==='/api/search'||p==='/api/search/'){
-      const q=(u.searchParams.get('q')||'').toLowerCase(),lim=parseInt(u.searchParams.get('limit')||'20');const a=await rss();const f=a.filter(function(x){return (x.title||'').toLowerCase().includes(q)||(x.description||'').toLowerCase().includes(q);}).slice(0,lim);return j({articles:f,totalCount:f.length});
+      const q=(u.searchParams.get('q')||'').toLowerCase(),lim=Math.max(1,Math.min(50,parseInt(u.searchParams.get('limit')||'20')||20));const a=await rss();const f=a.filter(function(x){return (x.title||'').toLowerCase().includes(q)||(x.description||'').toLowerCase().includes(q);}).slice(0,lim);return j({articles:f,totalCount:f.length});
     }
     return j({error:'not found'},404);
   }catch(e){return j({error:e.message||'internal error'},500);}
