@@ -1,5 +1,6 @@
 const F=['https://cointelegraph.com/rss','https://www.coindesk.com/arc/outboundfeeds/rss/','https://decrypt.co/feed','https://bitcoinmagazine.com/feed'];
 const CORS={'Access-Control-Allow-Origin':'*','Access-Control-Allow-Methods':'GET, POST, OPTIONS','Access-Control-Allow-Headers':'Content-Type','Content-Type':'application/json'};
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function j(d,s){s=s||200;return new Response(JSON.stringify(d),{status:s,headers:{...CORS,'Cache-Control':'public, max-age=300'}});}
 function cat(title,desc){const t=((title||'')+' '+(desc||'')).toLowerCase();if(/bitcoin|btc/.test(t))return'bitcoin';if(/ethereum|eth\b|ether/.test(t))return'ethereum';if(/solana|sol\b/.test(t))return'solana';if(/defi|dex|yield|liquidity|amm|staking/.test(t))return'defi';if(/nft|tokeniz/.test(t))return'nft';if(/regulat|sec|cftc|law|legal|court|sue|ban|policy/.test(t))return'regulation';if(/market|price|surge|rally|crash|etf|stock|trade/.test(t))return'markets';return'general';}
 function tag(xml,t){const m=xml.match(new RegExp('<'+t+'[^>]*>([\\s\\S]*?)</'+t+'>','i'));return m?m[1].replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g,'$1').trim():'';}
@@ -28,6 +29,12 @@ function trend(arts){
   return Object.entries(c).sort(function(a,b){return b[1]-a[1];}).slice(0,10).map(function(e){return{topic:e[0].charAt(0).toUpperCase()+e[0].slice(1),count:e[1],sentiment:'neutral',recentHeadlines:arts.filter(function(a){return (a.title||'').toLowerCase().includes(e[0]);}).slice(0,2).map(function(a){return a.title;})};});
 }
 const DISPOSABLE=new Set(['mailinator.com','guerrillamail.com','tempmail.com','throwaway.email','fakeinbox.com','trashmail.com','yopmail.com','sharklasers.com','guerrillamailblock.com','grr.la','dispostable.com','mailnesia.com','maildrop.cc','discard.email','temp-mail.org','getnada.com','mohmal.com','burpcollaborator.net','10minutemail.com','minutemail.com']);
+function isDisposable(domain){
+  if(DISPOSABLE.has(domain))return true;
+  const parts=domain.split('.');
+  for(let i=1;i<parts.length;i++){if(DISPOSABLE.has(parts.slice(i).join('.')))return true;}
+  return false;
+}
 function clamp(v,lo,hi,d){v=parseInt(v);if(isNaN(v))v=d;return Math.max(lo,Math.min(hi,v));}
 async function hasMX(domain){
   try{
@@ -37,43 +44,60 @@ async function hasMX(domain){
     return Array.isArray(d.Answer)&&d.Answer.length>0;
   }catch(e){return true;}
 }
+async function rateLimit(env,key,max,windowSec){
+  if(!env||!env.SUBSCRIBERS)return true;
+  const k='rl:'+key;
+  const raw=await env.SUBSCRIBERS.get(k);
+  const now=Date.now();
+  let data;
+  try{data=raw?JSON.parse(raw):null;}catch(e){data=null;}
+  if(!data||now>data.reset){data={count:0,reset:now+windowSec*1000};}
+  if(data.count>=max)return false;
+  data.count++;
+  try{await env.SUBSCRIBERS.put(k,JSON.stringify(data),{expirationTtl:windowSec+60});}catch(e){}
+  return true;
+}
 async function handle(req, env){
   const u=new URL(req.url);const p=u.pathname;
   if(req.method==='OPTIONS')return new Response(null,{status:204,headers:CORS});
   try{
     if(p==='/api/contact' && req.method==='POST'){
       try{
+        const ip=req.headers.get('CF-Connecting-IP')||'unknown';
+        if(!(await rateLimit(env,'contact:'+ip,5,300)))return j({error:'too many requests, try again later'},429);
         const body=await req.json();
-        const name=(body.name||'').trim();
-        const email=(body.email||'').trim().toLowerCase();
-        const subject=(body.subject||'').trim();
-        const message=(body.message||'').trim();
+        const name=(body.name||'').trim().slice(0,100);
+        const email=(body.email||'').trim().toLowerCase().slice(0,254);
+        const subject=(body.subject||'').trim().slice(0,200);
+        const message=(body.message||'').trim().slice(0,5000);
         if(!name||!email||!subject||!message)return j({error:'all fields required'},400);
         if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return j({error:'invalid email'},400);
-        if(env && env.RESEND_API_KEY){
-          await fetch('https://api.resend.com/emails',{
-            method:'POST',
-            headers:{'Authorization':'Bearer '+env.RESEND_API_KEY,'Content-Type':'application/json'},
-            body:JSON.stringify({
-              from:'ChainPlus Contact <welcome@chainplus.tech>',
-              to:['miketembo828@gmail.com'],
-              replyTo:[email],
-              subject:'[Contact] '+subject,
-              html:'<p><strong>From:</strong> '+name+' ('+email+')</p><p><strong>Subject:</strong> '+subject+'</p><hr><p>'+message.replace(/\n/g,'<br>')+'</p>',
-              text:'From: '+name+' ('+email+')\nSubject: '+subject+'\n\n'+message
-            })
-          });
-        }
+        if(!env || !env.RESEND_API_KEY)return j({error:'email service not configured'},503);
+        const res=await fetch('https://api.resend.com/emails',{
+          method:'POST',
+          headers:{'Authorization':'Bearer '+env.RESEND_API_KEY,'Content-Type':'application/json'},
+          body:JSON.stringify({
+            from:'ChainPlus Contact <welcome@chainplus.tech>',
+            to:['support@chainplus.tech'],
+            reply_to:[email],
+            subject:'[Contact] '+subject,
+            html:'<p><strong>From:</strong> '+esc(name)+' ('+esc(email)+')</p><p><strong>Subject:</strong> '+esc(subject)+'</p><hr><p>'+esc(message).replace(/\n/g,'<br>')+'</p>',
+            text:'From: '+name+' ('+email+')\nSubject: '+subject+'\n\n'+message
+          })
+        });
+        if(!res.ok)return j({error:'failed to send message'},502);
         return j({ok:true,message:'message sent'});
       }catch(e){return j({error:e.message||'contact failed'},500);}
     }
     if(p==='/api/subscribe' && req.method==='POST'){
       try{
+        const ip=req.headers.get('CF-Connecting-IP')||'unknown';
+        if(!(await rateLimit(env,'subscribe:'+ip,10,300)))return j({error:'too many requests, try again later'},429);
         const body=await req.json();
-        const email=(body.email||'').trim().toLowerCase();
+        const email=(body.email||'').trim().toLowerCase().slice(0,254);
         if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return j({error:'invalid email format'},400);
         const domain=email.split('@')[1];
-        if(DISPOSABLE.has(domain))return j({error:'disposable email not allowed'},400);
+        if(isDisposable(domain))return j({error:'disposable email not allowed'},400);
         const mx=await hasMX(domain);
         if(!mx)return j({error:'email domain has no mail server'},400);
         if(env && env.SUBSCRIBERS){
@@ -88,7 +112,7 @@ async function handle(req, env){
               headers:{'Authorization':'Bearer '+env.RESEND_API_KEY,'Content-Type':'application/json'},
               body:JSON.stringify({
                 from:'ChainPlus <welcome@chainplus.tech>',
-                replyTo:['support@chainplus.tech'],
+                reply_to:['support@chainplus.tech'],
                 to:[email],
                 subject:'Welcome to ChainPlus — we\'re glad you\'re here',
                 html:'<div style="font-family:Inter,system-ui,sans-serif;max-width:560px;margin:0 auto;padding:32px 24px;color:#1a1a1a"><h2 style="font-size:24px;margin:0 0 16px;color:#111">Welcome to ChainPlus</h2><p style="font-size:16px;line-height:1.6;margin:0 0 16px">Hey there 👋</p><p style="font-size:16px;line-height:1.6;margin:0 0 16px">Thank you for subscribing. It genuinely means a lot to us that you chose to follow along. We started ChainPlus because we believe crypto news should be clear, honest, and actually useful — not noise.</p><p style="font-size:16px;line-height:1.6;margin:0 0 16px">Here\'s what you can expect:</p><ul style="font-size:16px;line-height:1.6;margin:0 0 16px;padding-left:20px"><li>Top crypto headlines, curated daily</li><li>No clickbait, no spam — ever</li><li>One email, straight to the point</li></ul><p style="font-size:16px;line-height:1.6;margin:0 0 24px">If you ever have feedback, a question, or just want to say hi, reply to this email. We read every single one.</p><p style="font-size:16px;line-height:1.6;margin:0 0 8px">Grateful you\'re here,</p><p style="font-size:16px;line-height:1.6;margin:0;font-weight:600">The ChainPlus Team</p><hr style="border:none;border-top:1px solid #e5e5e5;margin:24px 0"><p style="font-size:12px;color:#888;margin:0">You\'re receiving this because you subscribed at chainplus.tech. No spam, unsubscribe anytime.</p></div>',
@@ -133,19 +157,4 @@ async function handle(req, env){
     return j({error:'not found'},404);
   }catch(e){return j({error:e.message||'internal error'},500);}
 }
-export default {
-  async fetch(request, env) { return handle(request, env); },
-  async email(message, env) {
-    try {
-      const from = (message.from || '').toLowerCase().trim();
-      if (!from || !env || !env.SUBSCRIBERS) return;
-      const raw = await env.SUBSCRIBERS.get(from);
-      if (!raw) return;
-      const data = JSON.parse(raw);
-      if (data.verified) return;
-      data.verified = true;
-      data.verifiedAt = new Date().toISOString();
-      await env.SUBSCRIBERS.put(from, JSON.stringify(data));
-    } catch (e) {}
-  }
-};
+export default { async fetch(request, env) { return handle(request, env); } };
