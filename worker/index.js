@@ -55,14 +55,13 @@ async function handle(req, env){
           if(existing)return j({ok:true,message:'already subscribed'});
           await env.SUBSCRIBERS.put(email, JSON.stringify({email:email,subscribedAt:new Date().toISOString()}));
         }
-        // Send welcome email via Resend
         if(env && env.RESEND_API_KEY){
           try{
             await fetch('https://api.resend.com/emails',{
               method:'POST',
               headers:{'Authorization':'Bearer '+env.RESEND_API_KEY,'Content-Type':'application/json'},
               body:JSON.stringify({
-                from:'ChainPlus <onboarding@resend.com>',
+                from:'ChainPlus <welcome@chainplus.tech>',
                 to:[email],
                 subject:'Welcome to ChainPlus!',
                 html:'<h2>Welcome to ChainPlus!</h2><p>Thanks for subscribing. You\'ll receive the top crypto headlines in your inbox.</p><p>No spam, unsubscribe anytime.</p><p>— The ChainPlus Team</p>',
