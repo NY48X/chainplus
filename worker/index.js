@@ -55,7 +55,7 @@ async function handle(req, env){
           if(existing)return j({ok:true,message:'already subscribed'});
           await env.SUBSCRIBERS.put(email, JSON.stringify({email:email,subscribedAt:new Date().toISOString(),verified:false}));
         }
-        return j({ok:true,message:'subscribed'});
+        return j({ok:true,message:'subscribed',verify:'Reply to verify@chainplus.tech from this email to confirm your subscription.'});
       }catch(e){return j({error:e.message||'subscribe failed'},500);}
     }
     if(p==='/api/news'||p==='/api/news/'){
@@ -91,4 +91,19 @@ async function handle(req, env){
     return j({error:'not found'},404);
   }catch(e){return j({error:e.message||'internal error'},500);}
 }
-export default { async fetch(request, env) { return handle(request, env); } };
+export default {
+  async fetch(request, env) { return handle(request, env); },
+  async email(message, env) {
+    try {
+      const from = (message.from || '').toLowerCase().trim();
+      if (!from || !env || !env.SUBSCRIBERS) return;
+      const raw = await env.SUBSCRIBERS.get(from);
+      if (!raw) return;
+      const data = JSON.parse(raw);
+      if (data.verified) return;
+      data.verified = true;
+      data.verifiedAt = new Date().toISOString();
+      await env.SUBSCRIBERS.put(from, JSON.stringify(data));
+    } catch (e) {}
+  }
+};
