@@ -41,6 +41,32 @@ async function handle(req, env){
   const u=new URL(req.url);const p=u.pathname;
   if(req.method==='OPTIONS')return new Response(null,{status:204,headers:CORS});
   try{
+    if(p==='/api/contact' && req.method==='POST'){
+      try{
+        const body=await req.json();
+        const name=(body.name||'').trim();
+        const email=(body.email||'').trim().toLowerCase();
+        const subject=(body.subject||'').trim();
+        const message=(body.message||'').trim();
+        if(!name||!email||!subject||!message)return j({error:'all fields required'},400);
+        if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return j({error:'invalid email'},400);
+        if(env && env.RESEND_API_KEY){
+          await fetch('https://api.resend.com/emails',{
+            method:'POST',
+            headers:{'Authorization':'Bearer '+env.RESEND_API_KEY,'Content-Type':'application/json'},
+            body:JSON.stringify({
+              from:'ChainPlus Contact <welcome@chainplus.tech>',
+              to:['miketembo828@gmail.com'],
+              replyTo:[email],
+              subject:'[Contact] '+subject,
+              html:'<p><strong>From:</strong> '+name+' ('+email+')</p><p><strong>Subject:</strong> '+subject+'</p><hr><p>'+message.replace(/\n/g,'<br>')+'</p>',
+              text:'From: '+name+' ('+email+')\nSubject: '+subject+'\n\n'+message
+            })
+          });
+        }
+        return j({ok:true,message:'message sent'});
+      }catch(e){return j({error:e.message||'contact failed'},500);}
+    }
     if(p==='/api/subscribe' && req.method==='POST'){
       try{
         const body=await req.json();
