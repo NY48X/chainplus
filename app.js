@@ -431,6 +431,7 @@
       chips.appendChild(all);
       state.categories.forEach(c=>{
         const id = (typeof c === 'string') ? c : (c.id || c.name || c);
+        if(id === 'all') return;
         const name = (typeof c === 'string') ? c.charAt(0).toUpperCase()+c.slice(1) : (c.name || c.id || c);
         const b = document.createElement('button');
         b.className = 'chip'; b.dataset.cat = id;
