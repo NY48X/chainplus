@@ -861,8 +861,8 @@
     }
   }
   async function init(){
-    await loadCategories();
-    await Promise.all([fetchNews(true,{updateHero:true}), loadTrending(), loadFG(), loadMarkets(), loadOSS(), renderTicker()]);
+    try { await loadCategories(); } catch(e){ console.error('categories error:', e); }
+    try { await Promise.all([fetchNews(true,{updateHero:true}), loadTrending(), loadFG(), loadMarkets(), loadOSS(), renderTicker()]); } catch(e){ console.error('init load error:', e); }
     revealIn();
     state.pollTimer = setInterval(livePoll, 45000);
     applyPageMode();
