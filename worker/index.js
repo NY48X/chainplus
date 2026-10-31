@@ -55,6 +55,22 @@ async function handle(req, env){
           if(existing)return j({ok:true,message:'already subscribed'});
           await env.SUBSCRIBERS.put(email, JSON.stringify({email:email,subscribedAt:new Date().toISOString()}));
         }
+        // Send welcome email via Cloudflare Email Service REST API
+        if(env && env.CF_API_TOKEN){
+          try{
+            await fetch('https://api.cloudflare.com/client/v4/accounts/'+env.CF_ACCOUNT_ID+'/email/sending/send',{
+              method:'POST',
+              headers:{'Authorization':'Bearer '+env.CF_API_TOKEN,'Content-Type':'application/json'},
+              body:JSON.stringify({
+                to:email,
+                from:'welcome@chainplus.tech',
+                subject:'Welcome to ChainPlus!',
+                html:'<h2>Welcome to ChainPlus!</h2><p>Thanks for subscribing. You\'ll receive the top crypto headlines in your inbox.</p><p>No spam, unsubscribe anytime.</p><p>— The ChainPlus Team</p>',
+                text:'Welcome to ChainPlus!\n\nThanks for subscribing. You\'ll receive the top crypto headlines in your inbox.\n\nNo spam, unsubscribe anytime.\n\n— The ChainPlus Team'
+              })
+            });
+          }catch(e){}
+        }
         return j({ok:true,message:'subscribed'});
       }catch(e){return j({error:e.message||'subscribe failed'},500);}
     }
