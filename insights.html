@@ -65,6 +65,8 @@
       <p><strong>Greed (55-75):</strong> Take profits on positions. New entries are riskier but momentum can carry further than expected.</p>
       <p><strong>Extreme Greed (75-100):</strong> Historically the best time to reduce exposure. But be aware that extreme greed can persist for weeks during bull markets — timing the top is nearly impossible.</p>
       <p>The real value isn't the number itself, but the <em>trend</em>. A rising Fear & Greed from 20 to 40 is more bullish than a static 50. Track the direction, not just the level.</p>
+    </article>
+
     <article class="insight-card">
       <h2>On-Chain Data as a Leading Indicator for Crypto Markets</h2>
       <p class="meta">Research · October 26, 2026</p>
@@ -106,11 +108,11 @@
   </footer>
 
 <!-- Cookie Consent -->
-<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1a1a1a;color:#fff;padding:16px 24px;z-index:9999;font-size:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1a1a1a;color:#fff;padding:16px 24px;z-index:9999;font-size:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
   <span>We use cookies to improve your experience and serve personalized ads. By continuing, you agree to our <a href="privacy.html" style="color:#00e5a0;text-decoration:underline">Privacy Policy</a>.</span>
-  <button onclick="document.getElementById('cookie-banner').style.display='none';localStorage.setItem('cp-cookies','1')" style="background:#00e5a0;color:#000;border:none;padding:8px 20px;border-radius:6px;cursor:pointer;font-weight:600">Accept</button>
+  <button onclick="document.getElementById('cookie-banner').style.display='none';try{localStorage.setItem('cp-cookies','1')}catch(e){}" style="background:#00e5a0;color:#000;border:none;padding:8px 20px;border-radius:6px;cursor:pointer;font-weight:600">Accept</button>
 </div>
-<script>if(!localStorage.getItem('cp-cookies'))document.getElementById('cookie-banner').style.display='flex';</script>
+<script>try{if(!localStorage.getItem('cp-cookies'))document.getElementById('cookie-banner').style.display='flex';}catch(e){}</script>
 
 </body>
 </html>
