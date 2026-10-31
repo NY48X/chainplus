@@ -27,7 +27,16 @@ function trend(arts){
   arts.forEach(function(a){(a.title||'').toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).forEach(function(w){if(w.length<4||st.has(w))return;c[w]=(c[w]||0)+1;});});
   return Object.entries(c).sort(function(a,b){return b[1]-a[1];}).slice(0,10).map(function(e){return{topic:e[0].charAt(0).toUpperCase()+e[0].slice(1),count:e[1],sentiment:'neutral',recentHeadlines:arts.filter(function(a){return (a.title||'').toLowerCase().includes(e[0]);}).slice(0,2).map(function(a){return a.title;})};});
 }
+const DISPOSABLE=new Set(['mailinator.com','guerrillamail.com','tempmail.com','throwaway.email','fakeinbox.com','trashmail.com','yopmail.com','sharklasers.com','guerrillamailblock.com','grr.la','dispostable.com','mailnesia.com','maildrop.cc','discard.email','temp-mail.org','getnada.com','mohmal.com','burpcollaborator.net','10minutemail.com','minutemail.com']);
 function clamp(v,lo,hi,d){v=parseInt(v);if(isNaN(v))v=d;return Math.max(lo,Math.min(hi,v));}
+async function hasMX(domain){
+  try{
+    const r=await fetch('https://cloudflare-dns.com/dns-query?name='+encodeURIComponent(domain)+'&type=MX',{headers:{'Accept':'application/dns-json'}});
+    if(!r.ok)return true;
+    const d=await r.json();
+    return Array.isArray(d.Answer)&&d.Answer.length>0;
+  }catch(e){return true;}
+}
 async function handle(req, env){
   const u=new URL(req.url);const p=u.pathname;
   if(req.method==='OPTIONS')return new Response(null,{status:204,headers:CORS});
@@ -36,11 +45,15 @@ async function handle(req, env){
       try{
         const body=await req.json();
         const email=(body.email||'').trim().toLowerCase();
-        if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return j({error:'invalid email'},400);
+        if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return j({error:'invalid email format'},400);
+        const domain=email.split('@')[1];
+        if(DISPOSABLE.has(domain))return j({error:'disposable email not allowed'},400);
+        const mx=await hasMX(domain);
+        if(!mx)return j({error:'email domain has no mail server'},400);
         if(env && env.SUBSCRIBERS){
           const existing=await env.SUBSCRIBERS.get(email);
           if(existing)return j({ok:true,message:'already subscribed'});
-          await env.SUBSCRIBERS.put(email, JSON.stringify({email:email,subscribedAt:new Date().toISOString()}));
+          await env.SUBSCRIBERS.put(email, JSON.stringify({email:email,subscribedAt:new Date().toISOString(),verified:false}));
         }
         return j({ok:true,message:'subscribed'});
       }catch(e){return j({error:e.message||'subscribe failed'},500);}
