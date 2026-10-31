@@ -96,5 +96,13 @@
     </div>
   </div>
 </footer>
+
+<!-- Cookie Consent -->
+<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1a1a1a;color:#fff;padding:16px 24px;z-index:9999;font-size:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+  <span>We use cookies to improve your experience and serve personalized ads. By continuing, you agree to our <a href="privacy.html" style="color:#00e5a0;text-decoration:underline">Privacy Policy</a>.</span>
+  <button onclick="document.getElementById('cookie-banner').style.display='none';localStorage.setItem('cp-cookies','1')" style="background:#00e5a0;color:#000;border:none;padding:8px 20px;border-radius:6px;cursor:pointer;font-weight:600">Accept</button>
+</div>
+<script>if(!localStorage.getItem('cp-cookies'))document.getElementById('cookie-banner').style.display='flex';</script>
+
 </body>
 </html>
