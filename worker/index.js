@@ -53,9 +53,9 @@ async function handle(req, env){
         if(env && env.SUBSCRIBERS){
           const existing=await env.SUBSCRIBERS.get(email);
           if(existing)return j({ok:true,message:'already subscribed'});
-          await env.SUBSCRIBERS.put(email, JSON.stringify({email:email,subscribedAt:new Date().toISOString(),verified:false}));
+          await env.SUBSCRIBERS.put(email, JSON.stringify({email:email,subscribedAt:new Date().toISOString()}));
         }
-        return j({ok:true,message:'subscribed',verify:'Reply to verify@chainplus.tech from this email to confirm your subscription.'});
+        return j({ok:true,message:'subscribed'});
       }catch(e){return j({error:e.message||'subscribe failed'},500);}
     }
     if(p==='/api/news'||p==='/api/news/'){
