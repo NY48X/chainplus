@@ -1,7 +1,7 @@
 const F=['https://cointelegraph.com/rss','https://www.coindesk.com/arc/outboundfeeds/rss/','https://decrypt.co/feed','https://bitcoinmagazine.com/feed'];
 const CORS={'Access-Control-Allow-Origin':'*','Access-Control-Allow-Methods':'GET, POST, OPTIONS','Access-Control-Allow-Headers':'Content-Type','Content-Type':'application/json'};
 function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function j(d,s,noCache,cacheSec){s=s||200;const cc=noCache?'no-store':'public, max-age='+(cacheSec||300);return new Response(JSON.stringify(d),{status:s,headers:{...CORS,'Cache-Control':cc}});}
+function j(d,s,noCache,cacheSec){s=s||200;const cc=noCache?'no-store':'public, max-age='+(cacheSec!=null?cacheSec:300);return new Response(JSON.stringify(d),{status:s,headers:{...CORS,'Cache-Control':cc}});}
 function cat(title,desc){const t=((title||'')+' '+(desc||'')).toLowerCase();if(/bitcoin|btc/.test(t))return'bitcoin';if(/ethereum|eth\b|ether/.test(t))return'ethereum';if(/solana|sol\b/.test(t))return'solana';if(/defi|dex|yield|liquidity|amm|staking/.test(t))return'defi';if(/nft|tokeniz/.test(t))return'nft';if(/regulat|sec|cftc|law|legal|court|sue|ban|policy/.test(t))return'regulation';if(/market|price|surge|rally|crash|etf|stock|trade/.test(t))return'markets';return'general';}
 function tag(xml,t){const m=xml.match(new RegExp('<'+t+'[^>]*>([\\s\\S]*?)</'+t+'>','i'));return m?m[1].replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g,'$1').trim():'';}
 async function rss(){
@@ -23,7 +23,7 @@ async function rss(){
   return o;
 }
 function trend(arts){
-  const st=new Set(['the','a','an','here','rules','gmail','search','says','said','new','just','now','how','why','what','when','where','who','and','or','but','in','on','at','to','for','of','with','by','is','are','was','were','this','that','these','those','from','into','has','have','says','said','new','says','just','now','how','why','what','when','where','who','will','can','may','could','should','would','been','being','more','most','also','than','then','its','it','he','she','they','we','you','our','their','your','my','his','her','not','no','do','does','did','done','get','gets','got','make','makes','made','take','takes','took','come','comes','came','go','goes','went','see','sees','saw','know','knows','knew','think','thinks','thought','look','looks','looked','want','wants','wanted','give','gives','gave','use','uses','used','find','finds','found','tell','tells','told','ask','asks','asked','work','works','worked','seem','seems','seemed','feel','feels','felt','try','tries','tried','leave','leaves','left','call','calls','called','keep','keeps','kept','let','lets','begin','begins','began','show','shows','showed','hear','hears','heard','play','plays','played','run','runs','ran','move','moves','moved','like','likes','liked','live','lives','lived','believe','believes','believed','hold','holds','held','bring','brings','brought','happen','happens','happened','write','writes','wrote','provide','provides','provided','sit','sits','sat','stand','stands','stood','lose','loses','lost','pay','pays','paid','meet','meets','met','include','includes','included','continue','continues','continued','set','sets','learn','learns','learned','change','changes','changed','lead','leads','led','understand','understands','understood','watch','watches','watched','follow','follows','followed','stop','stops','stopped','create','creates','created','speak','speaks','spoke','read','reads','read','allow','allows','allowed','add','adds','added','spend','spends','spent','grow','grows','grew','open','opens','opened','walk','walks','walked','offer','offers','offered','remember','remembers','remembered','love','loves','loved','consider','considers','considered','appear','appears','appeared','buy','buys','bought','wait','waits','waited','serve','serves','served','die','dies','died','send','sends','sent','expect','expects','expected','build','builds','built','stay','stays','stayed','fall','falls','fell','cut','cuts','cut','reach','reaches','reached','kill','kills','killed','remain','remains','remained']);
+  const st=new Set(['the','a','an','here','rules','gmail','search','says','said','new','just','now','how','why','what','when','where','who','after','before','amid','over','under','into','onto','upon','about','above','below','between','through','during','without','within','against','among','toward','towards','across','behind','beyond','beside','besides','despite','except','including','regarding','concerning','following','like','unlike','per','via','plus','minus','and','or','but','in','on','at','to','for','of','with','by','is','are','was','were','this','that','these','those','from','into','has','have','says','said','new','says','just','now','how','why','what','when','where','who','will','can','may','could','should','would','been','being','more','most','also','than','then','its','it','he','she','they','we','you','our','their','your','my','his','her','not','no','do','does','did','done','get','gets','got','make','makes','made','take','takes','took','come','comes','came','go','goes','went','see','sees','saw','know','knows','knew','think','thinks','thought','look','looks','looked','want','wants','wanted','give','gives','gave','use','uses','used','find','finds','found','tell','tells','told','ask','asks','asked','work','works','worked','seem','seems','seemed','feel','feels','felt','try','tries','tried','leave','leaves','left','call','calls','called','keep','keeps','kept','let','lets','begin','begins','began','show','shows','showed','hear','hears','heard','play','plays','played','run','runs','ran','move','moves','moved','like','likes','liked','live','lives','lived','believe','believes','believed','hold','holds','held','bring','brings','brought','happen','happens','happened','write','writes','wrote','provide','provides','provided','sit','sits','sat','stand','stands','stood','lose','loses','lost','pay','pays','paid','meet','meets','met','include','includes','included','continue','continues','continued','set','sets','learn','learns','learned','change','changes','changed','lead','leads','led','understand','understands','understood','watch','watches','watched','follow','follows','followed','stop','stops','stopped','create','creates','created','speak','speaks','spoke','read','reads','read','allow','allows','allowed','add','adds','added','spend','spends','spent','grow','grows','grew','open','opens','opened','walk','walks','walked','offer','offers','offered','remember','remembers','remembered','love','loves','loved','consider','considers','considered','appear','appears','appeared','buy','buys','bought','wait','waits','waited','serve','serves','served','die','dies','died','send','sends','sent','expect','expects','expected','build','builds','built','stay','stays','stayed','fall','falls','fell','cut','cuts','cut','reach','reaches','reached','kill','kills','killed','remain','remains','remained']);
   const c={};
   // Extract single words
   arts.forEach(function(a){
@@ -46,12 +46,13 @@ function trend(arts){
   const bearWords=['crash','drop','fall','decline','loss','bear','down','low','hack','scam','fraud','ban','sue','lawsuit','fear','panic','collapse','plunge','tank'];
   function sentimentFor(word){
     const wl=word.toLowerCase();
-    if(bullWords.some(function(b){return wl.includes(b);}))return'bullish';
-    if(bearWords.some(function(b){return wl.includes(b);}))return'bearish';
+    const tokens=wl.split(/[^a-z]+/).filter(Boolean);
+    if(bullWords.some(function(b){return tokens.indexOf(b)>=0;}))return'bullish';
+    if(bearWords.some(function(b){return tokens.indexOf(b)>=0;}))return'bearish';
     return'neutral';
   }
   // Time-based seed for rotation
-  const seed=new Date().getHours()+new Date().getDate()*24;
+  const seed=new Date().getDate()+new Date().getMonth()*31;
   function seededShuffle(arr){
     let s=seed;
     const out=arr.slice();
@@ -62,13 +63,16 @@ function trend(arts){
     }
     return out;
   }
-  const entries=Object.entries(c).filter(function(e){const isBg=e[0].includes(' ');return isBg?e[1]>=0.5:e[1]>=2;});
+  const entries=Object.entries(c).filter(function(e){const isBg=e[0].includes(' ');return isBg?e[1]>=1:e[1]>=2;});
   // Sort by count desc, then shuffle within tiers for variety
-  const sorted=entries.sort(function(a,b){
-    if(Math.abs(b[1]-a[1])>0.5)return b[1]-a[1];
-    return 0;
-  });
-  const shuffled=seededShuffle(sorted);
+  const sorted=entries.sort(function(a,b){return b[1]-a[1];});
+  // Shuffle within equal-count tiers for variety while preserving frequency ranking
+  const tiers={};
+  sorted.forEach(function(e){const k=Math.round(e[1]);if(!tiers[k])tiers[k]=[];tiers[k].push(e);});
+  const tierKeys=Object.keys(tiers).sort(function(a,b){return b-a;});
+  let ordered=[];
+  tierKeys.forEach(function(k){ordered=ordered.concat(seededShuffle(tiers[k]));});
+  const shuffled=ordered;
   return shuffled.slice(0,10).map(function(e){
     const word=e[0];
     const isBigram=word.includes(' ');
