@@ -163,7 +163,7 @@
     for(let i=0;i<attempts;i++){
       try{
         const r = await fetch(url, opts);
-        if(r.status===429 || r.status>=500){
+        if(r.status===429 || r.status===403 || r.status>=500){
           last = new Error('HTTP '+r.status);
           await new Promise(res=>setTimeout(res, 700*(i+1)));
           continue;
@@ -623,7 +623,7 @@
       const order = 'desc';
       const results = await Promise.all(picked.map(async q=>{
         try{
-          const r = await fetchRetry(`${GH}/search/repositories?q=${q}&sort=${sort}&order=${order}&per_page=6`, {headers:{'Accept':'application/vnd.github+json'}});
+          const r = await fetchRetry(`${GH}/search/repositories?q=${encodeURIComponent(q)}&sort=${sort}&order=${order}&per_page=6`, {headers:{'Accept':'application/vnd.github+json'}});
           const d = await r.json();
           return (d.items||[]).map(x=>({name:x.full_name,desc:x.description,stars:x.stargazers_count,url:x.html_url,lang:x.language,updated:x.updated_at}));
         }catch(e){ return []; }

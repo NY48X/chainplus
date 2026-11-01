@@ -79,7 +79,15 @@ function trend(arts){
   const tierKeys=Object.keys(tiers).sort(function(a,b){return Number(b)-Number(a);});
   let ordered=[];
   tierKeys.forEach(function(k){ordered=ordered.concat(seededShuffle(tiers[k]));});
-  const shuffled=ordered;
+  // Dedupe: skip bigrams whose component words already appear as standalone topics
+  const seenWords=new Set(shuffled.filter(function(e){return !e[0].includes(' ');}).map(function(e){return e[0];}));
+  const deduped=shuffled.filter(function(e){
+    if(!e[0].includes(' '))return true;
+    const parts=e[0].split(' ');
+    // Keep bigram only if at least one part isn't already a standalone topic
+    return parts.some(function(p){return !seenWords.has(p);});
+  });
+  const shuffled=deduped;
   return shuffled.slice(0,10).map(function(e){
     const word=e[0];
     const isBigram=word.includes(' ');
@@ -94,7 +102,7 @@ function isDisposable(domain){
   for(let i=1;i<parts.length;i++){if(DISPOSABLE.has(parts.slice(i).join('.')))return true;}
   return false;
 }
-function clamp(v,lo,hi,d){v=parseInt(v);if(isNaN(v))v=d;return Math.max(lo,Math.min(hi,v));}
+function clamp(v,lo,hi,d){v=parseInt(v,10);if(isNaN(v))v=d;return Math.max(lo,Math.min(hi,v));}
 async function hasMX(domain){
   try{
     const r=await fetch('https://cloudflare-dns.com/dns-query?name='+encodeURIComponent(domain)+'&type=MX',{headers:{'Accept':'application/dns-json'}});
@@ -172,6 +180,7 @@ async function handle(req){
               body:JSON.stringify({
                 from:'ChainPlus <welcome@chainplus.tech>',
                 reply_to:['support@chainplus.tech'],
+                headers:{'List-Unsubscribe':'<mailto:support@chainplus.tech?subject=unsubscribe>'},
                 to:[email],
                 subject:'Welcome to ChainPlus — we\'re glad you\'re here',
                 html:'<div style="font-family:Inter,system-ui,sans-serif;max-width:560px;margin:0 auto;padding:32px 24px;color:#1a1a1a"><h2 style="font-size:24px;margin:0 0 16px;color:#111">Welcome to ChainPlus</h2><p style="font-size:16px;line-height:1.6;margin:0 0 16px">Hey there 👋</p><p style="font-size:16px;line-height:1.6;margin:0 0 16px">Thank you for subscribing. It genuinely means a lot to us that you chose to follow along. We started ChainPlus because we believe crypto news should be clear, honest, and actually useful — not noise.</p><p style="font-size:16px;line-height:1.6;margin:0 0 16px">Here\'s what you can expect:</p><ul style="font-size:16px;line-height:1.6;margin:0 0 16px;padding-left:20px"><li>Top crypto headlines, curated daily</li><li>No clickbait, no spam — ever</li><li>One email, straight to the point</li></ul><p style="font-size:16px;line-height:1.6;margin:0 0 24px">If you ever have feedback, a question, or just want to say hi, reply to this email. We read every single one.</p><p style="font-size:16px;line-height:1.6;margin:0 0 8px">Grateful you\'re here,</p><p style="font-size:16px;line-height:1.6;margin:0;font-weight:600">The ChainPlus Team</p><hr style="border:none;border-top:1px solid #e5e5e5;margin:24px 0"><p style="font-size:12px;color:#888;margin:0">You\'re receiving this because you subscribed at chainplus.tech. No spam. To unsubscribe, reply with \"unsubscribe\" or email support@chainplus.tech.</p></div>',
@@ -203,7 +212,7 @@ async function handle(req){
       const a=await rss();return j({articles:a.slice(0,lim),totalCount:a.length});
     }
     if(p==='/api/fear-greed'||p==='/api/fear-greed/'){
-      try{const r=await fetch('https://api.alternative.me/fng/?limit=1');if(r.ok){const d=await r.json();const v=d&&d.data&&d.data[0];if(v)return j({value:parseInt(v.value),classification:v.value_classification,timestamp:v.timestamp});}}catch(e){}
+      try{const ctrl=new AbortController();const tid=setTimeout(function(){ctrl.abort();},5000);const r=await fetch('https://api.alternative.me/fng/?limit=1',{signal:ctrl.signal});clearTimeout(tid);if(r.ok){const d=await r.json();const v=d&&d.data&&d.data[0];if(v)return j({value:parseInt(v.value,10),classification:v.value_classification,timestamp:v.timestamp});}}catch(e){}
       return j({value:50,classification:'Neutral'});
     }
     if(p==='/api/search'||p==='/api/search/'){
