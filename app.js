@@ -623,7 +623,7 @@
       const order = 'desc';
       const results = await Promise.all(picked.map(async q=>{
         try{
-          const r = await fetchRetry(`${GH}/search/repositories?q=${encodeURIComponent(q)}&sort=${sort}&order=${order}&per_page=6`, {headers:{'Accept':'application/vnd.github+json'}});
+          const r = await fetchRetry(`${GH}/search/repositories?q=${q.split('+').map(function(p){return encodeURIComponent(p);}).join('+')}&sort=${sort}&order=${order}&per_page=6`, {headers:{'Accept':'application/vnd.github+json'}});
           const d = await r.json();
           return (d.items||[]).map(x=>({name:x.full_name,desc:x.description,stars:x.stargazers_count,url:x.html_url,lang:x.language,updated:x.updated_at}));
         }catch(e){ return []; }
@@ -762,28 +762,15 @@
   async function fetchSummary(a){
     const el = $('#aiText'); if(!el) return;
     const lang = (localStorage.getItem('cp-lang') || 'en');
-    let txt = '';
-    try{
-      const r = await fetchRetry(`${API}/api/summarize`, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({url: a.link, title: a.title})}, 2);
-      if(r.ok){
-        const d = await r.json();
-        txt = d.summary || d.text || d.result || '';
-      }
-    }catch(e){ /* fall through */ }
-    if(!txt){
-      const bs = buildSummary(a.description || a.title || '', a.title || '');
-      if(bs && bs.findings.length){
-        // Render as a single paragraph of up to 5 sentences
-        const para = bs.findings.slice(0,5).join(' ');
-        el.textContent = para;
-        if(lang !== 'en') await translateNode(el, lang);
-        return;
-      }
-      el.textContent = 'Summary unavailable. Read the original article for full details.';
+    const bs = buildSummary(a.description || a.title || '', a.title || '');
+    if(bs && bs.findings.length){
+      // Render as a single paragraph of up to 5 sentences
+      const para = bs.findings.slice(0,5).join(' ');
+      el.textContent = para;
+      if(lang !== 'en') await translateNode(el, lang);
       return;
     }
-    el.textContent = txt;
-    if(lang !== 'en') await translateNode(el, lang);
+    el.textContent = 'Summary unavailable. Read the original article for full details.';
   }
   function closeModal(){
     const m = $('#modal'); if(m){ m.classList.remove('open'); m.setAttribute('aria-hidden','true'); }
