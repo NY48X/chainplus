@@ -80,15 +80,14 @@ function trend(arts){
   let ordered=[];
   tierKeys.forEach(function(k){ordered=ordered.concat(seededShuffle(tiers[k]));});
   // Dedupe: skip bigrams whose component words already appear as standalone topics
-  const seenWords=new Set(shuffled.filter(function(e){return !e[0].includes(' ');}).map(function(e){return e[0];}));
-  const deduped=shuffled.filter(function(e){
+  const seenWords=new Set(ordered.filter(function(e){return !e[0].includes(' ');}).map(function(e){return e[0];}));
+  const deduped=ordered.filter(function(e){
     if(!e[0].includes(' '))return true;
     const parts=e[0].split(' ');
     // Keep bigram only if at least one part isn't already a standalone topic
     return parts.some(function(p){return !seenWords.has(p);});
   });
-  const shuffled=deduped;
-  return shuffled.slice(0,10).map(function(e){
+  return deduped.slice(0,10).map(function(e){
     const word=e[0];
     const isBigram=word.includes(' ');
     const topic=isBigram?word.split(' ').map(function(w){return w.charAt(0).toUpperCase()+w.slice(1);}).join(' '):word.charAt(0).toUpperCase()+word.slice(1);
