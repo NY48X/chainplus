@@ -539,11 +539,21 @@
     try{
       const ids = window.CP_DATA.coins.map(c=>c.id).join(',');
       const r = await fetchRetry(`${CG}/coins/markets?vs_currency=usd&ids=${ids}&order=market_cap_desc&sparkline=true&price_change_percentage=24h`);
+      if(!r.ok){
+        console.warn('CoinGecko returned', r.status);
+        // Try to use cached market data if available
+        try{
+          const cached = localStorage.getItem('cp-markets-cache');
+          if(cached){ state.markets = JSON.parse(cached); renderMarketStrip(); return; }
+        }catch(e){}
+        return;
+      }
       const data = await r.json();
       const map = {};
       (Array.isArray(data)?data:[]).forEach(d=>{ map[d.id] = d; });
       state.markets = map;
       renderMarketStrip();
+      try{ localStorage.setItem('cp-markets-cache', JSON.stringify(map)); }catch(e){}
     }catch(e){ console.error(e); toast('Markets unavailable'); }
   }
   function renderMarketStrip(){
@@ -614,13 +624,23 @@
       const sort = sorts[Math.floor(Math.random()*sorts.length)];
       // Always desc (most popular/recent/most-forked first is more useful)
       const order = 'desc';
-      const results = await Promise.all(picked.map(async q=>{
+      // Throttle: fetch sequentially with small delay to avoid GitHub rate limits (10 req/min unauthenticated)
+      const results = [];
+      for(const q of picked){
         try{
           const r = await fetchRetry(`${GH}/search/repositories?q=${q.split('+').map(function(p){return encodeURIComponent(p);}).join('+')}&sort=${sort}&order=${order}&per_page=8`, {headers:{'Accept':'application/vnd.github+json'}});
+          if(!r.ok){
+            // Rate limited or error — skip this query, don't crash
+            console.warn('GitHub search returned', r.status, 'for', q);
+            results.push([]);
+            continue;
+          }
           const d = await r.json();
-          return (d.items||[]).map(x=>({name:x.full_name,desc:x.description,stars:x.stargazers_count,url:x.html_url,lang:x.language,updated:x.updated_at}));
-        }catch(e){ return []; }
-      }));
+          results.push((d.items||[]).map(x=>({name:x.full_name,desc:x.description,stars:x.stargazers_count,url:x.html_url,lang:x.language,updated:x.updated_at})));
+        }catch(e){ results.push([]); }
+        // Small delay between requests to stay under rate limit
+        await new Promise(function(res){ setTimeout(res, 300); });
+      }
       // Deduplicate by name against existing repos
       const seen = new Set(state.oss.map(r=>r.name));
       let newItems = [];
