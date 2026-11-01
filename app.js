@@ -619,7 +619,8 @@
       const shuffled = queries.slice().sort(()=>Math.random()-0.5);
       const picked = shuffled.slice(0,3);
       const sort = sorts[Math.floor(Math.random()*sorts.length)];
-      const order = Math.random()>0.5?'desc':'asc';
+      // Always desc for stars (least popular first is useless); random for others
+      const order = (sort === 'stars') ? 'desc' : (Math.random()>0.5?'desc':'asc');
       const results = await Promise.all(picked.map(async q=>{
         try{
           const r = await fetchRetry(`${GH}/search/repositories?q=${q}&sort=${sort}&order=${order}&per_page=6`, {headers:{'Accept':'application/vnd.github+json'}});
@@ -636,7 +637,10 @@
       // Shuffle for variety
       items = items.sort(()=>Math.random()-0.5).slice(0,12);
       state.oss = items;
-      try{ sessionStorage.setItem(cacheKey, JSON.stringify({ts:Date.now(),items:items})); }catch(e){}
+      // Only cache non-empty results to avoid caching failures
+      if(items.length > 0){
+        try{ sessionStorage.setItem(cacheKey, JSON.stringify({ts:Date.now(),items:items})); }catch(e){}
+      }
       renderOSS();
     }catch(e){ console.error(e); const el=$('#ossGrid'); if(el) el.innerHTML='<div class="empty" style="grid-column:1/-1">Open-source data unavailable right now.</div>'; }
   }

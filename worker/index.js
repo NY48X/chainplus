@@ -42,17 +42,23 @@ function trend(arts){
     });
   });
   // Sentiment keywords
-  const bullWords=['surge','rally','gain','rise','soar','jump','bull','up','high','record','growth','profit','win','success','recover','rebound'];
-  const bearWords=['crash','drop','fall','decline','loss','bear','down','low','hack','scam','fraud','ban','sue','lawsuit','fear','panic','collapse','plunge','tank'];
+  const bullWords=['surge','rally','gain','rise','soar','jump','bull','up','high','record','growth','profit','win','success','recover','rebound','surges','surged','rising','gains','soars','soared','jumps','jumped','wins','winning','recovery','rebounding'];
+  const bearWords=['crash','drop','fall','decline','loss','bear','down','low','hack','scam','fraud','ban','sue','lawsuit','fear','panic','collapse','plunge','tank','crashes','crashed','dropping','dropped','falls','falling','declines','declined','losses','bears','banning','banned','sues','sued','fears','panics','collapses','collapsed','plunges','plunged','tanks','tanked','hacks','hacked','scams'];
   function sentimentFor(word){
     const wl=word.toLowerCase();
     const tokens=wl.split(/[^a-z]+/).filter(Boolean);
+    // Check exact token match first, then stem-based regex for inflected forms
     if(bullWords.some(function(b){return tokens.indexOf(b)>=0;}))return'bullish';
     if(bearWords.some(function(b){return tokens.indexOf(b)>=0;}))return'bearish';
+    // Stem fallback: check if any token starts with a sentiment stem
+    const bullStems=['surge','rally','gain','rise','soar','jump','bull','high','record','growth','profit','win','success','recover','rebound'];
+    const bearStems=['crash','drop','fall','decline','loss','bear','hack','scam','fraud','ban','sue','fear','panic','collapse','plunge','tank'];
+    if(tokens.some(function(t){return bullStems.some(function(s){return t.startsWith(s);});}))return'bullish';
+    if(tokens.some(function(t){return bearStems.some(function(s){return t.startsWith(s);});}))return'bearish';
     return'neutral';
   }
   // Time-based seed for rotation
-  const seed=new Date().getDate()+new Date().getMonth()*31;
+  const seed=new Date().getDate()+new Date().getMonth()*31+new Date().getFullYear()*365;
   function seededShuffle(arr){
     let s=seed;
     const out=arr.slice();
@@ -69,7 +75,7 @@ function trend(arts){
   // Shuffle within equal-count tiers for variety while preserving frequency ranking
   const tiers={};
   sorted.forEach(function(e){const k=Math.round(e[1]);if(!tiers[k])tiers[k]=[];tiers[k].push(e);});
-  const tierKeys=Object.keys(tiers).sort(function(a,b){return b-a;});
+  const tierKeys=Object.keys(tiers).sort(function(a,b){return Number(b)-Number(a);});
   let ordered=[];
   tierKeys.forEach(function(k){ordered=ordered.concat(seededShuffle(tiers[k]));});
   const shuffled=ordered;
@@ -205,7 +211,7 @@ async function handle(req){
       if(!q)return j({articles:[],totalCount:0});
       const a=await rss();
       const f=a.filter(function(x){return (x.title||'').toLowerCase().includes(q)||(x.description||'').toLowerCase().includes(q);}).slice(0,lim);
-      return j({articles:f,totalCount:f.length});
+      return j({articles:f,totalCount:f.length},200,false,60);
     }
     return j({error:'not found'},404);
   }catch(e){return j({error:e.message||'internal error'},500);}
