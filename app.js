@@ -586,16 +586,44 @@
   /* ---------- open source ---------- */
   async function loadOSS(){
     try{
-      const cacheKey = 'cp-oss-v2';
-      const cached = sessionStorage.getItem(cacheKey);
-      let items;
-      if(cached){ items = JSON.parse(cached); }
-      else {
-        const r = await fetchRetry(`${GH}/search/repositories?q=topic:blockchain+stars:>500&sort=stars&order=desc&per_page=9`, {headers:{'Accept':'application/vnd.github+json'}});
-        const d = await r.json();
-        items = (d.items||[]).map(x=>({name:x.full_name,desc:x.description,stars:x.stargazers_count,url:x.html_url,lang:x.language,updated:x.updated_at}));
-        try{ sessionStorage.setItem(cacheKey, JSON.stringify(items)); }catch(e){}
-      }
+      // Diverse GitHub search queries — rotated for freshness
+      const queries = [
+        'topic:blockchain+stars:>200',
+        'topic:defi+stars:>100',
+        'topic:solana+stars:>50',
+        'topic:ethereum+stars:>300',
+        'topic:web3+stars:>150',
+        'topic:crypto+stars:>500',
+        'topic:smart-contracts+stars:>100',
+        'topic:nft+stars:>50',
+        'topic:dao+stars:>50',
+        'topic:zero-knowledge+stars:>30',
+        'language:rust+topic:blockchain+stars:>50',
+        'language:go+topic:blockchain+stars:>50',
+        'language:python+topic:crypto+stars:>100',
+        'language:typescript+topic:web3+stars:>100'
+      ];
+      const sorts = ['stars','updated','forks'];
+      // Pick 3 random queries + 1 random sort for variety each load
+      const shuffled = queries.slice().sort(()=>Math.random()-0.5);
+      const picked = shuffled.slice(0,3);
+      const sort = sorts[Math.floor(Math.random()*sorts.length)];
+      const order = Math.random()>0.5?'desc':'desc';
+      const results = await Promise.all(picked.map(async q=>{
+        try{
+          const r = await fetchRetry(`${GH}/search/repositories?q=${q}&sort=${sort}&order=${order}&per_page=6`, {headers:{'Accept':'application/vnd.github+json'}});
+          const d = await r.json();
+          return (d.items||[]).map(x=>({name:x.full_name,desc:x.description,stars:x.stargazers_count,url:x.html_url,lang:x.language,updated:x.updated_at}));
+        }catch(e){ return []; }
+      }));
+      // Deduplicate by name
+      const seen = new Set();
+      let items = [];
+      results.flat().forEach(x=>{
+        if(!seen.has(x.name)){ seen.add(x.name); items.push(x); }
+      });
+      // Shuffle for variety
+      items = items.sort(()=>Math.random()-0.5).slice(0,12);
       state.oss = items;
       renderOSS();
     }catch(e){ console.error(e); const el=$('#ossGrid'); if(el) el.innerHTML='<div class="empty" style="grid-column:1/-1">Open-source data unavailable right now.</div>'; }

@@ -1,7 +1,7 @@
 const F=['https://cointelegraph.com/rss','https://www.coindesk.com/arc/outboundfeeds/rss/','https://decrypt.co/feed','https://bitcoinmagazine.com/feed'];
 const CORS={'Access-Control-Allow-Origin':'*','Access-Control-Allow-Methods':'GET, POST, OPTIONS','Access-Control-Allow-Headers':'Content-Type','Content-Type':'application/json'};
 function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function j(d,s,noCache){s=s||200;return new Response(JSON.stringify(d),{status:s,headers:{...CORS,'Cache-Control':noCache?'no-store':'public, max-age=300'}});}
+function j(d,s,noCache,cacheSec){s=s||200;const cc=noCache?'no-store':'public, max-age='+(cacheSec||300);return new Response(JSON.stringify(d),{status:s,headers:{...CORS,'Cache-Control':cc}});}
 function cat(title,desc){const t=((title||'')+' '+(desc||'')).toLowerCase();if(/bitcoin|btc/.test(t))return'bitcoin';if(/ethereum|eth\b|ether/.test(t))return'ethereum';if(/solana|sol\b/.test(t))return'solana';if(/defi|dex|yield|liquidity|amm|staking/.test(t))return'defi';if(/nft|tokeniz/.test(t))return'nft';if(/regulat|sec|cftc|law|legal|court|sue|ban|policy/.test(t))return'regulation';if(/market|price|surge|rally|crash|etf|stock|trade/.test(t))return'markets';return'general';}
 function tag(xml,t){const m=xml.match(new RegExp('<'+t+'[^>]*>([\\s\\S]*?)</'+t+'>','i'));return m?m[1].replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g,'$1').trim():'';}
 async function rss(){
@@ -23,10 +23,58 @@ async function rss(){
   return o;
 }
 function trend(arts){
-  const st=new Set(['the','a','an','and','or','but','in','on','at','to','for','of','with','by','is','are','was','were','this','that','these','those','from','into','has','have']);
+  const st=new Set(['the','a','an','here','rules','gmail','search','says','said','new','just','now','how','why','what','when','where','who','and','or','but','in','on','at','to','for','of','with','by','is','are','was','were','this','that','these','those','from','into','has','have','says','said','new','says','just','now','how','why','what','when','where','who','will','can','may','could','should','would','been','being','more','most','also','than','then','its','it','he','she','they','we','you','our','their','your','my','his','her','not','no','do','does','did','done','get','gets','got','make','makes','made','take','takes','took','come','comes','came','go','goes','went','see','sees','saw','know','knows','knew','think','thinks','thought','look','looks','looked','want','wants','wanted','give','gives','gave','use','uses','used','find','finds','found','tell','tells','told','ask','asks','asked','work','works','worked','seem','seems','seemed','feel','feels','felt','try','tries','tried','leave','leaves','left','call','calls','called','keep','keeps','kept','let','lets','begin','begins','began','show','shows','showed','hear','hears','heard','play','plays','played','run','runs','ran','move','moves','moved','like','likes','liked','live','lives','lived','believe','believes','believed','hold','holds','held','bring','brings','brought','happen','happens','happened','write','writes','wrote','provide','provides','provided','sit','sits','sat','stand','stands','stood','lose','loses','lost','pay','pays','paid','meet','meets','met','include','includes','included','continue','continues','continued','set','sets','learn','learns','learned','change','changes','changed','lead','leads','led','understand','understands','understood','watch','watches','watched','follow','follows','followed','stop','stops','stopped','create','creates','created','speak','speaks','spoke','read','reads','read','allow','allows','allowed','add','adds','added','spend','spends','spent','grow','grows','grew','open','opens','opened','walk','walks','walked','offer','offers','offered','remember','remembers','remembered','love','loves','loved','consider','considers','considered','appear','appears','appeared','buy','buys','bought','wait','waits','waited','serve','serves','served','die','dies','died','send','sends','sent','expect','expects','expected','build','builds','built','stay','stays','stayed','fall','falls','fell','cut','cuts','cut','reach','reaches','reached','kill','kills','killed','remain','remains','remained']);
   const c={};
-  arts.forEach(function(a){(a.title||'').toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).forEach(function(w){if(w.length<4||st.has(w))return;c[w]=(c[w]||0)+1;});});
-  return Object.entries(c).sort(function(a,b){return b[1]-a[1];}).slice(0,10).map(function(e){return{topic:e[0].charAt(0).toUpperCase()+e[0].slice(1),count:e[1],sentiment:'neutral',recentHeadlines:arts.filter(function(a){return (a.title||'').toLowerCase().includes(e[0]);}).slice(0,2).map(function(a){return a.title;})};});
+  // Extract single words
+  arts.forEach(function(a){
+    const words=(a.title||'').toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/);
+    words.forEach(function(w,i){
+      if(w.length<4||st.has(w))return;
+      c[w]=(c[w]||0)+1;
+      // Also extract bigrams for richer topics
+      if(i>0){
+        const prev=words[i-1];
+        if(prev.length>=4&&!st.has(prev)){
+          const bg=prev+' '+w;
+          c[bg]=(c[bg]||0)+0.5;
+        }
+      }
+    });
+  });
+  // Sentiment keywords
+  const bullWords=['surge','rally','gain','rise','soar','jump','bull','up','high','record','growth','profit','win','success','recover','rebound'];
+  const bearWords=['crash','drop','fall','decline','loss','bear','down','low','hack','scam','fraud','ban','sue','lawsuit','fear','panic','collapse','plunge','tank'];
+  function sentimentFor(word){
+    const wl=word.toLowerCase();
+    if(bullWords.some(function(b){return wl.includes(b);}))return'bullish';
+    if(bearWords.some(function(b){return wl.includes(b);}))return'bearish';
+    return'neutral';
+  }
+  // Time-based seed for rotation
+  const seed=new Date().getHours()+new Date().getDate()*24;
+  function seededShuffle(arr){
+    let s=seed;
+    const out=arr.slice();
+    for(let i=out.length-1;i>0;i--){
+      s=(s*9301+49297)%233280;
+      const j=Math.floor((s/233280)*(i+1));
+      const t=out[i];out[i]=out[j];out[j]=t;
+    }
+    return out;
+  }
+  const entries=Object.entries(c).filter(function(e){const isBg=e[0].includes(' ');return isBg?e[1]>=0.5:e[1]>=2;});
+  // Sort by count desc, then shuffle within tiers for variety
+  const sorted=entries.sort(function(a,b){
+    if(Math.abs(b[1]-a[1])>0.5)return b[1]-a[1];
+    return 0;
+  });
+  const shuffled=seededShuffle(sorted);
+  return shuffled.slice(0,10).map(function(e){
+    const word=e[0];
+    const isBigram=word.includes(' ');
+    const topic=isBigram?word.split(' ').map(function(w){return w.charAt(0).toUpperCase()+w.slice(1);}).join(' '):word.charAt(0).toUpperCase()+word.slice(1);
+    return{topic:topic,count:Math.round(e[1]),sentiment:sentimentFor(word),recentHeadlines:arts.filter(function(a){return (a.title||'').toLowerCase().includes(word.split(' ')[0]);}).slice(0,2).map(function(a){return a.title;})};
+  });
 }
 const DISPOSABLE=new Set(['mailinator.com','guerrillamail.com','tempmail.com','throwaway.email','fakeinbox.com','trashmail.com','yopmail.com','sharklasers.com','guerrillamailblock.com','grr.la','dispostable.com','mailnesia.com','maildrop.cc','discard.email','temp-mail.org','getnada.com','mohmal.com','burpcollaborator.net','10minutemail.com','minutemail.com']);
 function isDisposable(domain){
@@ -131,10 +179,10 @@ async function handle(req){
       let a=await rss();
       if(cat&&cat!=='all'){const q=cat.toLowerCase();a=a.filter(function(x){return (x.category||'').toLowerCase()===q;});}
       const s=(pg-1)*lim;const pgd=a.slice(s,s+lim);
-      return j({articles:pgd,totalCount:a.length,page:pg,limit:lim,hasMore:s+lim<a.length,_source:'rss'});
+      return j({articles:pgd,totalCount:a.length,page:pg,limit:lim,hasMore:s+lim<a.length,_source:'rss'},200,false,60);
     }
     if(p==='/api/trending'||p==='/api/trending/'){
-      const a=await rss();const t=trend(a);return j({trending:t});
+      const a=await rss();const t=trend(a);return j({trending:t},200,false,60);
     }
     if(p==='/api/categories'||p==='/api/categories/'||p==='/api/news/categories'||p==='/api/news/categories/'){
       return j({categories:['all','bitcoin','ethereum','defi','solana','nft','regulation','markets']});
