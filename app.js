@@ -275,7 +275,7 @@
       }
       state.totalCount = data.totalCount || data.total || state.articles.length;
       state.hasMore = state.articles.length < (state.totalCount || Infinity) && arts.length > 0;
-      if(usedFallback) toast('Primary API unavailable — showing backup RSS feeds');
+
       renderStories();
       renderCompact();
       if(state.articles.length && (reset || opts.updateHero)) renderHero();
@@ -893,6 +893,14 @@
       if(heroSec) heroSec.style.display = 'none';
       if(railEl) railEl.style.display = 'none';
       if(chipsBar) chipsBar.style.display = 'none';
+      // Hide compact/latest-in-brief section too
+      const compactSec = document.querySelector('.compact-list');
+      if(compactSec){ const sec = compactSec.closest('section'); if(sec) sec.style.display = 'none'; }
+    }
+    if(page === 'breaking' || page === 'topic'){
+      if(marketsSec) marketsSec.style.display = 'none';
+      if(ossSec) ossSec.style.display = 'none';
+      if(railEl) railEl.style.display = 'none';
     }
     if(page === 'breaking' || page === 'topic'){
       if(marketsSec) marketsSec.style.display = 'none';
