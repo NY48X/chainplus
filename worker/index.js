@@ -1,7 +1,7 @@
 const F=['https://cointelegraph.com/rss','https://www.coindesk.com/arc/outboundfeeds/rss/','https://decrypt.co/feed','https://bitcoinmagazine.com/feed'];
 const CORS={'Access-Control-Allow-Origin':'*','Access-Control-Allow-Methods':'GET, POST, OPTIONS','Access-Control-Allow-Headers':'Content-Type','Content-Type':'application/json'};
 function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function j(d,s){s=s||200;return new Response(JSON.stringify(d),{status:s,headers:{...CORS,'Cache-Control':'public, max-age=300'}});}
+function j(d,s,noCache){s=s||200;return new Response(JSON.stringify(d),{status:s,headers:{...CORS,'Cache-Control':noCache?'no-store':'public, max-age=300'}});}
 function cat(title,desc){const t=((title||'')+' '+(desc||'')).toLowerCase();if(/bitcoin|btc/.test(t))return'bitcoin';if(/ethereum|eth\b|ether/.test(t))return'ethereum';if(/solana|sol\b/.test(t))return'solana';if(/defi|dex|yield|liquidity|amm|staking/.test(t))return'defi';if(/nft|tokeniz/.test(t))return'nft';if(/regulat|sec|cftc|law|legal|court|sue|ban|policy/.test(t))return'regulation';if(/market|price|surge|rally|crash|etf|stock|trade/.test(t))return'markets';return'general';}
 function tag(xml,t){const m=xml.match(new RegExp('<'+t+'[^>]*>([\\s\\S]*?)</'+t+'>','i'));return m?m[1].replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g,'$1').trim():'';}
 async function rss(){
@@ -58,21 +58,21 @@ async function rateLimit(key,max,windowSec){
   return true;
 }
 async function handle(req){
+  try{
   const u=new URL(req.url);const p=u.pathname;
   if(req.method==='OPTIONS')return new Response(null,{status:204,headers:CORS});
-  try{
     if(p==='/api/contact' && req.method==='POST'){
       try{
         const ip=req.headers.get('CF-Connecting-IP')||'unknown';
-        if(!(await rateLimit('contact:'+ip,5,300)))return j({error:'too many requests, try again later'},429);
+        if(!(await rateLimit('contact:'+ip,5,300)))return j({error:'too many requests, try again later'},429,true);
         const body=await req.json();
         const name=(body.name||'').trim().slice(0,100);
         const email=(body.email||'').trim().toLowerCase().slice(0,254);
         const subject=(body.subject||'').trim().slice(0,200);
         const message=(body.message||'').trim().slice(0,5000);
-        if(!name||!email||!subject||!message)return j({error:'all fields required'},400);
-        if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return j({error:'invalid email'},400);
-        if(!RESEND_API_KEY)return j({error:'email service not configured'},503);
+        if(!name||!email||!subject||!message)return j({error:'all fields required'},400,true);
+        if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return j({error:'invalid email'},400,true);
+        if(!RESEND_API_KEY)return j({error:'email service not configured'},503,true);
         const res=await fetch('https://api.resend.com/emails',{
           method:'POST',
           headers:{'Authorization':'Bearer '+RESEND_API_KEY,'Content-Type':'application/json'},
@@ -85,24 +85,24 @@ async function handle(req){
             text:'From: '+name+' ('+email+')\nSubject: '+subject+'\n\n'+message
           })
         });
-        if(!res.ok)return j({error:'failed to send message'},502);
-        return j({ok:true,message:'message sent'});
-      }catch(e){return j({error:e.message||'contact failed'},500);}
+        if(!res.ok)return j({error:'failed to send message'},502,true);
+        return j({ok:true,message:'message sent'},200,true);
+      }catch(e){return j({error:e.message||'contact failed'},500,true);}
     }
     if(p==='/api/subscribe' && req.method==='POST'){
       try{
         const ip=req.headers.get('CF-Connecting-IP')||'unknown';
-        if(!(await rateLimit('subscribe:'+ip,10,300)))return j({error:'too many requests, try again later'},429);
+        if(!(await rateLimit('subscribe:'+ip,10,300)))return j({error:'too many requests, try again later'},429,true);
         const body=await req.json();
         const email=(body.email||'').trim().toLowerCase().slice(0,254);
-        if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return j({error:'invalid email format'},400);
+        if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return j({error:'invalid email format'},400,true);
         const domain=email.split('@')[1];
-        if(isDisposable(domain))return j({error:'disposable email not allowed'},400);
+        if(isDisposable(domain))return j({error:'disposable email not allowed'},400,true);
         const mx=await hasMX(domain);
-        if(!mx)return j({error:'email domain has no mail server'},400);
+        if(!mx)return j({error:'email domain has no mail server'},400,true);
         if(SUBSCRIBERS){
           const existing=await SUBSCRIBERS.get(email);
-          if(existing)return j({ok:true,message:'already subscribed'});
+          if(existing)return j({ok:true,message:'already subscribed'},200,true);
           await SUBSCRIBERS.put(email, JSON.stringify({email:email,subscribedAt:new Date().toISOString()}));
         }
         if(RESEND_API_KEY){
@@ -121,15 +121,15 @@ async function handle(req){
             });
           }catch(e){}
         }
-        return j({ok:true,message:'subscribed'});
-      }catch(e){return j({error:e.message||'subscribe failed'},500);}
+        return j({ok:true,message:'subscribed'},200,true);
+      }catch(e){return j({error:e.message||'subscribe failed'},500,true);}
     }
     if(p==='/api/news'||p==='/api/news/'){
       const lim=clamp(u.searchParams.get('limit'),1,100,20);
       const pg=clamp(u.searchParams.get('page'),1,1000,1);
       const cat=u.searchParams.get('category');
       let a=await rss();
-      if(cat&&cat!=='all'){const q=cat.toLowerCase();a=a.filter(function(x){return (x.category||'').toLowerCase()===q||(x.title||'').toLowerCase().includes(q);});}
+      if(cat&&cat!=='all'){const q=cat.toLowerCase();a=a.filter(function(x){return (x.category||'').toLowerCase()===q;});}
       const s=(pg-1)*lim;const pgd=a.slice(s,s+lim);
       return j({articles:pgd,totalCount:a.length,page:pg,limit:lim,hasMore:s+lim<a.length,_source:'rss'});
     }
@@ -148,8 +148,9 @@ async function handle(req){
       return j({value:50,classification:'Neutral'});
     }
     if(p==='/api/search'||p==='/api/search/'){
-      const q=(u.searchParams.get('q')||'').toLowerCase();
+      const q=(u.searchParams.get('q')||'').toLowerCase().trim();
       const lim=clamp(u.searchParams.get('limit'),1,50,20);
+      if(!q)return j({articles:[],totalCount:0});
       const a=await rss();
       const f=a.filter(function(x){return (x.title||'').toLowerCase().includes(q)||(x.description||'').toLowerCase().includes(q);}).slice(0,lim);
       return j({articles:f,totalCount:f.length});
