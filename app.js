@@ -634,8 +634,8 @@
       results.flat().forEach(x=>{
         if(!seen.has(x.name)){ seen.add(x.name); items.push(x); }
       });
-      // Shuffle for variety
-      items = items.sort(()=>Math.random()-0.5).slice(0,12);
+      // Sort by stars descending for a clean, meaningful order
+      items = items.sort((a,b)=>(b.stars||0)-(a.stars||0)).slice(0,12);
       state.oss = items;
       // Only cache non-empty results to avoid caching failures
       if(items.length > 0){
