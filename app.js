@@ -293,17 +293,17 @@
             renderStories();
             renderCompact();
             if(state.articles.length) renderHero();
-            toast('Showing cached headlines (offline)');
+
             return;
           }
         }
       } catch(err){}
       if(e && /429/.test(String(e.message))){
-        toast('Rate limited — showing cached results');
+
         if(state.search.trim()){
           const q = state.search.trim().toLowerCase();
           const filtered = state.articles.filter(a => (a.title||'').toLowerCase().includes(q) || (a.description||'').toLowerCase().includes(q) || (a.category||'').toLowerCase().includes(q));
-          if(filtered.length && filtered.length !== state.articles.length){ renderStoriesFiltered(filtered); toast(`Filtered ${filtered.length} cached headlines`); }
+          if(filtered.length && filtered.length !== state.articles.length){ renderStoriesFiltered(filtered); }
         }
       } else {
         toast('Failed to load news. Retrying…');
@@ -586,17 +586,6 @@
   /* ---------- open source ---------- */
   async function loadOSS(){
     try{
-      // Short TTL cache (5 min) to avoid GitHub rate limits (60 req/hr unauthenticated)
-      const cacheKey = 'cp-oss-v3';
-      const cached = sessionStorage.getItem(cacheKey);
-      if(cached){
-        try{
-          const c = JSON.parse(cached);
-          if(c.ts && Date.now()-c.ts < 300000 && c.items && c.items.length){
-            state.oss = c.items; renderOSS(); return;
-          }
-        }catch(e){}
-      }
       // Diverse GitHub search queries — rotated for freshness
       const queries = [
         'topic:blockchain+stars:>200',
@@ -637,10 +626,6 @@
       // Sort by stars descending for a clean, meaningful order
       items = items.sort((a,b)=>(b.stars||0)-(a.stars||0)).slice(0,12);
       state.oss = items;
-      // Only cache non-empty results to avoid caching failures
-      if(items.length > 0){
-        try{ sessionStorage.setItem(cacheKey, JSON.stringify({ts:Date.now(),items:items})); }catch(e){}
-      }
       renderOSS();
     }catch(e){ console.error(e); const el=$('#ossGrid'); if(el) el.innerHTML='<div class="empty" style="grid-column:1/-1">Open-source data unavailable right now.</div>'; }
   }
@@ -869,6 +854,27 @@
     const page = (document.body && document.body.dataset && document.body.dataset.page) || 'news';
     const marketsSec = document.getElementById('markets');
     const ossSec = document.getElementById('open-source');
+    // The main stories section (headlines grid + sidebar)
+    const storiesGrid = document.getElementById('storiesGrid');
+    const storiesSec = storiesGrid ? storiesGrid.closest('section') : null;
+    // Hero section
+    const heroSec = document.querySelector('section.hero');
+    // Sidebar rail (FG + trending widgets)
+    const railEl = document.querySelector('aside.rail');
+    // Chips bar
+    const chipsBar = document.getElementById('categoryChips');
+    // Hide sections not relevant to this page
+    if(page === 'markets' || page === 'opensource' || page === 'trending'){
+      if(storiesSec) storiesSec.style.display = 'none';
+      if(heroSec) heroSec.style.display = 'none';
+      if(railEl) railEl.style.display = 'none';
+      if(chipsBar) chipsBar.style.display = 'none';
+    }
+    if(page === 'breaking' || page === 'topic'){
+      if(marketsSec) marketsSec.style.display = 'none';
+      if(ossSec) ossSec.style.display = 'none';
+      if(railEl) railEl.style.display = 'none';
+    }
     if(page === 'markets'){
       if(marketsSec && marketsSec.parentNode){ marketsSec.parentNode.insertBefore(marketsSec, marketsSec.parentNode.firstChild); }
       if(ossSec) ossSec.style.display = 'none';
@@ -895,8 +901,23 @@
     }
   }
   async function init(){
+    const page = (document.body && document.body.dataset && document.body.dataset.page) || 'news';
     try { await loadCategories(); } catch(e){ console.error('categories error:', e); }
-    try { await Promise.all([fetchNews(true,{updateHero:true}), loadTrending(), loadFG(), loadMarkets(), loadOSS(), renderTicker()]); } catch(e){ console.error('init load error:', e); }
+    // Page-aware loading: only fetch data needed for this page
+    if(page === 'markets'){
+      try { await loadMarkets(); } catch(e){ console.error('init load error:', e); }
+    } else if(page === 'opensource'){
+      try { await loadOSS(); } catch(e){ console.error('init load error:', e); }
+    } else if(page === 'trending'){
+      try { await loadTrending(); } catch(e){ console.error('init load error:', e); }
+    } else if(page === 'breaking'){
+      try { await Promise.all([fetchNews(true,{updateHero:true}), renderTicker()]); } catch(e){ console.error('init load error:', e); }
+    } else if(page === 'topic'){
+      try { await Promise.all([fetchNews(true,{updateHero:true}), loadTrending()]); } catch(e){ console.error('init load error:', e); }
+    } else {
+      // news/index: load everything
+      try { await Promise.all([fetchNews(true,{updateHero:true}), loadTrending(), loadFG(), loadMarkets(), loadOSS(), renderTicker()]); } catch(e){ console.error('init load error:', e); }
+    }
     revealIn();
     state.pollTimer = setInterval(livePoll, 45000);
     applyPageMode();
