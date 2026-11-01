@@ -9,3 +9,6 @@ id = "a0f61099b71d4437a576ab3a3389b31b"
 # Free tier: 100k requests/day
 # Deploy: npx wrangler deploy
 # Dev: npx wrangler dev
+# Worker format: service-worker (addEventListener). Compatible with both
+# raw API deploy and `npx wrangler deploy`. The handle() function also
+# accepts an optional env param for ES module compatibility.

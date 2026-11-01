@@ -123,7 +123,12 @@ async function rateLimit(key,max,windowSec){
   try{await SUBSCRIBERS.put(k,JSON.stringify(data),{expirationTtl:windowSec+60});}catch(e){}
   return true;
 }
-async function handle(req){
+async function handle(req, env){
+  // Support both service-worker (globals) and ES module (env param) formats
+  if(env){
+    if(env.SUBSCRIBERS) globalThis.SUBSCRIBERS = env.SUBSCRIBERS;
+    if(env.RESEND_API_KEY) globalThis.RESEND_API_KEY = env.RESEND_API_KEY;
+  }
   try{
   const u=new URL(req.url);const p=u.pathname;
   if(req.method==='OPTIONS')return new Response(null,{status:204,headers:CORS});

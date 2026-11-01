@@ -2,7 +2,7 @@
 // Run: node worker/test_trend.js
 
 const fs = require('fs');
-const code = fs.readFileSync('worker/index.js', 'utf8');
+const code = fs.readFileSync(require('path').join(__dirname, 'index.js'), 'utf8');
 
 // Extract trend function by eval (it's a global function in the worker)
 // We'll extract just the trend function and its dependencies
