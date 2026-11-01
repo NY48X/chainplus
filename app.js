@@ -619,8 +619,8 @@
       const shuffled = queries.slice().sort(()=>Math.random()-0.5);
       const picked = shuffled.slice(0,3);
       const sort = sorts[Math.floor(Math.random()*sorts.length)];
-      // Always desc for stars (least popular first is useless); random for others
-      const order = (sort === 'stars') ? 'desc' : (Math.random()>0.5?'desc':'asc');
+      // Always desc (most popular/recent/most-forked first is more useful)
+      const order = 'desc';
       const results = await Promise.all(picked.map(async q=>{
         try{
           const r = await fetchRetry(`${GH}/search/repositories?q=${q}&sort=${sort}&order=${order}&per_page=6`, {headers:{'Accept':'application/vnd.github+json'}});
