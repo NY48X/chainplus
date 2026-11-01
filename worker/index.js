@@ -44,27 +44,27 @@ async function hasMX(domain){
     return Array.isArray(d.Answer)&&d.Answer.length>0;
   }catch(e){return true;}
 }
-async function rateLimit(env,key,max,windowSec){
-  if(!env||!env.SUBSCRIBERS)return true;
+async function rateLimit(key,max,windowSec){
+  if(!SUBSCRIBERS)return true;
   const k='rl:'+key;
-  const raw=await env.SUBSCRIBERS.get(k);
+  const raw=await SUBSCRIBERS.get(k);
   const now=Date.now();
   let data;
   try{data=raw?JSON.parse(raw):null;}catch(e){data=null;}
   if(!data||now>data.reset){data={count:0,reset:now+windowSec*1000};}
   if(data.count>=max)return false;
   data.count++;
-  try{await env.SUBSCRIBERS.put(k,JSON.stringify(data),{expirationTtl:windowSec+60});}catch(e){}
+  try{await SUBSCRIBERS.put(k,JSON.stringify(data),{expirationTtl:windowSec+60});}catch(e){}
   return true;
 }
-async function handle(req, env){
+async function handle(req){
   const u=new URL(req.url);const p=u.pathname;
   if(req.method==='OPTIONS')return new Response(null,{status:204,headers:CORS});
   try{
     if(p==='/api/contact' && req.method==='POST'){
       try{
         const ip=req.headers.get('CF-Connecting-IP')||'unknown';
-        if(!(await rateLimit(env,'contact:'+ip,5,300)))return j({error:'too many requests, try again later'},429);
+        if(!(await rateLimit('contact:'+ip,5,300)))return j({error:'too many requests, try again later'},429);
         const body=await req.json();
         const name=(body.name||'').trim().slice(0,100);
         const email=(body.email||'').trim().toLowerCase().slice(0,254);
@@ -72,10 +72,10 @@ async function handle(req, env){
         const message=(body.message||'').trim().slice(0,5000);
         if(!name||!email||!subject||!message)return j({error:'all fields required'},400);
         if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return j({error:'invalid email'},400);
-        if(!env || !env.RESEND_API_KEY)return j({error:'email service not configured'},503);
+        if(!RESEND_API_KEY)return j({error:'email service not configured'},503);
         const res=await fetch('https://api.resend.com/emails',{
           method:'POST',
-          headers:{'Authorization':'Bearer '+env.RESEND_API_KEY,'Content-Type':'application/json'},
+          headers:{'Authorization':'Bearer '+RESEND_API_KEY,'Content-Type':'application/json'},
           body:JSON.stringify({
             from:'ChainPlus Contact <welcome@chainplus.tech>',
             to:['support@chainplus.tech'],
@@ -92,7 +92,7 @@ async function handle(req, env){
     if(p==='/api/subscribe' && req.method==='POST'){
       try{
         const ip=req.headers.get('CF-Connecting-IP')||'unknown';
-        if(!(await rateLimit(env,'subscribe:'+ip,10,300)))return j({error:'too many requests, try again later'},429);
+        if(!(await rateLimit('subscribe:'+ip,10,300)))return j({error:'too many requests, try again later'},429);
         const body=await req.json();
         const email=(body.email||'').trim().toLowerCase().slice(0,254);
         if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return j({error:'invalid email format'},400);
@@ -100,16 +100,16 @@ async function handle(req, env){
         if(isDisposable(domain))return j({error:'disposable email not allowed'},400);
         const mx=await hasMX(domain);
         if(!mx)return j({error:'email domain has no mail server'},400);
-        if(env && env.SUBSCRIBERS){
-          const existing=await env.SUBSCRIBERS.get(email);
+        if(SUBSCRIBERS){
+          const existing=await SUBSCRIBERS.get(email);
           if(existing)return j({ok:true,message:'already subscribed'});
-          await env.SUBSCRIBERS.put(email, JSON.stringify({email:email,subscribedAt:new Date().toISOString()}));
+          await SUBSCRIBERS.put(email, JSON.stringify({email:email,subscribedAt:new Date().toISOString()}));
         }
-        if(env && env.RESEND_API_KEY){
+        if(RESEND_API_KEY){
           try{
             await fetch('https://api.resend.com/emails',{
               method:'POST',
-              headers:{'Authorization':'Bearer '+env.RESEND_API_KEY,'Content-Type':'application/json'},
+              headers:{'Authorization':'Bearer '+RESEND_API_KEY,'Content-Type':'application/json'},
               body:JSON.stringify({
                 from:'ChainPlus <welcome@chainplus.tech>',
                 reply_to:['support@chainplus.tech'],
@@ -157,4 +157,4 @@ async function handle(req, env){
     return j({error:'not found'},404);
   }catch(e){return j({error:e.message||'internal error'},500);}
 }
-export default { async fetch(request, env) { return handle(request, env); } };
+addEventListener("fetch", event => { event.respondWith(handle(event.request)); });
