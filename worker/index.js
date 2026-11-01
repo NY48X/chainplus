@@ -8,7 +8,7 @@ async function rss(){
   const o=[],seen=new Set();
   await Promise.all(F.map(async function(u){
     try{
-      const r=await fetch(u,{headers:{'User-Agent':'ChainPlus/1.0'}});
+      const ctrl=new AbortController();const tid=setTimeout(function(){ctrl.abort();},8000);const r=await fetch(u,{headers:{'User-Agent':'ChainPlus/1.0'},signal:ctrl.signal});clearTimeout(tid);
       if(!r.ok)return;
       const x=await r.text();
       const items=x.match(/<item[\s\S]*?<\/item>/gi)||[];
@@ -51,8 +51,8 @@ function trend(arts){
     if(bullWords.some(function(b){return tokens.indexOf(b)>=0;}))return'bullish';
     if(bearWords.some(function(b){return tokens.indexOf(b)>=0;}))return'bearish';
     // Stem fallback: only match if token equals stem or stem + common suffix (s/ed/ing)
-    const bullStems=['surge','rally','gain','rise','soar','jump','bull','high','record','growth','profit','win','success','recover','rebound'];
-    const bearStems=['crash','drop','fall','decline','loss','bear','hack','scam','fraud','ban','sue','fear','panic','collapse','plunge','tank'];
+    const bullStems=['surge','rally','gain','rise','soar','jump','bull','high','record','growth','profit','win','success','recover','rebound','up'];
+    const bearStems=['crash','drop','fall','decline','loss','bear','hack','scam','fraud','ban','sue','fear','panic','collapse','plunge','tank','low','down'];
     const suffixes=['','s','ed','ing','er','ers','est'];
     if(tokens.some(function(t){return bullStems.some(function(st){return suffixes.some(function(suf){return t===st+suf;});});}))return'bullish';
     if(tokens.some(function(t){return bearStems.some(function(st){return suffixes.some(function(suf){return t===st+suf;});});}))return'bearish';
@@ -84,7 +84,7 @@ function trend(arts){
     const word=e[0];
     const isBigram=word.includes(' ');
     const topic=isBigram?word.split(' ').map(function(w){return w.charAt(0).toUpperCase()+w.slice(1);}).join(' '):word.charAt(0).toUpperCase()+word.slice(1);
-    return{topic:topic,count:Math.round(e[1]),sentiment:sentimentFor(word),recentHeadlines:arts.filter(function(a){return (a.title||'').toLowerCase().includes(word.split(' ')[0]);}).slice(0,2).map(function(a){return a.title;})};
+    return{topic:topic,count:Math.round(e[1]*10)/10,sentiment:sentimentFor(word),recentHeadlines:arts.filter(function(a){return (a.title||'').toLowerCase().includes(word.split(' ')[0]);}).slice(0,2).map(function(a){return a.title;})};
   });
 }
 const DISPOSABLE=new Set(['mailinator.com','guerrillamail.com','tempmail.com','throwaway.email','fakeinbox.com','trashmail.com','yopmail.com','sharklasers.com','guerrillamailblock.com','grr.la','dispostable.com','mailnesia.com','maildrop.cc','discard.email','temp-mail.org','getnada.com','mohmal.com','burpcollaborator.net','10minutemail.com','minutemail.com']);
