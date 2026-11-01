@@ -25,6 +25,7 @@
     fg: null,
     markets: null,
     oss: [],
+    ossUsedQueries: new Set(),
     loading: false,
     hasMore: true,
     searchDebounce: null,
@@ -584,7 +585,7 @@
   }
 
   /* ---------- open source ---------- */
-  async function loadOSS(){
+  async function loadOSS(append){
     try{
       // Diverse GitHub search queries — rotated for freshness
       const queries = [
@@ -604,30 +605,51 @@
         'language:typescript+topic:web3+stars:>100'
       ];
       const sorts = ['stars','updated','forks'];
-      // Pick 3 random queries + 1 random sort for variety each load
-      const shuffled = queries.slice().sort(()=>Math.random()-0.5);
-      const picked = shuffled.slice(0,3);
+      // Pick queries not yet used; fall back to all if exhausted
+      const unused = queries.filter(q => !state.ossUsedQueries.has(q));
+      const pool = unused.length ? unused : queries;
+      const shuffled = pool.slice().sort(()=>Math.random()-0.5);
+      const picked = shuffled.slice(0,4);
+      picked.forEach(q => state.ossUsedQueries.add(q));
       const sort = sorts[Math.floor(Math.random()*sorts.length)];
       // Always desc (most popular/recent/most-forked first is more useful)
       const order = 'desc';
       const results = await Promise.all(picked.map(async q=>{
         try{
-          const r = await fetchRetry(`${GH}/search/repositories?q=${q.split('+').map(function(p){return encodeURIComponent(p);}).join('+')}&sort=${sort}&order=${order}&per_page=6`, {headers:{'Accept':'application/vnd.github+json'}});
+          const r = await fetchRetry(`${GH}/search/repositories?q=${q.split('+').map(function(p){return encodeURIComponent(p);}).join('+')}&sort=${sort}&order=${order}&per_page=8`, {headers:{'Accept':'application/vnd.github+json'}});
           const d = await r.json();
           return (d.items||[]).map(x=>({name:x.full_name,desc:x.description,stars:x.stargazers_count,url:x.html_url,lang:x.language,updated:x.updated_at}));
         }catch(e){ return []; }
       }));
-      // Deduplicate by name
-      const seen = new Set();
-      let items = [];
+      // Deduplicate by name against existing repos
+      const seen = new Set(state.oss.map(r=>r.name));
+      let newItems = [];
       results.flat().forEach(x=>{
-        if(!seen.has(x.name)){ seen.add(x.name); items.push(x); }
+        if(!seen.has(x.name)){ seen.add(x.name); newItems.push(x); }
       });
-      // Sort by stars descending for a clean, meaningful order
-      items = items.sort((a,b)=>(b.stars||0)-(a.stars||0)).slice(0,12);
-      state.oss = items;
+      // Sort by stars descending
+      newItems = newItems.sort((a,b)=>(b.stars||0)-(a.stars||0));
+      if(append){
+        state.oss = state.oss.concat(newItems);
+      } else {
+        state.oss = newItems;
+        state.ossUsedQueries = new Set(picked);
+      }
       renderOSS();
-    }catch(e){ console.error(e); const el=$('#ossGrid'); if(el) el.innerHTML='<div class="empty" style="grid-column:1/-1">Open-source data unavailable right now.</div>'; }
+      // Show/hide load more button
+      const btn = $('#loadMoreOssBtn');
+      if(btn){
+        // Hide if all queries used and no new items
+        const allUsed = state.ossUsedQueries.size >= queries.length;
+        btn.style.display = (newItems.length > 0 || !allUsed) ? 'block' : 'none';
+      }
+    }catch(e){ console.error(e); const el=$('#ossGrid'); if(el && !state.oss.length) el.innerHTML='<div class="empty" style="grid-column:1/-1">Open-source data unavailable right now.</div>'; }
+  }
+  async function loadMoreOSS(){
+    const btn = $('#loadMoreOssBtn');
+    if(btn){ btn.disabled = true; btn.textContent = 'Loading…'; }
+    await loadOSS(true);
+    if(btn){ btn.disabled = false; btn.textContent = 'Load more repositories'; }
   }
   function renderOSS(){
     const el = $('#ossGrid'); if(!el) return;
@@ -824,6 +846,8 @@
   /* ---------- load more ---------- */
   const lb = $('#loadMoreBtn');
   if(lb){ lb.addEventListener('click', ()=>{ state.page += 1; fetchNews(false); }); }
+  const lmob = $('#loadMoreOssBtn');
+  if(lmob){ lmob.addEventListener('click', ()=>{ loadMoreOSS(); }); }
 
   /* ---------- mobile menu + back to top ---------- */
   const mobileBtn = $('#mobileMenuBtn'); const mobileNav = $('#mobileNav');
