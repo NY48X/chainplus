@@ -230,4 +230,6 @@ async function handle(req, env){
     return j({error:'not found'},404);
   }catch(e){return j({error:e.message||'internal error'},500);}
 }
+// Service-worker format (Cloudflare API deployment)
+// handle() accepts optional env param for ES module compatibility (wrangler deploy)
 addEventListener("fetch", event => { event.respondWith(handle(event.request)); });
