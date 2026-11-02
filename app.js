@@ -41,7 +41,17 @@
   const $$ = (s, r=document) => [...r.querySelectorAll(s)];
 
   /* ---------- helpers ---------- */
-  function esc(s){ return (s||'').replace(/[&<>\"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c])); }
+  function esc(s){ return (s||'').replace(/[&<>\\"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\\"':'&quot;',"'":'&#39;'}[c])); }
+  function decodeEntities(s){
+    if(!s) return '';
+    // Decode numeric entities
+    s = s.replace(/&#(\d+);/g, (_,n) => { try { return String.fromCharCode(parseInt(n,10)); } catch(e){ return _; } });
+    s = s.replace(/&#x([0-9a-fA-F]+);/g, (_,n) => { try { return String.fromCharCode(parseInt(n,16)); } catch(e){ return _; } });
+    // Decode named entities
+    const e = {'amp':'&','lt':'<','gt':'>','quot':'"','apos':"'",'nbsp':' ','mdash':'—','ndash':'–','hellip':'…','rsquo':'’','lsquo':'‘','rdquo':'”','ldquo':'“'};
+    s = s.replace(/&([a-zA-Z]+);/g, (m,name) => e[name.toLowerCase()] !== undefined ? e[name.toLowerCase()] : m);
+    return s;
+  }
   function timeAgo(d){
     if(!d) return '';
     const t = new Date(d).getTime();
@@ -335,8 +345,8 @@ async function fetchRSSFallback(){
       const cred = a.credibility || (a.reputation? a.reputation/100 : 0.6);
       return `
         <article class="story reveal" data-idx="${i}">
-          <span class="story-cat">${esc(a.category||'general')}</span>
-          <h3 class="story-title">${esc(a.title)}</h3>
+          <span class="story-cat">${esc(decodeEntities(a.category||'general'))}</span>
+          <h3 class="story-title">${esc(decodeEntities(a.title))}</h3>
           ${a.description ? `<p class="story-dek">${esc(stripHtml(a.description))}</p>` : ''}
           <div class="story-meta">
             <span class="src">${esc(a.source||'Unknown')}</span>
@@ -362,7 +372,7 @@ async function fetchRSSFallback(){
     const cta = $('#heroCta');
     const rail = $('#heroRail');
     if(!a){ if(headline) headline.textContent = 'No headlines yet'; return; }
-    if(headline) headline.innerHTML = esc(a.title).replace(/(bitcoin|crypto|blockchain|ethereum|solana|defi|web3|nft)/gi, '<span class="accent">$1</span>');
+    if(headline) headline.innerHTML = esc(decodeEntities(a.title)).replace(/(bitcoin|crypto|blockchain|ethereum|solana|defi|web3|nft)/gi, '<span class="accent">$1</span>');
     if(dek) dek.textContent = stripHtml(a.description||'') || 'Aggregating real-time blockchain and cryptocurrency news from over 300 verified sources.';
     if(src) src.textContent = a.source || 'Unknown';
     if(time) time.textContent = a.timeAgo || timeAgo(a.pubDate);
@@ -371,8 +381,8 @@ async function fetchRSSFallback(){
     if(rail){
       rail.innerHTML = state.articles.slice(1,5).map(a=>`
         <article class="rail-card" data-url="${esc(a.link)}">
-          <div class="rc-cat">${esc(a.category||'general')}</div>
-          <h3 class="rc-title">${esc(a.title)}</h3>
+          <div class="rc-cat">${esc(decodeEntities(a.category||'general'))}</div>
+          <h3 class="rc-title">${esc(decodeEntities(a.title))}</h3>
           <div class="rc-meta">${esc(a.source||'')} · ${esc(a.timeAgo || timeAgo(a.pubDate))}</div>
         </article>`).join('');
       $$('#heroRail .rail-card').forEach((c,i)=>{ c.addEventListener('click', ()=> openArticle(state.articles[i+1])); });
@@ -390,8 +400,8 @@ async function fetchRSSFallback(){
       const saved = state.bookmarks.has(a.link) ? ' saved' : '';
       return `
         <article class="story${lead} reveal" data-idx="${i}">
-          <span class="story-cat">${esc(a.category||'general')}</span>
-          <h3 class="story-title">${esc(a.title)}</h3>
+          <span class="story-cat">${esc(decodeEntities(a.category||'general'))}</span>
+          <h3 class="story-title">${esc(decodeEntities(a.title))}</h3>
           ${a.description ? `<p class="story-dek">${esc(stripHtml(a.description))}</p>` : ''}
           <div class="story-meta">
             <span class="src">${esc(a.source||'Unknown')}</span>
@@ -417,8 +427,8 @@ async function fetchRSSFallback(){
       <div class="compact-item reveal" data-idx="${i}">
         <div class="compact-num">${String(i+1).padStart(2,'0')}</div>
         <div>
-          <p class="compact-title">${esc(a.title)}</p>
-          <div class="compact-meta">${esc(a.source||'')} · ${esc(a.timeAgo || timeAgo(a.pubDate))} · ${esc(a.category||'general')}</div>
+          <p class="compact-title">${esc(decodeEntities(a.title))}</p>
+          <div class="compact-meta">${esc(a.source||'')} · ${esc(a.timeAgo || timeAgo(a.pubDate))} · ${esc(decodeEntities(a.category||'general'))}</div>
         </div>
       </div>`).join('');
     $$('#compactList .compact-item').forEach((el,i)=>{ el.addEventListener('click', ()=> openArticle(state.articles[i])); });
@@ -430,7 +440,7 @@ async function fetchRSSFallback(){
     try{
       const data = await api('/api/breaking?limit=12');
       const arts = data.articles || [];
-      const html = arts.map(a=>`<a href="${esc(a.link)}" target="_blank" rel="noopener">${esc(a.title)}</a>`).join('  ·  ');
+      const html = arts.map(a=>`<a href="${esc(a.link)}" target="_blank" rel="noopener">${esc(decodeEntities(a.title))}</a>`).join('  ·  ');
       const track = $('#tickerTrack');
       if(track) track.innerHTML = `<span class="ticker-item">${html}  ·  ${html}</span>`;
     }catch(e){ /* keep placeholder */ }
@@ -490,11 +500,11 @@ async function fetchRSSFallback(){
       const sentCls = sent.includes('bull')?'sent-bullish':sent.includes('bear')?'sent-bearish':'sent-neutral';
       const color = sent.includes('bull')?'var(--accent)':sent.includes('bear')?'var(--danger)':'var(--muted-2)';
       const pct = Math.round(((t.count||0)/max)*100);
-      const heads = (t.recentHeadlines||[]).slice(0,2).map(h=>`<div class="small muted" style="margin-top:4px;line-height:1.3">• ${esc(h)}</div>`).join('');
-      return `<div class="trend-row" data-topic="${esc(t.topic)}">
+      const heads = (t.recentHeadlines||[]).slice(0,2).map(h=>`<div class="small muted" style="margin-top:4px;line-height:1.3">• ${esc(decodeEntities(h))}</div>`).join('');
+      return `<div class="trend-row" data-topic="${esc(decodeEntities(t.topic))}">
         <div>
           <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
-            <span class="trend-name">${esc(t.topic)}</span>
+            <span class="trend-name">${esc(decodeEntities(t.topic))}</span>
             <span class="trend-meta"><span class="trend-sent ${sentCls}">${esc(sent)}</span> ${t.count||''}</span>
           </div>
           <div class="trend-bar"><div class="trend-bar-fill" style="width:${pct}%;background:${color}"></div></div>
@@ -539,9 +549,9 @@ async function fetchRSSFallback(){
         const badge = (t.count||0) >= maxCount*0.7 ? 'hot' : (t.count||0) >= maxCount*0.4 ? 'rising' : 'stable';
         const badgeLabel = badge==='hot'?'🔥 Hot':badge==='rising'?'↑ Rising':'→ Stable';
         const pct = Math.round(((t.count||0)/maxCount)*100);
-        return `<div class="pulse-card ${sentCls}" data-topic="${esc(t.topic)}">
+        return `<div class="pulse-card ${sentCls}" data-topic="${esc(decodeEntities(t.topic))}">
           <div class="rank">${i+1}</div>
-          <div class="topic-name">${esc(t.topic)}</div>
+          <div class="topic-name">${esc(decodeEntities(t.topic))}</div>
           <div class="topic-meta">
             <span class="momentum-badge ${badge}">${badgeLabel}</span>
             <span>${t.count||0} mentions</span>
@@ -565,9 +575,9 @@ async function fetchRSSFallback(){
         const sent = (t.sentiment||'neutral').toLowerCase();
         const color = sent.includes('bull')?'#22c55e':sent.includes('bear')?'#ef4444':'#6b7280';
         const pct = Math.round(((t.count||0)/maxCount)*100);
-        return `<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);cursor:pointer" data-topic="${esc(t.topic)}">
+        return `<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);cursor:pointer" data-topic="${esc(decodeEntities(t.topic))}">
           <span style="font-size:12px;color:var(--text-2);width:24px;text-align:right">${i+1}</span>
-          <span style="flex:1;font-weight:500">${esc(t.topic)}</span>
+          <span style="flex:1;font-weight:500">${esc(decodeEntities(t.topic))}</span>
           <span style="font-size:12px;color:var(--text-2);text-transform:capitalize">${esc(sent)}</span>
           <div style="width:120px;height:6px;background:var(--border);border-radius:3px;overflow:hidden">
             <div style="width:${pct}%;height:100%;background:${color};border-radius:3px"></div>
@@ -588,7 +598,7 @@ async function fetchRSSFallback(){
     if(emergingList){
       const emerging = trending.slice(-4).reverse();
       emergingList.innerHTML = emerging.map(t => {
-        return `<span class="emerging-tag" data-topic="${esc(t.topic)}">${esc(t.topic)}<span class="new-badge">NEW</span></span>`;
+        return `<span class="emerging-tag" data-topic="${esc(decodeEntities(t.topic))}">${esc(decodeEntities(t.topic))}<span class="new-badge">NEW</span></span>`;
       }).join('');
       $$('#emergingList .emerging-tag').forEach(tag => {
         tag.addEventListener('click', () => {
@@ -1040,12 +1050,12 @@ async function fetchRSSFallback(){
     const saved = state.bookmarks.has(a.link);
     content.innerHTML = `
       <div class="modal-meta">
-        <span>${esc(a.category||'general')}</span><span>·</span>
+        <span>${esc(decodeEntities(a.category||'general'))}</span><span>·</span>
         <span>${esc(a.source||'Unknown')}</span><span>·</span>
         <span>${esc(a.timeAgo || timeAgo(a.pubDate))}</span>
         <span>·</span><span>${readTime(a.description)}</span>
       </div>
-      <h2>${esc(a.title)}</h2>
+      <h2>${esc(decodeEntities(a.title))}</h2>
       <div class="modal-body">
         <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
           <button class="chip" onclick="navigator.clipboard.writeText('${esc(a.link)}').then(()=>window.__toast('Link copied'))">Copy link</button>
@@ -1382,7 +1392,7 @@ async function fetchRSSFallback(){
           } catch(e){}
           if(heads.length){
             const grid = $('#storiesGrid');
-            if(grid) grid.innerHTML = heads.map(h=>`<article class=\"story\"><div class=\"story-body\"><h3 class=\"story-title\">${esc(h)}</h3><div class=\"story-meta\"><span class=\"muted small\">${esc(params.get('topic'))}</span></div></div></article>`).join('');
+            if(grid) grid.innerHTML = heads.map(h=>`<article class=\"story\"><div class=\"story-body\"><h3 class=\"story-title\">${esc(decodeEntities(h))}</h3><div class=\"story-meta\"><span class=\"muted small\">${esc(params.get('topic'))}</span></div></div></article>`).join('');
             showSearchBanner(`${heads.length} recent headlines for “${params.get('topic')}”`);
           } else if(state.articles.length){
             // Last resort: show all loaded articles
