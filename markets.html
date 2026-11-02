@@ -135,7 +135,14 @@
     <section class="section" id="markets">
       <div class="section-head">
         <h2>Live Prices</h2>
-        <p class="sub">Live prices via CoinGecko · click a coin to filter headlines</p>
+        <p class="sub">Live prices via CoinGecko · click a coin to view chart & filter headlines</p>
+      </div>
+      <div style="max-width:420px;margin:0 auto 16px">
+        <input id="marketSearch" type="search" placeholder="Search coins by name or symbol…" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);font-size:14px" />
+      </div>
+      <div id="marketChartWrap" style="max-width:800px;margin:0 auto 24px;padding:16px;border:1px solid var(--border);border-radius:12px;background:var(--surface);display:none">
+        <h3 id="marketChartTitle" style="margin:0 0 12px;font-size:16px;font-family:var(--font-display)">Price Chart</h3>
+        <div id="marketChart" style="width:100%;min-height:240px"></div>
       </div>
       <div class="market-strip" id="marketStrip">
         <div class="skeleton skeleton-card"></div>

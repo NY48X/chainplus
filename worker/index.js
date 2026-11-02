@@ -191,7 +191,7 @@ async function handle(req, env){
                 text:'Welcome to ChainPlus\n\nHey there,\n\nThank you for subscribing. It genuinely means a lot to us that you chose to follow along. We started ChainPlus because we believe crypto news should be clear, honest, and actually useful — not noise.\n\nHere\'s what you can expect:\n- Top crypto headlines, curated daily\n- No clickbait, no spam — ever\n- One email, straight to the point\n\nIf you ever have feedback, a question, or just want to say hi, reply to this email. We read every single one.\n\nGrateful you\'re here,\nThe ChainPlus Team\n\n---\nYou\'re receiving this because you subscribed at chainplus.tech. No spam. To unsubscribe, reply with \"unsubscribe\" or email support@chainplus.tech.'
               })
             });
-          }catch(e){}
+          }catch(e){ console.error('Resend welcome email failed:', e && e.message); }
         }
         return j({ok:true,message:'subscribed'},200,true);
       }catch(e){return j({error:e.message||'subscribe failed'},500,true);}

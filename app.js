@@ -24,6 +24,8 @@
     trending: [],
     fg: null,
     markets: null,
+    marketCoins: [],
+    marketChartCoin: null,
     oss: [],
     ossUsedQueries: new Set(),
     loading: false,
@@ -537,11 +539,10 @@
   /* ---------- markets ---------- */
   async function loadMarkets(){
     try{
-      const ids = window.CP_DATA.coins.map(c=>c.id).join(',');
-      const r = await fetchRetry(`${CG}/coins/markets?vs_currency=usd&ids=${ids}&order=market_cap_desc&sparkline=true&price_change_percentage=24h`);
+      // Fetch top 100 coins by market cap (single request)
+      const r = await fetchRetry(`${CG}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=true&price_change_percentage=24h`);
       if(!r.ok){
         console.warn('CoinGecko returned', r.status);
-        // Try to use cached market data if available
         try{
           const cached = localStorage.getItem('cp-markets-cache');
           if(cached){ state.markets = JSON.parse(cached); renderMarketStrip(); return; }
@@ -552,34 +553,120 @@
       const map = {};
       (Array.isArray(data)?data:[]).forEach(d=>{ map[d.id] = d; });
       state.markets = map;
+      // Build coin list for search
+      state.marketCoins = (Array.isArray(data)?data:[]).map(d=>({id:d.id,sym:d.symbol.toUpperCase(),name:d.name}));
       renderMarketStrip();
       try{ localStorage.setItem('cp-markets-cache', JSON.stringify(map)); }catch(e){}
     }catch(e){ console.error(e); toast('Markets unavailable'); }
   }
-  function renderMarketStrip(){
+
+  async function loadCoinChart(coinId){
+    const chartEl = document.getElementById('marketChart');
+    const chartTitle = document.getElementById('marketChartTitle');
+    if(!chartEl) return;
+    chartEl.innerHTML = '<div class="skeleton skeleton-line" style="height:200px"></div>';
+    try{
+      const r = await fetchRetry(`${CG}/coins/${coinId}/market_chart?vs_currency=usd&days=30`);
+      if(!r.ok){ chartEl.innerHTML = '<div class="muted small">Chart data unavailable.</div>'; return; }
+      const d = await r.json();
+      const prices = (d.prices||[]).map(p=>({t:p[0],v:p[1]}));
+      if(!prices.length){ chartEl.innerHTML = '<div class="muted small">No chart data.</div>'; return; }
+      // Find coin name
+      const coin = state.markets && state.markets[coinId];
+      const name = coin ? coin.name : coinId;
+      const sym = coin ? coin.symbol.toUpperCase() : '';
+      if(chartTitle) chartTitle.textContent = `${name} (${sym}) — 30 Day Price`;
+      drawChart(chartEl, prices);
+    }catch(e){ console.error(e); chartEl.innerHTML = '<div class="muted small">Chart unavailable.</div>'; }
+  }
+
+  function drawChart(container, prices){
+    const w = container.clientWidth || 600;
+    const h = 240;
+    const pad = {top:20,right:20,bottom:30,left:60};
+    const plotW = w - pad.left - pad.right;
+    const plotH = h - pad.top - pad.bottom;
+    const vals = prices.map(p=>p.v);
+    const min = Math.min(...vals);
+    const max = Math.max(...vals);
+    const range = (max-min)||1;
+    const ts = prices.map(p=>p.t);
+    const tMin = ts[0], tMax = ts[ts.length-1];
+    const tRange = (tMax-tMin)||1;
+
+    // Build SVG
+    const pts = prices.map(p=>{
+      const x = pad.left + ((p.t-tMin)/tRange)*plotW;
+      const y = pad.top + (1-(p.v-min)/range)*plotH;
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    }).join(' ');
+
+    // Price labels
+    const fmt = v => v>=1000 ? '$'+(v/1000).toFixed(1)+'k' : '$'+v.toFixed(2);
+    const gridLines = 4;
+    let gridSvg = '';
+    for(let i=0;i<=gridLines;i++){
+      const y = pad.top + (i/gridLines)*plotH;
+      const val = max - (i/gridLines)*range;
+      gridSvg += `<line x1="${pad.left}" y1="${y}" x2="${w-pad.right}" y2="${y}" stroke="var(--border)" stroke-width="0.5" opacity="0.5"/>`;
+      gridSvg += `<text x="${pad.left-8}" y="${y+4}" text-anchor="end" fill="var(--muted-2)" font-size="10" font-family="var(--font-mono)">${fmt(val)}</text>`;
+    }
+
+    // Date labels
+    const dateFmt = ts => new Date(ts).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    let dateSvg = '';
+    const step = Math.max(1, Math.floor(prices.length/5));
+    for(let i=0;i<prices.length;i+=step){
+      const x = pad.left + ((prices[i].t-tMin)/tRange)*plotW;
+      dateSvg += `<text x="${x}" y="${h-8}" text-anchor="middle" fill="var(--muted-2)" font-size="10" font-family="var(--font-mono)">${dateFmt(prices[i].t)}</text>`;
+    }
+
+    // Area fill
+    const areaPts = `${pad.left},${pad.top+plotH} ` + pts + ` ${w-pad.right},${pad.top+plotH}`;
+    const isUp = vals[vals.length-1] >= vals[0];
+    const color = isUp ? 'var(--accent)' : 'var(--danger)';
+
+    container.innerHTML = `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" style="width:100%;height:auto">
+      ${gridSvg}
+      <polygon points="${areaPts}" fill="${color}" opacity="0.1"/>
+      <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round"/>
+      ${dateSvg}
+    </svg>`;
+  }
+  function renderMarketStrip(filter){
     const el = $('#marketStrip'); if(!el || !state.markets) return;
-    el.innerHTML = window.CP_DATA.coins.map(c=>{
+    const q = (filter||'').toLowerCase().trim();
+    const coins = (state.marketCoins.length ? state.marketCoins : window.CP_DATA.coins.map(c=>({id:c.id,sym:c.sym,name:c.name})));
+    const filtered = q ? coins.filter(c=>c.name.toLowerCase().includes(q)||c.sym.toLowerCase().includes(q)) : coins;
+    el.innerHTML = filtered.map(c=>{
       const d = state.markets[c.id]; if(!d) return '';
       const chg = d.price_change_percentage_24h;
       const chgStr = (chg == null) ? '—' : `${chg>=0?'+':''}${Number(chg).toFixed(2)}%`;
       const chgCls = (chg == null) ? '' : (chg>=0?'chg-up':'chg-down');
       const spark = (d.sparkline_in_7d && d.sparkline_in_7d.price) ? sparklineSVG(d.sparkline_in_7d.price, chg>=0) : '';
-      return `<div class="mkt-tile" data-sym="${c.sym}" data-id="${c.id}">
+      return `<div class="mkt-tile" data-sym="${esc(c.sym)}" data-id="${esc(c.id)}" style="cursor:pointer">
         <div class="mt-top"><div class="mt-sym">${esc(c.sym)}</div><div class="mt-chg ${chgCls}">${chgStr}</div></div>
         <div class="mt-price">${fmtPrice(d.current_price)}</div>
         <div class="mt-name">${esc(c.name)}</div>
         ${spark}
       </div>`;
     }).join('');
+    // Click handler: show chart + filter headlines
     $$('#marketStrip .mkt-tile').forEach(t=>{
       t.addEventListener('click', ()=>{
+        const id = t.dataset.id;
         const sym = t.dataset.sym;
-        const q = sym.toLowerCase();
+        state.marketChartCoin = id;
+        const wrap = document.getElementById('marketChartWrap');
+        if(wrap) wrap.style.display = 'block';
+        loadCoinChart(id);
+        // Also filter headlines
+        const q2 = sym.toLowerCase();
         state.search = sym; const si = $('#searchInput'); if(si) si.value = state.search;
         state.cat = 'all'; state.page = 1;
         $$('#categoryChips .chip').forEach(x=>x.classList.remove('active'));
         const all = $('#categoryChips .chip'); if(all) all.classList.add('active');
-        const filtered = state.articles.filter(a => (a.title||'').toLowerCase().includes(q) || (a.description||'').toLowerCase().includes(q));
+        const filtered = state.articles.filter(a => (a.title||'').toLowerCase().includes(q2) || (a.description||'').toLowerCase().includes(q2));
         if(filtered.length){ renderStoriesFiltered(filtered); showSearchBanner(`Showing ${filtered.length} headlines for ${sym}`); }
         else showSearchBanner(`No headlines for ${sym}`);
       });
@@ -922,11 +1009,6 @@
       if(ossSec) ossSec.style.display = 'none';
       if(railEl) railEl.style.display = 'none';
     }
-    if(page === 'breaking' || page === 'topic'){
-      if(marketsSec) marketsSec.style.display = 'none';
-      if(ossSec) ossSec.style.display = 'none';
-      if(railEl) railEl.style.display = 'none';
-    }
     if(page === 'markets'){
       if(marketsSec && marketsSec.parentNode){ marketsSec.parentNode.insertBefore(marketsSec, marketsSec.parentNode.firstChild); }
       if(ossSec) ossSec.style.display = 'none';
@@ -1024,6 +1106,10 @@
       try { const h = $('.hero'); if(h) await translateNode(h, _lang); } catch(e){}
     }
   }
+  // Market search filter
+  const ms = document.getElementById('marketSearch');
+  if(ms){ ms.addEventListener('input', (e)=>{ renderMarketStrip(e.target.value); }); }
+
   init().catch(e=>{ console.error(e); toast('Initialization failed'); });
 
 })();
