@@ -510,6 +510,167 @@ async function fetchRSSFallback(){
     });
   }
 
+  function renderRisingTopics(){
+    const trending = state.trending || [];
+    if(!trending.length) return;
+    const maxCount = Math.max(...trending.map(t=>t.count||1));
+
+    // 1. Spotlight: top topic
+    const spotlight = document.getElementById('topicSpotlight');
+    const spotlightTopic = document.getElementById('spotlightTopic');
+    const spotlightCount = document.getElementById('spotlightCount');
+    const spotlightBtn = document.getElementById('spotlightBtn');
+    if(spotlight && trending.length){
+      const top = trending[0];
+      if(spotlightTopic) spotlightTopic.textContent = top.topic;
+      if(spotlightCount) spotlightCount.textContent = top.count || 0;
+      if(spotlightBtn){
+        spotlightBtn.onclick = () => { window.location.href = 'topic.html?topic=' + encodeURIComponent(top.topic); };
+      }
+      spotlight.style.display = 'block';
+    }
+
+    // 2. Pulse cards: top 6
+    const pulseGrid = document.getElementById('pulseGrid');
+    if(pulseGrid){
+      pulseGrid.innerHTML = trending.slice(0,6).map((t,i) => {
+        const sent = (t.sentiment||'neutral').toLowerCase();
+        const sentCls = sent.includes('bull')?'bullish':sent.includes('bear')?'bearish':'neutral';
+        const badge = (t.count||0) >= maxCount*0.7 ? 'hot' : (t.count||0) >= maxCount*0.4 ? 'rising' : 'stable';
+        const badgeLabel = badge==='hot'?'🔥 Hot':badge==='rising'?'↑ Rising':'→ Stable';
+        const pct = Math.round(((t.count||0)/maxCount)*100);
+        return `<div class="pulse-card ${sentCls}" data-topic="${esc(t.topic)}">
+          <div class="rank">${i+1}</div>
+          <div class="topic-name">${esc(t.topic)}</div>
+          <div class="topic-meta">
+            <span class="momentum-badge ${badge}">${badgeLabel}</span>
+            <span>${t.count||0} mentions</span>
+            <span style="text-transform:capitalize">${esc(sent)}</span>
+          </div>
+          <div class="mention-bar"><div class="fill" style="width:${pct}%"></div></div>
+        </div>`;
+      }).join('');
+      $$('#pulseGrid .pulse-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const topic = card.dataset.topic;
+          if(topic) showTopicArticles(topic);
+        });
+      });
+    }
+
+    // 3. All topics list with bars
+    const allList = document.getElementById('allTopicsList');
+    if(allList){
+      allList.innerHTML = trending.map((t,i) => {
+        const sent = (t.sentiment||'neutral').toLowerCase();
+        const color = sent.includes('bull')?'#22c55e':sent.includes('bear')?'#ef4444':'#6b7280';
+        const pct = Math.round(((t.count||0)/maxCount)*100);
+        return `<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);cursor:pointer" data-topic="${esc(t.topic)}">
+          <span style="font-size:12px;color:var(--text-2);width:24px;text-align:right">${i+1}</span>
+          <span style="flex:1;font-weight:500">${esc(t.topic)}</span>
+          <span style="font-size:12px;color:var(--text-2);text-transform:capitalize">${esc(sent)}</span>
+          <div style="width:120px;height:6px;background:var(--border);border-radius:3px;overflow:hidden">
+            <div style="width:${pct}%;height:100%;background:${color};border-radius:3px"></div>
+          </div>
+          <span style="font-size:12px;color:var(--text-2);width:40px;text-align:right">${t.count||0}</span>
+        </div>`;
+      }).join('');
+      $$('#allTopicsList [data-topic]').forEach(row => {
+        row.addEventListener('click', () => {
+          const topic = row.dataset.topic;
+          if(topic) showTopicArticles(topic);
+        });
+      });
+    }
+
+    // 4. Emerging topics (lowest 3-5 by count)
+    const emergingList = document.getElementById('emergingList');
+    if(emergingList){
+      const emerging = trending.slice(-4).reverse();
+      emergingList.innerHTML = emerging.map(t => {
+        return `<span class="emerging-tag" data-topic="${esc(t.topic)}">${esc(t.topic)}<span class="new-badge">NEW</span></span>`;
+      }).join('');
+      $$('#emergingList .emerging-tag').forEach(tag => {
+        tag.addEventListener('click', () => {
+          const topic = tag.dataset.topic;
+          if(topic) showTopicArticles(topic);
+        });
+      });
+    }
+
+    // 5. By sector
+    const sectorGrid = document.getElementById('sectorGrid');
+    if(sectorGrid){
+      const sectors = {
+        'Layer 1': ['Bitcoin','Ethereum','Solana','Binance'],
+        'DeFi': ['DeFi','Tokenized','Exchange'],
+        'Security': ['Hack','Hackers','Withdrawals','Outflows'],
+        'Markets': ['Record','Korea'],
+      };
+      // Dynamically assign topics to sectors based on keywords
+      const sectorMap = {};
+      trending.forEach(t => {
+        const topic = (t.topic||'').toLowerCase();
+        let sector = 'Other';
+        if(/bitcoin|ethereum|solana|binance|chain|layer|btc|eth|sol/.test(topic)) sector = 'Layer 1';
+        else if(/defi|token|dex|yield|swap|exchange|dex/.test(topic)) sector = 'DeFi';
+        else if(/hack|security|scam|fraud|exploit/.test(topic)) sector = 'Security';
+        else if(/market|price|trade|rally|crash|record/.test(topic)) sector = 'Markets';
+        else if(/nft|art|collect/.test(topic)) sector = 'NFT';
+        else if(/regulat|sec|law|policy|ban/.test(topic)) sector = 'Regulation';
+        if(!sectorMap[sector]) sectorMap[sector] = [];
+        sectorMap[sector].push(t.topic);
+      });
+      sectorGrid.innerHTML = Object.entries(sectorMap).map(([sector, topics]) => {
+        return `<div class="sector-card">
+          <h4>${esc(sector)}</h4>
+          <div class="topic-chips">
+            ${topics.map(t => `<span class="chip" data-topic="${esc(t)}">${esc(t)}</span>`).join('')}
+          </div>
+        </div>`;
+      }).join('');
+      $$('#sectorGrid .chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          const topic = chip.dataset.topic;
+          if(topic) showTopicArticles(topic);
+        });
+      });
+    }
+  }
+
+  async function showTopicArticles(topic){
+    const filteredSection = document.getElementById('filteredSection');
+    const filteredTitle = document.getElementById('filteredTitle');
+    const filteredSub = document.getElementById('filteredSub');
+    if(filteredSection) filteredSection.style.display = 'block';
+    if(filteredTitle) filteredTitle.textContent = `Headlines: ${topic}`;
+    if(filteredSub) filteredSub.textContent = `Articles matching "${topic}"`;
+
+    // Scroll to filtered section
+    filteredSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    // Pull extra pages
+    try{
+      for(let p=2; p<=4; p++){
+        const data = await api(`/api/news?limit=${state.limit}&page=${p}`);
+        const arts = (data.articles || data.news || []).filter(a=>!/eth\s*gas|⛽|gwei/i.test(a && a.title || ''));
+        if(!arts.length) break;
+        const seen = new Set(state.articles.map(a=>a.link||a.url));
+        for(const a of arts){ if(!seen.has(a.link||a.url)){ state.articles.push(a); seen.add(a.link||a.url);} }
+      }
+    }catch(e){ console.error(e); }
+
+    const filtered = state.articles.filter(a => (a.title||'').toLowerCase().includes(topic.toLowerCase()) || (a.description||'').toLowerCase().includes(topic.toLowerCase()));
+    const grid = document.getElementById('storiesGrid');
+    if(filtered.length && grid){
+      renderStoriesFiltered(filtered);
+      const banner = document.getElementById('searchBanner');
+      if(banner){ banner.textContent = `Showing ${filtered.length} headlines for "${topic}"`; banner.classList.remove('hidden'); }
+    } else if(grid){
+      grid.innerHTML = '<div class="empty">No headlines found for this topic.</div>';
+    }
+  }
+
   /* ---------- fear & greed ---------- */
   async function loadFG(){
     try{
@@ -1055,6 +1216,11 @@ async function fetchRSSFallback(){
     const page = (document.body && document.body.dataset && document.body.dataset.page) || 'news';
     if(page !== 'news' && page !== 'breaking' && page !== 'topic') return;
     if(state.loading || state.search.trim() || state.cat!=='all') return;
+    // On topic page, skip if a topic filter is active (filtered articles shown)
+    if(page === 'topic'){
+      const params = new URLSearchParams(window.location.search);
+      if(params.get('topic')) return;
+    }
     try{
       const data = await api(`/api/news?limit=${state.limit}&page=1`);
       const isGas = (a)=> /eth\s*gas|⛽|gwei/i.test(a && a.title || '');
@@ -1167,7 +1333,9 @@ async function fetchRSSFallback(){
     } else if(page === 'breaking'){
       try { await Promise.all([fetchNews(true,{updateHero:true}), renderTicker()]); } catch(e){ console.error('init load error:', e); }
     } else if(page === 'topic'){
-      try { await Promise.all([fetchNews(true,{updateHero:true}), loadTrending()]); } catch(e){ console.error('init load error:', e); }
+      try { await Promise.all([fetchNews(true,{updateHero:false}), loadTrending()]); } catch(e){ console.error('init load error:', e); }
+      // Render rising topics dashboard
+      try { renderRisingTopics(); } catch(e){ console.error('renderRisingTopics error:', e); }
     } else {
       // news/index: load everything
       try { await Promise.all([fetchNews(true,{updateHero:true}), loadTrending(), loadFG(), loadMarkets(), loadOSS(), renderTicker()]); } catch(e){ console.error('init load error:', e); }
@@ -1181,6 +1349,15 @@ async function fetchRSSFallback(){
       const params = new URLSearchParams(window.location.search);
       const topic = (params.get('topic') || '').toLowerCase();
       if(topic){
+        // Show filtered articles section
+        const fs = document.getElementById('filteredSection');
+        if(fs) fs.style.display = 'block';
+        // Hide rising topics sections
+        ['risingHero','topicSpotlight'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
+        document.querySelectorAll('.section').forEach(sec=>{
+          const h2 = sec.querySelector('h2');
+          if(h2 && (h2.textContent.includes('Pulse')||h2.textContent.includes('All Rising')||h2.textContent.includes('Just Emerged')||h2.textContent.includes('By Sector')||h2.textContent.includes('How Rising'))) sec.style.display='none';
+        });
         // pull extra pages to get enough matches
         try{
           for(let p=2; p<=4; p++){

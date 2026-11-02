@@ -3,21 +3,21 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>ChainPlus — Topic Headlines</title>
-<meta name="description" content="Crypto news headlines filtered by topic. Browse Bitcoin, Ethereum, DeFi, NFT and regulation news from 300+ sources." />
-<meta name="keywords" content="crypto news, blockchain news, bitcoin news, ethereum news, defi news, solana news, crypto market, fear and greed index, crypto open source" />
+<title>ChainPlus — Rising Topics</title>
+<meta name="description" content="Discover rising cryptocurrency topics and trends. See what's gaining traction in crypto news right now — from DeFi to Layer 1, NFTs to regulation." />
+<meta name="keywords" content="crypto trending topics, rising crypto trends, bitcoin trending, defi trends, crypto market sentiment, emerging crypto narratives" />
 <meta name="author" content="ChainPlus" />
 <meta name="robots" content="noindex,follow" />
 <link rel="canonical" href="https://chainplus.tech/topic.html" />
 <meta property="og:type" content="website" />
-<meta property="og:title" content="ChainPlus — Topic Headlines" />
-<meta property="og:description" content="Crypto news headlines filtered by topic from 300+ verified sources." />
+<meta property="og:title" content="ChainPlus — Rising Topics" />
+<meta property="og:description" content="Discover rising cryptocurrency topics and trends from 300+ verified sources." />
 <meta property="og:site_name" content="ChainPlus" />
 <meta property="og:image" content="https://chainplus.tech/og-image.png" />
 <meta property="og:url" content="https://chainplus.tech/topic.html" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="ChainPlus — Topic Headlines" />
-<meta name="twitter:description" content="Crypto news headlines filtered by topic from 300+ verified sources." />
+<meta name="twitter:title" content="ChainPlus — Rising Topics" />
+<meta name="twitter:description" content="Discover rising cryptocurrency topics and trends from 300+ verified sources." />
 <meta name="twitter:image" content="https://chainplus.tech/og-image.png" />
 <meta name="theme-color" content="#0a0a0c" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0a0c'/%3E%3Cpath d='M6 22 L16 8 L26 22' fill='none' stroke='%2300e5a0' stroke-width='2.5' stroke-linejoin='round'/%3E%3Ccircle cx='16' cy='16' r='2.2' fill='%23ff5c7a'/%3E%3C/svg%3E" />
@@ -25,20 +25,43 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="styles.css" />
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "ChainPlus",
-  "url": "https://chainplus.tech/",
-  "description": "Real-time blockchain and cryptocurrency news aggregator.",
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": "https://chainplus.tech/?q={search_term_string}",
-    "query-input": "required name=search_term_string"
-  }
-}
-</script>
+<style>
+  .rising-hero { text-align: center; padding: 40px 0 24px; }
+  .rising-hero h1 { font-family: var(--font-display); font-size: 36px; margin: 0 0 8px; background: linear-gradient(135deg, #00e5a0, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .rising-hero p { color: var(--text-2); font-size: 16px; max-width: 600px; margin: 0 auto; }
+  .pulse-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 24px 0; }
+  .pulse-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; position: relative; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
+  .pulse-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+  .pulse-card .rank { position: absolute; top: 12px; right: 16px; font-size: 28px; font-weight: 800; opacity: 0.15; font-family: var(--font-display); }
+  .pulse-card .topic-name { font-family: var(--font-display); font-size: 20px; font-weight: 700; margin: 0 0 4px; }
+  .pulse-card .topic-meta { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--text-2); }
+  .pulse-card .mention-bar { height: 4px; background: var(--border); border-radius: 2px; margin-top: 12px; overflow: hidden; }
+  .pulse-card .mention-bar .fill { height: 100%; border-radius: 2px; transition: width 0.5s; }
+  .pulse-card.bullish { border-left: 3px solid #22c55e; }
+  .pulse-card.bearish { border-left: 3px solid #ef4444; }
+  .pulse-card.neutral { border-left: 3px solid #6b7280; }
+  .pulse-card.bullish .fill { background: #22c55e; }
+  .pulse-card.bearish .fill { background: #ef4444; }
+  .pulse-card.neutral .fill { background: #6b7280; }
+  .momentum-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; }
+  .momentum-badge.rising { background: rgba(34,197,94,0.15); color: #22c55e; }
+  .momentum-badge.hot { background: rgba(239,68,68,0.15); color: #ef4444; }
+  .momentum-badge.stable { background: rgba(107,114,128,0.15); color: #9ca3af; }
+  .sector-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 16px 0; }
+  .sector-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+  .sector-card h4 { margin: 0 0 8px; font-size: 14px; }
+  .sector-card .topic-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .sector-card .chip { font-size: 12px; padding: 4px 10px; border-radius: 12px; background: var(--border); color: var(--text-2); cursor: pointer; transition: background 0.2s; }
+  .sector-card .chip:hover { background: var(--accent); color: #000; }
+  .topic-spotlight { background: linear-gradient(135deg, rgba(0,229,160,0.1), rgba(59,130,246,0.1)); border: 1px solid var(--border); border-radius: 16px; padding: 32px; margin: 24px 0; text-align: center; }
+  .topic-spotlight h2 { font-family: var(--font-display); font-size: 28px; margin: 0 0 8px; }
+  .topic-spotlight .spotlight-stat { font-size: 48px; font-weight: 800; font-family: var(--font-display); color: var(--accent); }
+  .topic-spotlight .spotlight-label { color: var(--text-2); font-size: 14px; }
+  .emerging-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
+  .emerging-tag { padding: 6px 14px; border-radius: 20px; font-size: 13px; background: var(--surface); border: 1px solid var(--border); cursor: pointer; transition: all 0.2s; }
+  .emerging-tag:hover { border-color: var(--accent); color: var(--accent); }
+  .emerging-tag .new-badge { font-size: 9px; background: #ef4444; color: #fff; padding: 1px 5px; border-radius: 3px; margin-left: 6px; font-weight: 700; }
+</style>
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8503915493262909" crossorigin="anonymous"></script>
 </head>
@@ -80,30 +103,15 @@
         <option value="fr">FR</option>
         <option value="de">DE</option>
         <option value="pt">PT</option>
-        <option value="zh">ZH</option>
-        <option value="ja">JA</option>
+        <option value="it">IT</option>
+        <option value="nl">NL</option>
         <option value="ru">RU</option>
-        <option value="ar">AR</option>
-        <option value="hi">HI</option>
+        <option value="ja">JA</option>
+        <option value="zh">ZH</option>
       </select>
-      <button id="refreshBtn" class="iconbtn" aria-label="Refresh" title="Refresh data">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-      </button>
+      <a class="btn btn-ghost" href="contact.html">Contact</a>
     </div>
   </div>
-
-  <nav class="mobile-nav container" id="mobileNav" aria-label="Mobile">
-    <a href="index.html">News</a>
-    <a href="markets.html">Markets</a>
-    <a href="opensource.html">Open source</a>
-    <a href="insights.html">Insights</a>
-    <a href="breaking.html">Breaking</a>
-    <a href="trending.html">Trending</a>
-    <a href="methodology.html">Methodology</a>
-    <a href="about.html">About</a>
-    <a href="contact.html">Contact</a>
-  </nav>
-
   <div class="ticker">
     <span class="ticker-label"><span class="pulse"></span>Breaking</span>
     <div class="ticker-track" id="tickerTrack">
@@ -112,52 +120,96 @@
   </div>
 </header>
 
-
 <div class="container" style="padding-top:16px">
 </div>
-
 
 <main id="main">
   <div class="container">
     <div id="searchBanner" class="search-banner hidden"></div>
 
-    <section class="section" style="padding-top:24px">
-      <div class="layout">
-        <div class="main-col">
-          <div class="section-head">
-            <h2 id="sectionTitle">Latest headlines</h2>
-            <p class="sub" id="sectionSub">Fresh from 300+ sources · sorted by recency</p>
-          </div>
-          <div id="storiesGrid" class="stories-grid">
-            <div class="skeleton skeleton-card"></div>
-            <div class="skeleton skeleton-card"></div>
-            <div class="skeleton skeleton-card"></div>
-            <div class="skeleton skeleton-card"></div>
-          </div>
-          <div id="loadMoreWrap" class="center" style="margin-top:24px">
-            <button id="loadMoreBtn" class="btn-ghost" style="padding:10px 18px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text-2);font-size:13px;font-weight:500">Load more headlines</button>
-            <div id="loadStatus" class="muted small" style="margin-top:8px"></div>
-          </div>
-        </div>
+    <!-- Rising Topics Hero -->
+    <div class="rising-hero" id="risingHero">
+      <h1>Rising Topics</h1>
+      <p>What the crypto world is talking about right now. Discover emerging narratives, track momentum, and find the stories behind the trends.</p>
+    </div>
 
-        <aside class="rail">
+    <!-- Topic of the Hour Spotlight -->
+    <div class="topic-spotlight" id="topicSpotlight" style="display:none">
+      <div class="spotlight-label">🔥 Topic of the Hour</div>
+      <h2 id="spotlightTopic">—</h2>
+      <div class="spotlight-stat" id="spotlightCount">0</div>
+      <div class="spotlight-label" id="spotlightLabel">mentions in recent headlines</div>
+      <div style="margin-top:12px">
+        <button class="btn btn-primary" id="spotlightBtn" style="padding:8px 20px;border-radius:8px">Explore headlines →</button>
+      </div>
+    </div>
 
-          <div class="widget">
-            <div class="widget-head"><h3>Fear &amp; Greed</h3><span class="sub">index</span></div>
-            <div class="fg-gauge" id="fgWidget"><div class="skeleton skeleton-line"></div></div>
-          </div>
-
-          <div class="widget">
-            <div class="widget-head"><h3>Trending now</h3><span class="sub">topics</span></div>
-            <div id="trendingList"><div class="skeleton skeleton-line"></div></div>
-          </div>
-        </aside>
+    <!-- Top Rising Pulse Cards -->
+    <section class="section" style="padding-top:16px">
+      <div class="section-head">
+        <h2>The Pulse</h2>
+        <p class="sub">Top topics gaining traction right now</p>
+      </div>
+      <div class="pulse-grid" id="pulseGrid">
+        <div class="skeleton skeleton-card"></div>
+        <div class="skeleton skeleton-card"></div>
+        <div class="skeleton skeleton-card"></div>
       </div>
     </section>
 
-    
-    
-    
+    <!-- All Topics with Bars -->
+    <section class="section">
+      <div class="section-head">
+        <h2>All Rising</h2>
+        <p class="sub">Every topic we're tracking, ranked by mentions</p>
+      </div>
+      <div id="allTopicsList" style="max-width:720px;margin:0 auto"></div>
+    </section>
+
+    <!-- Emerging Topics -->
+    <section class="section">
+      <div class="section-head">
+        <h2>Just Emerged</h2>
+        <p class="sub">New topics appearing in headlines for the first time</p>
+      </div>
+      <div class="emerging-list" id="emergingList"></div>
+    </section>
+
+    <!-- By Sector -->
+    <section class="section">
+      <div class="section-head">
+        <h2>By Sector</h2>
+        <p class="sub">Topics grouped by crypto category</p>
+      </div>
+      <div class="sector-grid" id="sectorGrid"></div>
+    </section>
+
+    <!-- Filtered Articles (shown when a topic is clicked) -->
+    <section class="section" id="filteredSection" style="display:none">
+      <div class="section-head">
+        <h2 id="filteredTitle">Headlines</h2>
+        <p class="sub" id="filteredSub">Articles matching this topic</p>
+      </div>
+      <div id="storiesGrid" class="stories-grid">
+        <div class="skeleton skeleton-card"></div>
+      </div>
+      <div id="loadMoreWrap" class="center" style="margin-top:24px">
+        <button id="loadMoreBtn" class="btn-ghost" style="padding:10px 18px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text-2);font-size:13px;font-weight:500">Load more headlines</button>
+        <div id="loadStatus" class="muted small" style="margin-top:8px"></div>
+      </div>
+    </section>
+
+    <!-- Editorial Content -->
+    <section class="section">
+      <div class="container">
+        <h2 style="font-family:var(--font-display);font-size:22px;margin:0 0 16px">How Rising Topics Work</h2>
+        <div style="max-width:720px;line-height:1.7;color:var(--text-2);font-size:15px">
+          <p>Our rising topics engine analyzes headlines from over 300 verified crypto news sources in real time. It extracts meaningful keywords and phrases, filters out common stop words, and ranks topics by frequency of mention. Each topic is classified with a sentiment indicator based on associated keywords.</p>
+          <p>Topics are refreshed every 60 seconds as new headlines are published. The "Pulse" section shows the top topics gaining traction right now. "All Rising" lists every topic we're tracking, ranked by mentions. "Just Emerged" highlights topics that appeared in headlines for the first time recently.</p>
+          <p>Click any topic to see all related headlines. Use the sector filters to explore topics by category — DeFi, Layer 1, NFT, regulation, and more.</p>
+        </div>
+      </div>
+    </section>
   </div>
 </main>
 
@@ -166,7 +218,7 @@
     <div class="cta-widget">
       <h3 style="font-family:var(--font-display);font-size:24px;margin:0 0 8px">Stay in the loop</h3>
       <p class="muted small" style="margin:0 0 16px">Get the top crypto headlines in your inbox. No spam, unsubscribe anytime.</p>
-      <form class="form" style="max-width:420px;margin:0 auto" onsubmit="event.preventDefault(); (async()=>{const f=event.target;const i=f.querySelector('input[type=email]');const b=f.querySelector('button');b.disabled=true;b.textContent='...';try{const r=await fetch((window.CHAINPLUS_API||localStorage.getItem('cp-api-base')||'https://chainpulse-api.miketembo828.workers.dev')+'/api/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:i.value})});const d=await r.json();if(d.ok){window.__toast(d.message==='already subscribed'?'You\'re already subscribed!':'Thanks! You\'re subscribed.');i.value='';}else{window.__toast(d.error||'Something went wrong.');}}catch(e){window.__toast('Network error. Try again.');}b.disabled=false;b.textContent='Subscribe';})();">
+      <form class="form" style="max-width:420px;margin:0 auto" onsubmit="event.preventDefault(); (async()=>{const f=event.target;const i=f.querySelector('input[type=email]');const b=f.querySelector('button');b.disabled=true;b.textContent='...';try{const r=await fetch((window.CHAINPLUS_API||localStorage.getItem('cp-api-base')||'https://chainpulse-api.miketembo828.workers.dev')+'/api/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:i.value})});const d=await r.json();if(d.ok){window.__toast(d.message==='already subscribed'?'You\\'re already subscribed!':'Thanks! You\\'re subscribed.');i.value='';}else{window.__toast(d.error||'Something went wrong.');}}catch(e){window.__toast('Network error. Try again.');}b.disabled=false;b.textContent='Subscribe';})();">
         <input type="email" placeholder="you@example.com" required />
         <button type="submit">Subscribe</button>
       </form>
@@ -210,20 +262,6 @@
   </div>
 </footer>
 
-<div id="modal" class="modal" aria-hidden="true" role="dialog" aria-modal="true">
-  <div class="modal-backdrop" id="modalBackdrop"></div>
-  <div class="modal-panel" id="modalPanel">
-    <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
-    <div id="modalContent"></div>
-  </div>
-</div>
-
-<button id="backToTop" class="back-to-top" aria-label="Back to top">↑</button>
-<div id="toast" class="toast" role="status" aria-live="polite"></div>
-
-<script src="data.js"></script>
-<script src="app.js"></script>
-
 <!-- Cookie Consent -->
 <div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1a1a1a;color:#fff;padding:16px 24px;z-index:9999;font-size:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
   <span>We use cookies to improve your experience and serve personalized ads. By continuing, you agree to our <a href="privacy.html" style="color:#00e5a0;text-decoration:underline">Privacy Policy</a> and <a href="cookies.html" style="color:#00e5a0;text-decoration:underline">Cookie Policy</a>.</span>
@@ -231,5 +269,6 @@
 </div>
 <script>try{if(!localStorage.getItem('cp-cookies'))document.getElementById('cookie-banner').style.display='flex';}catch(e){}</script>
 
+<script src="app.js"></script>
 </body>
 </html>
