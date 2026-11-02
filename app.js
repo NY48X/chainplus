@@ -195,7 +195,18 @@
   }
 
   /* ---------- rss fallback (4 backup sources) ---------- */
-  async function fetchRSSFallback(){
+  function _cat(title, desc){
+  const t = ((title||'')+' '+(desc||'')).toLowerCase();
+  if(/bitcoin|btc/.test(t)) return 'bitcoin';
+  if(/ethereum|eth\b|ether/.test(t)) return 'ethereum';
+  if(/solana|sol\b/.test(t)) return 'solana';
+  if(/defi|dex|yield|liquidity|amm|staking/.test(t)) return 'defi';
+  if(/nft|tokeniz/.test(t)) return 'nft';
+  if(/regulat|sec|cftc|law|legal|court|sue|ban|policy/.test(t)) return 'regulation';
+  if(/market|price|surge|rally|crash|etf|stock|trade/.test(t)) return 'markets';
+  return 'general';
+}
+async function fetchRSSFallback(){
     const out = [];
     const seen = new Set();
     await Promise.all(RSS_BACKUPS.map(async (url)=>{
@@ -219,7 +230,7 @@
             description: d.replace(/<[^>]+>/g,'').replace(/<!\[CDATA\[|\]\]>/g,'').slice(0,240).trim(),
             pubDate: p.trim(),
             source: new URL(url).hostname,
-            category: 'general'
+            category: _cat(title, d.replace(/<[^>]+>/g,''))
           });
         });
       }catch(e){ console.error('RSS backup failed:', url, e); }

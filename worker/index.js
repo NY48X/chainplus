@@ -184,7 +184,7 @@ async function handle(req, env){
               body:JSON.stringify({
                 from:'ChainPlus <welcome@chainplus.tech>',
                 reply_to:['support@chainplus.tech'],
-                headers:{'List-Unsubscribe':'<mailto:support@chainplus.tech?subject=unsubscribe>'},
+                headers:{'List-Unsubscribe':'<mailto:support@chainplus.tech?subject=unsubscribe>, <https://chainpulse-api.miketembo828.workers.dev/api/unsubscribe?email='+encodeURIComponent(email)+'>','List-Unsubscribe-Post':'List-Unsubscribe=One-Click'},
                 to:[email],
                 subject:'Welcome to ChainPlus — we\'re glad you\'re here',
                 html:'<div style="font-family:Inter,system-ui,sans-serif;max-width:560px;margin:0 auto;padding:32px 24px;color:#1a1a1a"><h2 style="font-size:24px;margin:0 0 16px;color:#111">Welcome to ChainPlus</h2><p style="font-size:16px;line-height:1.6;margin:0 0 16px">Hey there 👋</p><p style="font-size:16px;line-height:1.6;margin:0 0 16px">Thank you for subscribing. It genuinely means a lot to us that you chose to follow along. We started ChainPlus because we believe crypto news should be clear, honest, and actually useful — not noise.</p><p style="font-size:16px;line-height:1.6;margin:0 0 16px">Here\'s what you can expect:</p><ul style="font-size:16px;line-height:1.6;margin:0 0 16px;padding-left:20px"><li>Top crypto headlines, curated daily</li><li>No clickbait, no spam — ever</li><li>One email, straight to the point</li></ul><p style="font-size:16px;line-height:1.6;margin:0 0 24px">If you ever have feedback, a question, or just want to say hi, reply to this email. We read every single one.</p><p style="font-size:16px;line-height:1.6;margin:0 0 8px">Grateful you\'re here,</p><p style="font-size:16px;line-height:1.6;margin:0;font-weight:600">The ChainPlus Team</p><hr style="border:none;border-top:1px solid #e5e5e5;margin:24px 0"><p style="font-size:12px;color:#888;margin:0">You\'re receiving this because you subscribed at chainplus.tech. No spam. To unsubscribe, reply with \"unsubscribe\" or email support@chainplus.tech.</p></div>',
@@ -196,6 +196,19 @@ async function handle(req, env){
         }
         return j({ok:true,message:'subscribed'},200,true);
       }catch(e){return j({error:e.message||'subscribe failed'},500,true);}
+    }
+    if(p==='/api/unsubscribe' && (req.method==='POST'||req.method==='GET')){
+      try{
+        let email='';
+        if(req.method==='POST'){const body=await req.json();email=(body.email||'').trim().toLowerCase();}
+        else{email=(u.searchParams.get('email')||'').trim().toLowerCase();}
+        if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return j({error:'invalid email'},400,true);
+        if(globalThis.SUBSCRIBERS){
+          const existing=await globalThis.SUBSCRIBERS.get(email);
+          if(existing){await globalThis.SUBSCRIBERS.delete(email);}
+        }
+        return j({ok:true,message:'unsubscribed'},200,true);
+      }catch(e){return j({error:e.message||'unsubscribe failed'},500,true);}
     }
     if(p==='/api/news'||p==='/api/news/'){
       const lim=clamp(u.searchParams.get('limit'),1,100,20);
