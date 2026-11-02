@@ -892,29 +892,67 @@
     document.body.style.overflow='hidden';
     fetchSummary(a);
   }
+  // Translation cache to avoid re-translating
+  const _trCache = {};
+  function _trKey(text, target){ return target + ':' + text; }
+
   async function translateText(text, target){
     if(!text || target==='en') return text;
+    const key = _trKey(text, target);
+    if(_trCache[key]) return _trCache[key];
     try{
       const r = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${encodeURIComponent(target)}&dt=t&q=${encodeURIComponent(text)}`);
       if(!r.ok) return text;
       const d = await r.json();
-      // d[0] is array of [translated, original, ...]
-      return (d[0]||[]).map(x=>x[0]).join('') || text;
+      const tr = (d[0]||[]).map(x=>x[0]).join('') || text;
+      _trCache[key] = tr;
+      return tr;
     }catch(e){ return text; }
   }
+
+  // Batch translate: collects all text nodes, sends in chunks of up to 5 texts joined by newlines
   async function translateNode(el, target){
+    if(!el || target==='en') return;
     const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
     const nodes = [];
     let n;
     while(n = walker.nextNode()) nodes.push(n);
-    for(const tn of nodes){
-      try {
-        const v = tn.nodeValue.trim();
-        if(v.length < 3) continue;
-        const tr = await translateText(v, target);
-        if(tr && tr !== v) tn.nodeValue = tn.nodeValue.replace(v, tr);
-      } catch(e){ /* ignore */ }
+
+    // Filter nodes worth translating
+    const translatable = nodes.map(tn=>{
+      const v = tn.nodeValue;
+      const trimmed = (v||'').trim();
+      if(trimmed.length < 2) return null;
+      // Skip script/style content
+      const parent = tn.parentNode;
+      if(parent && (parent.tagName==='SCRIPT' || parent.tagName==='STYLE' || parent.tagName==='CODE')) return null;
+      return {node: tn, text: trimmed, original: v};
+    }).filter(Boolean);
+
+    if(!translatable.length) return;
+
+    // Process in batches of 5 to reduce API calls
+    const BATCH = 5;
+    for(let i=0; i<translatable.length; i+=BATCH){
+      const batch = translatable.slice(i, i+BATCH);
+      const combined = batch.map(b=>b.text).join('\n');
+      try{
+        const tr = await translateText(combined, target);
+        const parts = tr.split('\n');
+        batch.forEach((b, idx)=>{
+          const translated = (parts[idx] || b.text).trim();
+          if(translated && translated !== b.text){
+            b.node.nodeValue = b.original.replace(b.text, translated);
+          }
+        });
+      }catch(e){ /* ignore */ }
     }
+  }
+
+  // Translate the entire page
+  async function translatePage(target){
+    if(target==='en') return;
+    try { await translateNode(document.body, target); } catch(e){}
   }
   async function fetchSummary(a){
     const el = $('#aiText'); if(!el) return;
@@ -1147,8 +1185,7 @@
     // Apply saved language to main content (translate titles/deks) if non-English
     const _lang = localStorage.getItem('cp-lang') || 'en';
     if(_lang !== 'en'){
-      try { await translateNode($('#storiesGrid'), _lang); } catch(e){}
-      try { const h = $('.hero'); if(h) await translateNode(h, _lang); } catch(e){}
+      try { await translatePage(_lang); } catch(e){}
     }
   }
   // Market search filter
