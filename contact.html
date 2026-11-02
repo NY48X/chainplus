@@ -23,6 +23,7 @@
 <link rel="stylesheet" href="styles.css" />
 <script>(function(){var s=localStorage.getItem('cp-theme');if(s==='light')document.documentElement.classList.add('light');})();</script>
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8503915493262909" crossorigin="anonymous"></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -108,26 +109,9 @@
 <!-- Cookie Consent -->
 <div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1a1a1a;color:#fff;padding:16px 24px;z-index:9999;font-size:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
   <span>We use cookies to improve your experience and serve personalized ads. By continuing, you agree to our <a href="privacy.html" style="color:#00e5a0;text-decoration:underline">Privacy Policy</a> and <a href="cookies.html" style="color:#00e5a0;text-decoration:underline">Cookie Policy</a>.</span>
-  <button onclick="document.getElementById('cookie-banner').style.display='none';try{localStorage.setItem('cp-cookies','1');loadAdSense();}catch(e){}" style="background:#00e5a0;color:#000;border:none;padding:8px 20px;border-radius:6px;cursor:pointer;font-weight:600">Accept</button>
+  <button onclick="document.getElementById('cookie-banner').style.display='none';try{localStorage.setItem('cp-cookies','1')}catch(e){}" style="background:#00e5a0;color:#000;border:none;padding:8px 20px;border-radius:6px;cursor:pointer;font-weight:600">Accept</button>
 </div>
-<script>
-function loadAdSense(){
-  if(window.__adsLoaded) return;
-  window.__adsLoaded = true;
-  var s = document.createElement('script');
-  s.async = true;
-  s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8503915493262909';
-  s.crossOrigin = 'anonymous';
-  document.head.appendChild(s);
-}
-try{
-  if(localStorage.getItem('cp-cookies')){
-    loadAdSense();
-  } else {
-    document.getElementById('cookie-banner').style.display = 'flex';
-  }
-}catch(e){}
-</script>
+<script>try{if(!localStorage.getItem('cp-cookies'))document.getElementById('cookie-banner').style.display='flex';}catch(e){}</script>
 
 </body>
 </html>
