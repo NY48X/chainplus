@@ -28,15 +28,15 @@ No build step, no dependencies.
 - Trending open-source repos from GitHub (stars, language, recency).
 - Article modal with excerpt-based summary (API + client-side fallback), read time, related headlines, bookmark/save (localStorage).
 - Dark/light theme, keyboard shortcuts (/ search, Esc close), mobile menu, back-to-top, reveal animations.
-- AdSense-ready compliance surface (privacy, terms, about, contact, methodology, FAQ, ads.txt, robots.txt, sitemap.xml, marked ad slots).
+- Ad-ready compliance surface (privacy, terms, about, contact, methodology, FAQ, ads.txt, robots.txt, sitemap.xml, marked ad slots).
 
-## AdSense readiness
+## Ad readiness
 
 - Original-value additions: categorization, ranking, market context, editorial notes, methodology page explaining collection and update cadence.
 - Only headlines + short excerpts shown; full articles linked to original publishers.
 - Pages: About, Contact, Privacy Policy, Terms of Use, Methodology, FAQ.
 - ads.txt (replace placeholder publisher ID), robots.txt, sitemap.xml.
-- Ad slots marked in HTML (Advertisement placeholders) — paste AdSense code there.
+- Ad slots marked in HTML (Advertisement placeholders) — paste ad code there.
 - Fast, no pop-ups, clear navigation, responsive.
 
 ## How news is updated
