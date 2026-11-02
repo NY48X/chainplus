@@ -703,15 +703,14 @@
         const wrap = document.getElementById('marketChartWrap');
         if(wrap) wrap.style.display = 'block';
         loadCoinChart(id);
-        // Also filter headlines
-        const q2 = sym.toLowerCase();
-        state.search = sym; const si = $('#searchInput'); if(si) si.value = state.search;
-        state.cat = 'all'; state.page = 1;
-        $$('#categoryChips .chip').forEach(x=>x.classList.remove('active'));
-        const all = $('#categoryChips .chip'); if(all) all.classList.add('active');
-        const filtered = state.articles.filter(a => (a.title||'').toLowerCase().includes(q2) || (a.description||'').toLowerCase().includes(q2));
-        if(filtered.length){ renderStoriesFiltered(filtered); showSearchBanner(`Showing ${filtered.length} headlines for ${sym}`); }
-        else if(state.articles.length){ showSearchBanner(`No headlines for ${sym}`); }
+        // Filter headlines if stories grid exists
+        const grid = $('#storiesGrid');
+        if(grid && state.articles.length){
+          const q2 = sym.toLowerCase();
+          const filtered = state.articles.filter(a => (a.title||'').toLowerCase().includes(q2) || (a.description||'').toLowerCase().includes(q2));
+          if(filtered.length){ renderStoriesFiltered(filtered); showSearchBanner(`Showing ${filtered.length} headlines for ${sym}`); }
+          else { showSearchBanner(`No headlines for ${sym}`); }
+        }
       });
     });
   }
@@ -1122,7 +1121,7 @@
     try { await loadCategories(); } catch(e){ console.error('categories error:', e); }
     // Page-aware loading: only fetch data needed for this page
     if(page === 'markets'){
-      try { await Promise.all([loadMarkets(), fetchNews(true,{updateHero:false})]); } catch(e){ console.error('init load error:', e); }
+      try { await loadMarkets(); } catch(e){ console.error('init load error:', e); }
     } else if(page === 'opensource'){
       try { await loadOSS(); } catch(e){ console.error('init load error:', e); }
     } else if(page === 'trending'){

@@ -17,22 +17,11 @@
 <meta name="twitter:title" content="Cookie Policy — ChainPlus" />
 <meta name="twitter:description" content="Detailed cookie and tracking technology information for ChainPlus." />
 <meta name="twitter:image" content="https://chainplus.tech/og-image.png" />
-<meta property="og:type" content="website" />
-<meta property="og:title" content="Cookie Policy — ChainPlus" />
-<meta property="og:description" content="Detailed cookie and tracking technology information for ChainPlus." />
-<meta property="og:site_name" content="ChainPlus" />
-<meta property="og:image" content="https://chainplus.tech/og-image.png" />
-<meta property="og:url" content="https://chainplus.tech/cookies.html" />
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Cookie Policy — ChainPlus" />
-<meta name="twitter:description" content="Detailed cookie and tracking technology information for ChainPlus." />
-<meta name="twitter:image" content="https://chainplus.tech/og-image.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="styles.css" />
 <script>(function(){var s=localStorage.getItem('cp-theme');if(s==='light')document.documentElement.classList.add('light');})();</script>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8503915493262909" crossorigin="anonymous"></script>
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 </head>
 <body>
@@ -77,7 +66,8 @@
         <tr style="border-bottom:1px solid var(--border)"><td style="padding:8px"><code>cp-cookies</code></td><td style="padding:8px">localStorage</td><td style="padding:8px">Records that you accepted the cookie banner</td><td style="padding:8px">Persistent</td><td style="padding:8px">ChainPlus</td></tr>
         <tr style="border-bottom:1px solid var(--border)"><td style="padding:8px"><code>cp-api-base</code></td><td style="padding:8px">localStorage</td><td style="padding:8px">Stores custom API base URL (if set)</td><td style="padding:8px">Persistent</td><td style="padding:8px">ChainPlus</td></tr>
         <tr style="border-bottom:1px solid var(--border)"><td style="padding:8px"><code>cp-news-cache</code></td><td style="padding:8px">localStorage</td><td style="padding:8px">Caches news headlines for offline resilience</td><td style="padding:8px">Persistent</td><td style="padding:8px">ChainPlus</td></tr>
-        <tr><td style="padding:8px"><code>cp-markets-cache</code></td><td style="padding:8px">localStorage</td><td style="padding:8px">Caches market data for resilience</td><td style="padding:8px">Persistent</td><td style="padding:8px">ChainPlus</td></tr>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:8px"><code>cp-markets-cache</code></td><td style="padding:8px">localStorage</td><td style="padding:8px">Caches market data for resilience</td><td style="padding:8px">Persistent</td><td style="padding:8px">ChainPlus</td></tr>
+        <tr><td style="padding:8px"><code>__cf_bm</code></td><td style="padding:8px">Cookie</td><td style="padding:8px">Cloudflare bot management and security</td><td style="padding:8px">30 minutes</td><td style="padding:8px">Cloudflare</td></tr>
       </tbody>
     </table>
 
@@ -153,9 +143,26 @@
 <!-- Cookie Consent -->
 <div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1a1a1a;color:#fff;padding:16px 24px;z-index:9999;font-size:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
   <span>We use cookies to improve your experience and serve personalized ads. By continuing, you agree to our <a href="privacy.html" style="color:#00e5a0;text-decoration:underline">Privacy Policy</a> and <a href="cookies.html" style="color:#00e5a0;text-decoration:underline">Cookie Policy</a>.</span>
-  <button onclick="document.getElementById('cookie-banner').style.display='none';try{localStorage.setItem('cp-cookies','1')}catch(e){}" style="background:#00e5a0;color:#000;border:none;padding:8px 20px;border-radius:6px;cursor:pointer;font-weight:600">Accept</button>
+  <button onclick="document.getElementById('cookie-banner').style.display='none';try{localStorage.setItem('cp-cookies','1');loadAdSense();}catch(e){}" style="background:#00e5a0;color:#000;border:none;padding:8px 20px;border-radius:6px;cursor:pointer;font-weight:600">Accept</button>
 </div>
-<script>try{if(!localStorage.getItem('cp-cookies'))document.getElementById('cookie-banner').style.display='flex';}catch(e){}</script>
+<script>
+function loadAdSense(){
+  if(window.__adsLoaded) return;
+  window.__adsLoaded = true;
+  var s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8503915493262909';
+  s.crossOrigin = 'anonymous';
+  document.head.appendChild(s);
+}
+try{
+  if(localStorage.getItem('cp-cookies')){
+    loadAdSense();
+  } else {
+    document.getElementById('cookie-banner').style.display = 'flex';
+  }
+}catch(e){}
+</script>
 
 </body>
 </html>

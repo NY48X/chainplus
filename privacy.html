@@ -22,7 +22,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="styles.css" />
 <script>(function(){var s=localStorage.getItem('cp-theme');if(s==='light')document.documentElement.classList.add('light');})();</script>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8503915493262909" crossorigin="anonymous"></script>
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 </head>
 <body>
@@ -82,7 +81,7 @@
       <tbody>
         <tr style="border-bottom:1px solid var(--border)"><td style="padding:8px">Email address (newsletter)</td><td style="padding:8px">Send you crypto news headlines and updates</td><td style="padding:8px">Consent (Art. 6(1)(a))</td></tr>
         <tr style="border-bottom:1px solid var(--border)"><td style="padding:8px">Name, email, message (contact form)</td><td style="padding:8px">Respond to your inquiry</td><td style="padding:8px">Consent (Art. 6(1)(a))</td></tr>
-        <tr style="border-bottom:1px solid var(--border)"><td style="padding:8px">IP address, browser, device type</td><td style="padding:8px">Site security, abuse prevention, analytics</td><td style="padding:8px">Legitimate interest (Art. 6(1)(f))</td></tr>
+        <tr style="border-bottom:1px solid var(--border)"><td style="padding:8px">IP address, browser, device type</td><td style="padding:8px">Site security, abuse prevention, CDN routing</td><td style="padding:8px">Legitimate interest (Art. 6(1)(f))</td></tr>
         <tr style="border-bottom:1px solid var(--border)"><td style="padding:8px">Cookie and advertising data</td><td style="padding:8px">Serve and measure advertisements</td><td style="padding:8px">Consent (Art. 6(1)(a))</td></tr>
         <tr><td style="padding:8px">Local storage preferences</td><td style="padding:8px">Remember your settings (language, theme)</td><td style="padding:8px">Legitimate interest (Art. 6(1)(f))</td></tr>
       </tbody>
@@ -184,9 +183,26 @@
 <!-- Cookie Consent -->
 <div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1a1a1a;color:#fff;padding:16px 24px;z-index:9999;font-size:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
   <span>We use cookies to improve your experience and serve personalized ads. By continuing, you agree to our <a href="privacy.html" style="color:#00e5a0;text-decoration:underline">Privacy Policy</a> and <a href="cookies.html" style="color:#00e5a0;text-decoration:underline">Cookie Policy</a>.</span>
-  <button onclick="document.getElementById('cookie-banner').style.display='none';try{localStorage.setItem('cp-cookies','1')}catch(e){}" style="background:#00e5a0;color:#000;border:none;padding:8px 20px;border-radius:6px;cursor:pointer;font-weight:600">Accept</button>
+  <button onclick="document.getElementById('cookie-banner').style.display='none';try{localStorage.setItem('cp-cookies','1');loadAdSense();}catch(e){}" style="background:#00e5a0;color:#000;border:none;padding:8px 20px;border-radius:6px;cursor:pointer;font-weight:600">Accept</button>
 </div>
-<script>try{if(!localStorage.getItem('cp-cookies'))document.getElementById('cookie-banner').style.display='flex';}catch(e){}</script>
+<script>
+function loadAdSense(){
+  if(window.__adsLoaded) return;
+  window.__adsLoaded = true;
+  var s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8503915493262909';
+  s.crossOrigin = 'anonymous';
+  document.head.appendChild(s);
+}
+try{
+  if(localStorage.getItem('cp-cookies')){
+    loadAdSense();
+  } else {
+    document.getElementById('cookie-banner').style.display = 'flex';
+  }
+}catch(e){}
+</script>
 
 </body>
 </html>
