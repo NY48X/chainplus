@@ -1081,14 +1081,23 @@ async function fetchRSSFallback(){
     if(!text || target==='en') return text;
     const key = _trKey(text, target);
     if(_trCache[key]) return _trCache[key];
-    try{
-      const r = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${encodeURIComponent(target)}&dt=t&q=${encodeURIComponent(text)}`);
-      if(!r.ok) return text;
-      const d = await r.json();
-      const tr = (d[0]||[]).map(x=>x[0]).join('') || text;
-      _trCache[key] = tr;
-      return tr;
-    }catch(e){ return text; }
+    for(let attempt=0; attempt<3; attempt++){
+      try{
+        const r = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${encodeURIComponent(target)}&dt=t&q=${encodeURIComponent(text)}`);
+        if(r.status === 429){
+          await new Promise(res=>setTimeout(res, 500*(attempt+1)));
+          continue;
+        }
+        if(!r.ok) return text;
+        const d = await r.json();
+        const tr = (d[0]||[]).map(x=>x[0]).join('') || text;
+        _trCache[key] = tr;
+        return tr;
+      }catch(e){ 
+        if(attempt < 2) await new Promise(res=>setTimeout(res, 300*(attempt+1)));
+      }
+    }
+    return text;
   }
 
   // Batch translate: collects all text nodes, sends in chunks of up to 5 texts joined by a unique separator
@@ -1105,6 +1114,10 @@ async function fetchRSSFallback(){
       const v = tn.nodeValue;
       const trimmed = (v||'').trim();
       if(trimmed.length < 2) return null;
+      // Skip pure numbers, URLs, and single-word brand names
+      if(/^\d[\d.,%$€£¥]*$/.test(trimmed)) return null;
+      if(/^https?:\/\//.test(trimmed)) return null;
+      if(/^[A-Z]{2,}$/.test(trimmed)) return null;
       // Skip script/style content
       const parent = tn.parentNode;
       if(parent && (parent.tagName==='SCRIPT' || parent.tagName==='STYLE' || parent.tagName==='CODE')) return null;
@@ -1128,8 +1141,9 @@ async function fetchRSSFallback(){
     if(!uncached.length) return;
 
     // Process in batches of 5 to reduce API calls
-    const BATCH = 5;
+    const BATCH = 8;
     for(let i=0; i<uncached.length; i+=BATCH){
+      if(i > 0) await new Promise(res=>setTimeout(res, 100));
       const batch = uncached.slice(i, i+BATCH);
       const combined = batch.map(b=>b.text).join(SEP);
       try{
