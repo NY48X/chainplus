@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://chainplus.tech/</loc><changefreq>hourly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://chainplus.tech/markets.html</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://chainplus.tech/breaking.html</loc><changefreq>hourly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://chainplus.tech/trending.html</loc><changefreq>hourly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://chainplus.tech/insights.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://chainplus.tech/opensource.html</loc><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://chainplus.tech/about.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://chainplus.tech/methodology.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://chainplus.tech/faq.html</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://chainplus.tech/contact.html</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
-  <url><loc>https://chainplus.tech/privacy.html</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
-  <url><loc>https://chainplus.tech/terms.html</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://chainplus.tech/</loc><lastmod>2026-11-02T09:13:49Z</lastmod><changefreq>hourly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://chainplus.tech/markets.html</loc><lastmod>2026-11-02T09:13:49Z</lastmod><changefreq>hourly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://chainplus.tech/breaking.html</loc><lastmod>2026-11-02T09:13:49Z</lastmod><changefreq>hourly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://chainplus.tech/trending.html</loc><lastmod>2026-11-02T09:13:49Z</lastmod><changefreq>hourly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://chainplus.tech/insights.html</loc><lastmod>2026-11-02T09:13:49Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://chainplus.tech/opensource.html</loc><lastmod>2026-11-02T09:13:49Z</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://chainplus.tech/about.html</loc><lastmod>2026-11-02T09:13:49Z</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://chainplus.tech/methodology.html</loc><lastmod>2026-11-02T09:13:49Z</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://chainplus.tech/faq.html</loc><lastmod>2026-11-02T09:13:49Z</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://chainplus.tech/contact.html</loc><lastmod>2026-11-02T09:13:49Z</lastmod><changefreq>monthly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://chainplus.tech/privacy.html</loc><lastmod>2026-11-02T09:13:49Z</lastmod><changefreq>monthly</changefreq><priority>0.3</priority></url>
+  <url><loc>https://chainplus.tech/terms.html</loc><lastmod>2026-11-02T09:13:49Z</lastmod><changefreq>monthly</changefreq><priority>0.3</priority></url>
 </urlset>
