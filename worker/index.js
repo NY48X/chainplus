@@ -111,16 +111,16 @@ async function hasMX(domain){
   }catch(e){return true;}
 }
 async function rateLimit(key,max,windowSec){
-  if(!SUBSCRIBERS)return true;
+  if(!globalThis.SUBSCRIBERS)return true;
   const k='rl:'+key;
-  const raw=await SUBSCRIBERS.get(k);
+  const raw=await globalThis.SUBSCRIBERS.get(k);
   const now=Date.now();
   let data;
   try{data=raw?JSON.parse(raw):null;}catch(e){data=null;}
   if(!data||now>data.reset){data={count:0,reset:now+windowSec*1000};}
   if(data.count>=max)return false;
   data.count++;
-  try{await SUBSCRIBERS.put(k,JSON.stringify(data),{expirationTtl:windowSec+60});}catch(e){}
+  try{await globalThis.SUBSCRIBERS.put(k,JSON.stringify(data),{expirationTtl:windowSec+60});}catch(e){}
   return true;
 }
 async function handle(req, env){
@@ -143,10 +143,10 @@ async function handle(req, env){
         const message=(body.message||'').trim().slice(0,5000);
         if(!name||!email||!subject||!message)return j({error:'all fields required'},400,true);
         if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return j({error:'invalid email'},400,true);
-        if(!RESEND_API_KEY)return j({error:'email service not configured'},503,true);
+        if(!globalThis.RESEND_API_KEY)return j({error:'email service not configured'},503,true);
         const res=await fetch('https://api.resend.com/emails',{
           method:'POST',
-          headers:{'Authorization':'Bearer '+RESEND_API_KEY,'Content-Type':'application/json'},
+          headers:{'Authorization':'Bearer '+globalThis.RESEND_API_KEY,'Content-Type':'application/json'},
           body:JSON.stringify({
             from:'ChainPlus Contact <welcome@chainplus.tech>',
             to:['support@chainplus.tech'],
@@ -171,16 +171,16 @@ async function handle(req, env){
         if(isDisposable(domain))return j({error:'disposable email not allowed'},400,true);
         const mx=await hasMX(domain);
         if(!mx)return j({error:'email domain has no mail server'},400,true);
-        if(SUBSCRIBERS){
-          const existing=await SUBSCRIBERS.get(email);
+        if(globalThis.SUBSCRIBERS){
+          const existing=await globalThis.SUBSCRIBERS.get(email);
           if(existing)return j({ok:true,message:'already subscribed'},200,true);
-          await SUBSCRIBERS.put(email, JSON.stringify({email:email,subscribedAt:new Date().toISOString()}));
+          await globalThis.SUBSCRIBERS.put(email, JSON.stringify({email:email,subscribedAt:new Date().toISOString()}));
         }
-        if(RESEND_API_KEY){
+        if(globalThis.RESEND_API_KEY){
           try{
             await fetch('https://api.resend.com/emails',{
               method:'POST',
-              headers:{'Authorization':'Bearer '+RESEND_API_KEY,'Content-Type':'application/json'},
+              headers:{'Authorization':'Bearer '+globalThis.RESEND_API_KEY,'Content-Type':'application/json'},
               body:JSON.stringify({
                 from:'ChainPlus <welcome@chainplus.tech>',
                 reply_to:['support@chainplus.tech'],

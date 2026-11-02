@@ -545,7 +545,7 @@
         console.warn('CoinGecko returned', r.status);
         try{
           const cached = localStorage.getItem('cp-markets-cache');
-          if(cached){ state.markets = JSON.parse(cached); renderMarketStrip(); return; }
+          if(cached){ state.markets = JSON.parse(cached); state.marketCoins = Object.values(state.markets||{}).map(d=>({id:d.id,sym:(d.symbol||'').toUpperCase(),name:d.name})); renderMarketStrip(); return; }
         }catch(e){}
         return;
       }
@@ -668,7 +668,7 @@
         const all = $('#categoryChips .chip'); if(all) all.classList.add('active');
         const filtered = state.articles.filter(a => (a.title||'').toLowerCase().includes(q2) || (a.description||'').toLowerCase().includes(q2));
         if(filtered.length){ renderStoriesFiltered(filtered); showSearchBanner(`Showing ${filtered.length} headlines for ${sym}`); }
-        else showSearchBanner(`No headlines for ${sym}`);
+        else if(state.articles.length){ showSearchBanner(`No headlines for ${sym}`); }
       });
     });
   }
