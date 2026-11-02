@@ -626,12 +626,55 @@
     const isUp = vals[vals.length-1] >= vals[0];
     const color = isUp ? 'var(--accent)' : 'var(--danger)';
 
-    container.innerHTML = `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" style="width:100%;height:auto">
+    // Build price lookup for hover
+    const priceData = prices;
+    container.innerHTML = `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" style="width:100%;height:auto;cursor:crosshair" id="chartSvg">
       ${gridSvg}
       <polygon points="${areaPts}" fill="${color}" opacity="0.1"/>
       <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round"/>
       ${dateSvg}
-    </svg>`;
+      <line id="hoverLine" x1="0" y1="${pad.top}" x2="0" y2="${pad.top+plotH}" stroke="var(--muted-2)" stroke-width="1" stroke-dasharray="4,4" opacity="0" />
+      <circle id="hoverDot" cx="0" cy="0" r="4" fill="${color}" opacity="0" />
+    </svg>
+    <div id="chartTooltip" style="position:absolute;display:none;padding:6px 10px;background:var(--surface);border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:var(--font-mono);pointer-events:none;z-index:10;white-space:nowrap"></div>`;
+
+    // Hover interaction
+    const svg = container.querySelector('#chartSvg');
+    const hoverLine = container.querySelector('#hoverLine');
+    const hoverDot = container.querySelector('#hoverDot');
+    const tooltip = container.querySelector('#chartTooltip');
+    if(svg && hoverLine && hoverDot && tooltip){
+      container.style.position = 'relative';
+      svg.addEventListener('mousemove', (e)=>{
+        const rect = svg.getBoundingClientRect();
+        const scaleX = w / rect.width;
+        const mx = (e.clientX - rect.left) * scaleX;
+        // Find nearest price point
+        let best = null, bestDist = Infinity;
+        for(const p of priceData){
+          const px = pad.left + ((p.t-tMin)/tRange)*plotW;
+          const dist = Math.abs(px - mx);
+          if(dist < bestDist){ bestDist = dist; best = p; }
+        }
+        if(!best) return;
+        const px = pad.left + ((best.t-tMin)/tRange)*plotW;
+        const py = pad.top + (1-(best.v-min)/range)*plotH;
+        hoverLine.setAttribute('x1', px); hoverLine.setAttribute('x2', px);
+        hoverLine.setAttribute('opacity', '1');
+        hoverDot.setAttribute('cx', px); hoverDot.setAttribute('cy', py);
+        hoverDot.setAttribute('opacity', '1');
+        tooltip.style.display = 'block';
+        tooltip.style.left = (px + 12) + 'px';
+        tooltip.style.top = (py - 30) + 'px';
+        const d = new Date(best.t);
+        tooltip.textContent = `${d.toLocaleDateString('en-US',{month:'short',day:'numeric'})} ${d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})} — $${best.v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
+      });
+      svg.addEventListener('mouseleave', ()=>{
+        hoverLine.setAttribute('opacity', '0');
+        hoverDot.setAttribute('opacity', '0');
+        tooltip.style.display = 'none';
+      });
+    }
   }
   function renderMarketStrip(filter){
     const el = $('#marketStrip'); if(!el || !state.markets) return;
@@ -934,6 +977,8 @@
 
   // live flowing poll: prepend new articles without wiping
   async function livePoll(){
+    const page = (document.body && document.body.dataset && document.body.dataset.page) || 'news';
+    if(page !== 'news' && page !== 'breaking' && page !== 'topic') return;
     if(state.loading || state.search.trim() || state.cat!=='all') return;
     try{
       const data = await api(`/api/news?limit=${state.limit}&page=1`);
@@ -1039,7 +1084,7 @@
     try { await loadCategories(); } catch(e){ console.error('categories error:', e); }
     // Page-aware loading: only fetch data needed for this page
     if(page === 'markets'){
-      try { await loadMarkets(); } catch(e){ console.error('init load error:', e); }
+      try { await Promise.all([loadMarkets(), fetchNews(true,{updateHero:false})]); } catch(e){ console.error('init load error:', e); }
     } else if(page === 'opensource'){
       try { await loadOSS(); } catch(e){ console.error('init load error:', e); }
     } else if(page === 'trending'){
