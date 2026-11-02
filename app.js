@@ -909,7 +909,8 @@
     }catch(e){ return text; }
   }
 
-  // Batch translate: collects all text nodes, sends in chunks of up to 5 texts joined by newlines
+  // Batch translate: collects all text nodes, sends in chunks of up to 5 texts joined by a unique separator
+  const SEP = ' \u2016\u2016\u2016 '; // triple pipe (‖‖‖) — Google preserves this
   async function translateNode(el, target){
     if(!el || target==='en') return;
     const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
@@ -930,20 +931,46 @@
 
     if(!translatable.length) return;
 
+    // Cache individual texts first; only translate uncached ones
+    const uncached = translatable.filter(b => !_trCache[_trKey(b.text, target)]);
+    // Apply cached translations immediately
+    translatable.forEach(b => {
+      const key = _trKey(b.text, target);
+      if(_trCache[key]){
+        const translated = _trCache[key];
+        if(translated && translated !== b.text){
+          b.node.nodeValue = b.original.replace(b.text, translated);
+        }
+      }
+    });
+    if(!uncached.length) return;
+
     // Process in batches of 5 to reduce API calls
     const BATCH = 5;
-    for(let i=0; i<translatable.length; i+=BATCH){
-      const batch = translatable.slice(i, i+BATCH);
-      const combined = batch.map(b=>b.text).join('\n');
+    for(let i=0; i<uncached.length; i+=BATCH){
+      const batch = uncached.slice(i, i+BATCH);
+      const combined = batch.map(b=>b.text).join(SEP);
       try{
         const tr = await translateText(combined, target);
-        const parts = tr.split('\n');
-        batch.forEach((b, idx)=>{
-          const translated = (parts[idx] || b.text).trim();
-          if(translated && translated !== b.text){
-            b.node.nodeValue = b.original.replace(b.text, translated);
+        const parts = tr.split(SEP);
+        // If separator count doesn't match, fall back to individual translation
+        if(parts.length !== batch.length){
+          for(const b of batch){
+            const t = await translateText(b.text, target);
+            _trCache[_trKey(b.text, target)] = t;
+            if(t && t !== b.text){
+              b.node.nodeValue = b.original.replace(b.text, t);
+            }
           }
-        });
+        } else {
+          batch.forEach((b, idx)=>{
+            const translated = (parts[idx] || b.text).trim();
+            _trCache[_trKey(b.text, target)] = translated;
+            if(translated && translated !== b.text){
+              b.node.nodeValue = b.original.replace(b.text, translated);
+            }
+          });
+        }
       }catch(e){ /* ignore */ }
     }
   }
