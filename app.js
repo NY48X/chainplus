@@ -1359,7 +1359,7 @@ async function fetchRSSFallback(){
     } else if(page === 'trending'){
       try { await loadTrending(); } catch(e){ console.error('init load error:', e); }
     } else if(page === 'breaking'){
-      try { await Promise.all([fetchNews(true,{updateHero:true}), renderTicker()]); } catch(e){ console.error('init load error:', e); }
+      try { await Promise.all([fetchNews(true,{updateHero:false}), loadTrending(), loadFG(), renderTicker()]); } catch(e){ console.error('init load error:', e); }
     } else if(page === 'topic'){
       try { await Promise.all([fetchNews(true,{updateHero:false}), loadTrending()]); } catch(e){ console.error('init load error:', e); }
       // Render rising topics dashboard
