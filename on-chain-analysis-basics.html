@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>On-Chain Analysis: Reading the Blockchain — ChainPlus</title>
+  <meta name="description" content="What is on-chain analysis, what data is available, and how can you use it to understand crypto markets?" />
+  <meta name="author" content="ChainPlus Team" />
+  <link rel="canonical" href="https://chainplus.tech/on-chain-analysis-basics.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="On-Chain Analysis: Reading the Blockchain" />
+  <meta property="og:description" content="What is on-chain analysis, what data is available, and how can you use it to understand crypto markets?" />
+  <meta property="og:site_name" content="ChainPlus" />
+  <meta property="og:image" content="https://chainplus.tech/og-image.png" />
+  <meta property="og:url" content="https://chainplus.tech/on-chain-analysis-basics.html" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="On-Chain Analysis: Reading the Blockchain" />
+  <meta name="twitter:description" content="What is on-chain analysis, what data is available, and how can you use it to understand crypto markets?" />
+  <meta name="twitter:image" content="https://chainplus.tech/og-image.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8503915493262909" crossorigin="anonymous"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "On-Chain Analysis: Reading the Blockchain",
+    "description": "What is on-chain analysis, what data is available, and how can you use it to understand crypto markets?",
+    "url": "https://chainplus.tech/on-chain-analysis-basics.html",
+    "datePublished": "2026-10-25",
+    "dateModified": "2026-10-25",
+    "author": {
+      "@type": "Organization",
+      "name": "ChainPlus Team"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "ChainPlus",
+      "url": "https://chainplus.tech"
+    }
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="index.html" aria-label="ChainPlus home">ChainPlus<span class="dot">.</span></a>
+      <nav class="desktop-nav">
+        <a href="index.html">Home</a>
+        <a href="markets.html">Markets</a>
+        <a href="breaking.html">Breaking</a>
+        <a href="trending.html">Trending</a>
+        <a href="topic.html">Topics</a>
+        <a href="opensource.html">Open Source</a>
+        <a href="insights.html" class="active">Insights</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="container page" style="max-width:720px">
+      <article>
+        <h1>On-Chain Analysis: Reading the Blockchain</h1>
+        <p class="meta" style="color:var(--text-3);font-size:14px;margin-bottom:24px">By <a href="about.html" style="color:var(--accent)">ChainPlus Team</a> · October 25, 2026 · Analysis</p>
+        <p>The blockchain is the most transparent financial dataset ever created. Every transaction, every wallet movement, every token transfer is permanently recorded and publicly accessible. On-chain analysis is the practice of extracting insights from this data.</p>
+
+<h2>Key On-Chain Metrics</h2>
+<h3>Exchange Net Flows</h3>
+<p>When more coins leave exchanges than enter, it suggests accumulation (holders moving to cold storage). When more enter than leave, it suggests distribution (holders preparing to sell). This is one of the most reliable on-chain signals.</p>
+
+<h3>Whale Wallet Activity</h3>
+<p>Large holders ("whales") can move markets. Tracking their buying and selling patterns can provide insight into smart money sentiment. But beware: whale activity can also be misleading — large holders may split funds across multiple wallets to obscure their activity.</p>
+
+<h3>Stablecoin Supply</h3>
+<p>Growing stablecoin supply means new capital entering the crypto ecosystem. Shrinking supply means capital leaving. This is a macro indicator that correlates with overall market direction.</p>
+
+<h3>Active Addresses</h3>
+<p>The number of unique addresses transacting on a network. Rising active addresses suggest growing adoption and network usage. Falling active addresses suggest declining interest.</p>
+
+<h3>MVRV Ratio</h3>
+<p>Market Value to Realized Value. Compares the current market cap to the "realized cap" (the price at which each coin last moved). When MVRV is high, the market is overvalued relative to historical cost basis. When low, it's undervalued.</p>
+
+<h2>Limitations of On-Chain Analysis</h2>
+<ul>
+<li><strong>Noise:</strong> Most on-chain activity is noise — wash trading, arbitrage, MEV bots, and automated systems generate millions of transactions with no informational value.</li>
+<li><strong>Anonymity:</strong> While transactions are public, identities are not. Wallet clustering (grouping addresses that belong to the same entity) is difficult and imperfect.</li>
+<li><strong>Lag:</strong> On-chain data is real-time, but interpretation takes time. A whale buying today might not affect price for days or weeks.</li>
+<li><strong>Context:</strong> On-chain data doesn't exist in a vacuum. It must be interpreted alongside market conditions, news, and macro factors.</li>
+</ul>
+
+<h2>Getting Started</h2>
+<p>Platforms like Glassnode, Nansen, and Arkham provide on-chain analytics dashboards. Start with simple metrics (exchange flows, active addresses) before diving into complex ones (MVRV, SOPR). And remember: on-chain data predicts behavior, not price. Use it for context, not predictions.</p>
+      
+<h2>Tools for On-Chain Analysis</h2>
+<ul>
+<li><strong>Glassnode:</strong> Comprehensive on-chain metrics and dashboards. Paid but has free tier.</li>
+<li><strong>Nansen:</strong> Wallet labeling and smart money tracking. Excellent for identifying whale behavior.</li>
+<li><strong>Arkham:</strong> On-chain intelligence platform with entity identification.</li>
+<li><strong>Dune Analytics:</strong> Custom SQL queries on blockchain data. Free and powerful.</li>
+<li><strong>DefiLlama:</strong> DeFi TVL and protocol metrics. Free and comprehensive.</li>
+</ul>
+
+<h2>Practical Application</h2>
+<p>Here's how to use on-chain data in practice:</p>
+<ol>
+<li><strong>Check exchange flows weekly.</strong> Consistent outflows suggest accumulation. Consistent inflows suggest distribution.</li>
+<li><strong>Monitor whale wallets.</strong> Are large holders buying or selling? This often precedes price moves.</li>
+<li><strong>Track stablecoin supply.</strong> Growing supply means new capital entering. Shrinking means capital leaving.</li>
+<li><strong>Use MVRV for context.</strong> High MVRV = overvalued. Low MVRV = undervalued. Not a timing tool, but a valuation reference.</li>
+</ol>
+
+<h2>Common On-Chain Patterns</h2>
+<p>Here are some patterns that on-chain analysts look for:</p>
+<ul>
+<li><strong>Exchange outflows before price rises:</strong> When large amounts leave exchanges, it often precedes price increases. Holders are moving to cold storage, reducing sell pressure.</li>
+<li><strong>Whale accumulation during dips:</strong> Large holders buying during price drops often signals a bottom. They're taking advantage of lower prices.</li>
+<li><strong>Stablecoin inflows before rallies:</strong> When stablecoin supply on exchanges increases, it suggests dry powder ready to be deployed. This often precedes price increases.</li>
+<li><strong>Miner selling:</strong> When miners sell their rewards, it creates sell pressure. Tracking miner outflows can signal short-term price pressure.</li>
+</ul>
+
+<h2>Combining On-Chain with Other Analysis</h2>
+<p>On-chain analysis is most powerful when combined with other forms of analysis:</p>
+<ul>
+<li><strong>Technical analysis:</strong> Use on-chain data to confirm or contradict technical signals.</li>
+<li><strong>Fundamental analysis:</strong> Use on-chain data to verify adoption and usage claims.</li>
+<li><strong>Sentiment analysis:</strong> Use on-chain data to measure actual behavior vs. stated sentiment.</li>
+</ul>
+<p>No single analysis method is sufficient. The best investors combine multiple approaches and maintain intellectual humility about their limitations.</p>
+
+<h2>Frequently Asked Questions</h2>
+<h3>Do I need to pay for on-chain analytics?</h3>
+<p>No. Free tools like Dune Analytics, DefiLlama, and Etherscan provide substantial on-chain data. Paid tools (Glassnode, Nansen) offer more sophisticated metrics and dashboards but aren't necessary for beginners.</p>
+<h3>Can on-chain analysis predict prices?</h3>
+<p>On-chain analysis predicts behavior, not price. It tells you what market participants are doing, not what prices will do. Use it for context and understanding, not predictions.</p>
+<h3>How accurate is on-chain analysis?</h3>
+<p>Accuracy varies by metric and context. Exchange flows and active addresses are relatively reliable. Wallet clustering and smart money identification are less reliable. Always combine on-chain data with other analysis methods.</p>
+<h3>What's the best on-chain metric for beginners?</h3>
+<p>Exchange net flows. They're simple to understand, widely available, and historically reliable. When more coins leave exchanges than enter, it suggests accumulation. When more enter than leave, it suggests distribution.</p>
+</article>
+      <div style="margin-top:40px;padding-top:24px;border-top:1px solid var(--border)">
+        <a href="insights.html" style="color:var(--accent)">← Back to Insights</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-brand">ChainPlus<span class="dot">.</span></div>
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="markets.html">Markets</a>
+        <a href="breaking.html">Breaking</a>
+        <a href="trending.html">Trending</a>
+        <a href="topic.html">Topics</a>
+        <a href="opensource.html">Open Source</a>
+        <a href="insights.html">Insights</a>
+        <a href="about.html">About</a>
+        <a href="methodology.html">Methodology</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contact.html">Contact</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="cookies.html">Cookie Policy</a>
+        <a href="terms.html">Terms</a>
+      </div>
+      <div class="footer-links" style="margin-top:8px;font-size:12px">
+        <a href="https://www.coingecko.com" target="_blank" rel="noopener">CoinGecko</a>
+        <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <p class="footer-copy">© 2026 ChainPlus. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

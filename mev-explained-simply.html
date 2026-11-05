@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MEV Explained: The Hidden Tax on Crypto Transactions — ChainPlus</title>
+  <meta name="description" content="What is MEV (Maximal Extractable Value), how does it affect you, and what can you do about it?" />
+  <meta name="author" content="ChainPlus Team" />
+  <link rel="canonical" href="https://chainplus.tech/mev-explained-simply.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="MEV Explained: The Hidden Tax on Crypto Transactions" />
+  <meta property="og:description" content="What is MEV (Maximal Extractable Value), how does it affect you, and what can you do about it?" />
+  <meta property="og:site_name" content="ChainPlus" />
+  <meta property="og:image" content="https://chainplus.tech/og-image.png" />
+  <meta property="og:url" content="https://chainplus.tech/mev-explained-simply.html" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="MEV Explained: The Hidden Tax on Crypto Transactions" />
+  <meta name="twitter:description" content="What is MEV (Maximal Extractable Value), how does it affect you, and what can you do about it?" />
+  <meta name="twitter:image" content="https://chainplus.tech/og-image.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8503915493262909" crossorigin="anonymous"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "MEV Explained: The Hidden Tax on Crypto Transactions",
+    "description": "What is MEV (Maximal Extractable Value), how does it affect you, and what can you do about it?",
+    "url": "https://chainplus.tech/mev-explained-simply.html",
+    "datePublished": "2026-10-26",
+    "dateModified": "2026-10-26",
+    "author": {
+      "@type": "Organization",
+      "name": "ChainPlus Team"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "ChainPlus",
+      "url": "https://chainplus.tech"
+    }
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="index.html" aria-label="ChainPlus home">ChainPlus<span class="dot">.</span></a>
+      <nav class="desktop-nav">
+        <a href="index.html">Home</a>
+        <a href="markets.html">Markets</a>
+        <a href="breaking.html">Breaking</a>
+        <a href="trending.html">Trending</a>
+        <a href="topic.html">Topics</a>
+        <a href="opensource.html">Open Source</a>
+        <a href="insights.html" class="active">Insights</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="container page" style="max-width:720px">
+      <article>
+        <h1>MEV Explained: The Hidden Tax on Crypto Transactions</h1>
+        <p class="meta" style="color:var(--text-3);font-size:14px;margin-bottom:24px">By <a href="about.html" style="color:var(--accent)">ChainPlus Team</a> · October 26, 2026 · Explainer</p>
+        <p>Every time you make a crypto transaction, someone might be extracting value from it. This is called MEV (Maximal Extractable Value), and it's one of the most important — and least understood — concepts in crypto.</p>
+
+<h2>What Is MEV?</h2>
+<p>MEV is the profit that can be extracted from users by reordering, inserting, or censoring transactions within a block. It's essentially a tax on every transaction that most users don't know they're paying.</p>
+
+<h2>How MEV Works</h2>
+<p>When you submit a transaction to a blockchain, it goes to the mempool (a waiting area for pending transactions). Before your transaction is included in a block, sophisticated actors (called "searchers") can see it and act on it.</p>
+<p>The most common form is the sandwich attack: a bot sees your large trade, buys before you (front-running), lets your trade push the price up, then sells at the higher price (back-running). You get a worse execution price; the bot profits.</p>
+
+<h2>Who Benefits?</h2>
+<p>The MEV supply chain involves multiple participants:</p>
+<ul>
+<li><strong>Searchers:</strong> Find MEV opportunities and construct profitable transaction bundles.</li>
+<li><strong>Builders:</strong> Assemble blocks from transaction bundles, optimizing for profit.</li>
+<li><strong>Validators/Proposers:</strong> Select which block to publish and take a cut.</li>
+</ul>
+<p>Each participant takes a share. The total MEV extracted on Ethereum alone exceeds $1 billion annually.</p>
+
+<h2>How MEV Affects You</h2>
+<ul>
+<li><strong>Worse execution prices:</strong> Sandwich attacks cost you money on every large trade.</li>
+<li><strong>Higher gas fees:</strong> Searchers bid up gas prices to get their transactions included first.</li>
+<li><strong>Failed transactions:</strong> Your transaction might be censored or delayed if it's not profitable for validators.</li>
+</ul>
+
+<h2>What Can You Do?</h2>
+<ul>
+<li><strong>Use MEV-protected RPCs:</strong> Services like Flashbots Protect and MEV Blocker submit transactions privately, preventing front-running.</li>
+<li><strong>Split large trades:</strong> Smaller trades are less attractive targets for sandwich attacks.</li>
+<li><strong>Use limit orders:</strong> DEXs like CoW Swap use batch auctions that are MEV-resistant.</li>
+<li><strong>Be aware:</strong> Simply knowing MEV exists helps you understand why your trades sometimes get worse prices than expected.</li>
+</ul>
+
+<h2>The Bigger Picture</h2>
+<p>MEV is a structural problem in blockchain design. As long as transactions are visible before inclusion, someone will extract value from them. The long-term solution is encrypted mempools or threshold encryption — technologies that are still in development but promise to eliminate MEV at the protocol level.</p>
+      
+<h2>MEV by the Numbers</h2>
+<p>The scale of MEV is staggering:</p>
+<ul>
+<li>Over $1 billion in MEV extracted on Ethereum since 2020.</li>
+<li>Sandwich attacks alone cost users hundreds of millions.</li>
+<li>During peak DeFi activity, MEV can exceed 5% of total transaction value.</li>
+<li>The most profitable MEV opportunities are in large DEX trades and liquidations.</li>
+</ul>
+
+<h2>The MEV Supply Chain in Detail</h2>
+<p><strong>Searchers</strong> are independent operators who run algorithms to find MEV opportunities. They compete in a priority gas auction (PGA) — whoever bids the most gas gets their transaction included first.</p>
+<p><strong>Builders</strong> (like Flashbots) aggregate searcher bundles and construct the most profitable block. They take a cut of the MEV and pass the rest to validators.</p>
+<p><strong>Validators</strong> select which block to propose. With MEV-Boost, validators can auction their block space to the highest bidder, maximizing their revenue.</p>
+<p>This supply chain has become highly sophisticated. What started as simple front-running has evolved into a multi-billion dollar industry with specialized infrastructure, algorithms, and market dynamics.</p>
+
+<h2>MEV Mitigation Strategies</h2>
+<p>Beyond using MEV-protected RPCs, here are additional strategies:</p>
+<ul>
+<li><strong>Time your transactions:</strong> MEV is more prevalent during high-volatility periods. Trading during calm periods reduces MEV exposure.</li>
+<li><strong>Use DEX aggregators:</strong> Services like 1inch and Matcha route trades across multiple DEXs to find the best price, making sandwich attacks harder.</li>
+<li><strong>Set slippage tolerance carefully:</strong> Too high a slippage tolerance makes you an easy target for sandwich attacks. Too low and your transaction fails.</li>
+<li><strong>Use private mempools:</strong> Some wallets and services offer private transaction submission that bypasses the public mempool entirely.</li>
+</ul>
+
+<h2>The Future of MEV</h2>
+<p>The MEV problem is being actively researched. Proposed solutions include:</p>
+<ul>
+<li><strong>Encrypted mempools:</strong> Transactions are encrypted until included in a block, preventing front-running.</li>
+<li><strong>Threshold encryption:</strong> Multiple parties must cooperate to decrypt transactions, removing single points of failure.</li>
+<li><strong>MEV smoothing:</strong> Distribute MEV revenue across all validators, reducing the incentive to extract it.</li>
+<li><strong>Application-level protection:</strong> DEXs and protocols building MEV resistance into their design.</li>
+</ul>
+<p>These solutions are promising but not yet deployed at scale. MEV will remain a significant issue for the foreseeable future.</p>
+
+<h2>Frequently Asked Questions</h2>
+<h3>How much does MEV cost the average user?</h3>
+<p>For small trades, MEV costs are minimal — a few cents to a few dollars. For large trades (>$10,000), MEV can cost hundreds or thousands of dollars. The average user probably loses $10-50 per year to MEV without knowing it.</p>
+<h3>Can I completely avoid MEV?</h3>
+<p>Not entirely. MEV is a structural feature of blockchain design. But you can significantly reduce your exposure by using MEV-protected RPCs, splitting large trades, and using MEV-resistant DEXs.</p>
+<h3>Is MEV illegal?</h3>
+<p>MEV is not illegal. It's a consequence of public mempools and deterministic execution. Some forms (like sandwich attacks) are ethically questionable but technically allowed by the protocol. Regulators have not yet addressed MEV specifically.</p>
+<h3>Does MEV affect Bitcoin?</h3>
+<p>MEV exists on Bitcoin but is less prevalent than on Ethereum. Bitcoin's simpler transaction model and different mempool structure make MEV extraction harder. The most significant MEV on Bitcoin is related to transaction ordering and fee sniping.</p>
+</article>
+      <div style="margin-top:40px;padding-top:24px;border-top:1px solid var(--border)">
+        <a href="insights.html" style="color:var(--accent)">← Back to Insights</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-brand">ChainPlus<span class="dot">.</span></div>
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="markets.html">Markets</a>
+        <a href="breaking.html">Breaking</a>
+        <a href="trending.html">Trending</a>
+        <a href="topic.html">Topics</a>
+        <a href="opensource.html">Open Source</a>
+        <a href="insights.html">Insights</a>
+        <a href="about.html">About</a>
+        <a href="methodology.html">Methodology</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contact.html">Contact</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="cookies.html">Cookie Policy</a>
+        <a href="terms.html">Terms</a>
+      </div>
+      <div class="footer-links" style="margin-top:8px;font-size:12px">
+        <a href="https://www.coingecko.com" target="_blank" rel="noopener">CoinGecko</a>
+        <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <p class="footer-copy">© 2026 ChainPlus. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>
