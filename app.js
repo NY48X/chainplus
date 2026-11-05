@@ -743,13 +743,24 @@ async function fetchRSSFallback(){
   }
 
   async function loadCoinChart(coinId){
+    console.log('[Chart] loadCoinChart called with:', coinId);
     const chartEl = document.getElementById('marketChart');
     const chartTitle = document.getElementById('marketChartTitle');
     if(!chartEl) return;
     chartEl.innerHTML = '<div class="skeleton skeleton-line" style="height:200px"></div>';
     try{
-      const r = await fetchRetry(`${CG}/coins/${coinId}/market_chart?vs_currency=usd&days=30`);
-      if(!r.ok){ chartEl.innerHTML = '<div class="muted small">Chart data unavailable.</div>'; return; }
+      const r = await fetchRetry(`${CG}/coins/${coinId}/market_chart?vs_currency=usd&days=30`, {cache:'no-store'});
+      if(!r.ok){ 
+        // Fallback: use sparkline data from state.markets if available
+        const coin = state.markets && state.markets[coinId];
+        if(coin && coin.sparkline_in_7d && coin.sparkline_in_7d.price && coin.sparkline_in_7d.price.length){
+          const sparkPrices = coin.sparkline_in_7d.price.map((v,i)=>({t:Date.now()- (7-i)*86400000/24, v:v}));
+          drawChart(chartEl, sparkPrices);
+          if(chartTitle) chartTitle.textContent = `${coin.name} (${coin.symbol.toUpperCase()}) — 7 Day Price (cached)`;
+          return;
+        }
+        chartEl.innerHTML = '<div class="muted small">Chart data unavailable.</div>'; return; 
+      }
       const d = await r.json();
       const prices = (d.prices||[]).map(p=>({t:p[0],v:p[1]}));
       if(!prices.length){ chartEl.innerHTML = '<div class="muted small">No chart data.</div>'; return; }
@@ -763,6 +774,7 @@ async function fetchRSSFallback(){
   }
 
   function drawChart(container, prices){
+    console.log('[Chart] drawChart called, prices:', prices.length, 'first:', prices[0] && prices[0].v, 'last:', prices[prices.length-1] && prices[prices.length-1].v);
     const w = container.clientWidth || 600;
     const h = 240;
     const pad = {top:20,right:20,bottom:30,left:60};
