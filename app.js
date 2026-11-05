@@ -304,7 +304,6 @@ async function fetchRSSFallback(){
       renderStories();
       renderCompact();
       if(state.articles.length && (reset || opts.updateHero)) renderHero();
-      const lu = $('#lastUpdated'); if(lu) lu.textContent = 'last fetch ' + new Date().toLocaleTimeString();
       // Cache for offline/resilience
       try { localStorage.setItem('cp-news-cache', JSON.stringify(state.articles.slice(0,60))); } catch(e){}
     }catch(e){
@@ -1322,7 +1321,6 @@ async function fetchRSSFallback(){
         renderStories(); renderCompact(); renderHero();
         toast(`${fresh.length} new headline${fresh.length>1?'s':''} — flowed to top`);
       }
-      const lu = $('#lastUpdated'); if(lu) lu.textContent = 'live ' + new Date().toLocaleTimeString();
     }catch(e){ /* silent */ }
   }
 
