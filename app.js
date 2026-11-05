@@ -18,6 +18,7 @@
     page: 1,
     limit: 18,
     articles: [],
+    savedArticles: null,
     totalCount: 0,
     sources: [],
     categories: [],
@@ -1088,6 +1089,10 @@ const si = $('#searchInput');
           if(q){ window.location.href = 'news.html?q=' + encodeURIComponent(q); }
           return;
         }
+        // Save original articles before search
+        if(!state.savedArticles && state.articles.length){ state.savedArticles = [...state.articles]; }
+        // Show searching indicator
+        showSearchBanner('Searching…');
         // Ensure news is loaded for search on any page
         if(state.articles.length < 20){
           try { await fetchNews(true, {updateHero:false}); } catch(e){ console.error(e); }
@@ -1111,6 +1116,7 @@ const si = $('#searchInput');
           if(filtered.length){ renderStoriesFiltered(filtered); showSearchBanner(`Showing ${filtered.length} headlines for "${q}"`); }
           else { showSearchBanner(`No headlines found for "${q}"`); }
         } else {
+          if(state.savedArticles){ state.articles = state.savedArticles; state.savedArticles = null; }
           renderStories(); showSearchBanner('Showing all headlines');
         }
       }, 320);
