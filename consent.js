@@ -65,6 +65,20 @@
   window.cpOpenConsent = function(){
     showBanner();
   };
+  // Open preferences panel (shows banner with category details)
+  window.cpOpenPreferences = function(){
+    const b = document.getElementById('consent-banner');
+    if(b){
+      // Update banner text to show category breakdown
+      const span = b.querySelector('span');
+      if(span){
+        span.innerHTML = 'Choose which cookies to allow: <strong>Essential</strong> (theme, language — always on) · <strong>Analytics</strong> (pageviews, geography) · <strong>Advertising</strong> (personalized ads). See our <a href="privacy.html" style="color:#00e5a0;text-decoration:underline">Privacy Policy</a> and <a href="cookies.html" style="color:#00e5a0;text-decoration:underline">Cookie Policy</a>.';
+      }
+      b.style.display = 'flex';
+    } else {
+      setTimeout(window.cpOpenPreferences, 100);
+    }
+  };
 
   // On load: check consent
   function initConsent(){

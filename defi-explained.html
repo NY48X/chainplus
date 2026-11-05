@@ -60,6 +60,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-T8P3MVPH');</script>
 <!-- End Google Tag Manager -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8503915493262909" crossorigin="anonymous"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://chainplus.tech/index.html"},
+      {"@type": "ListItem", "position": 2, "name": "Insights", "item": "https://chainplus.tech/insights.html"},
+      {"@type": "ListItem", "position": 3, "name": "DeFi Explained: Decentralized Finance for Beginners", "item": "https://chainplus.tech/defi-explained.html"}
+    ]
+  }
+  </script>
 </head>
 <body>
   <header class="masthead">
@@ -201,6 +212,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <a href="contact.html">Contact</a>
         <a href="privacy.html">Privacy</a>
         <a href="cookies.html">Cookie Policy</a>
+        <a href="#" onclick="cpOpenConsent();return false">Cookie Settings</a>
         <a href="terms.html">Terms</a>
       </div>
       <div class="footer-links" style="margin-top:8px;font-size:12px">
@@ -215,7 +227,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <div id="consent-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1a1a1a;color:#fff;padding:16px 24px;z-index:9999;font-size:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
   <span style="flex:1;min-width:200px">We use cookies and similar technologies for analytics and personalized advertising. You can accept all, reject non-essential, or manage your preferences. See our <a href="privacy.html" style="color:#00e5a0;text-decoration:underline">Privacy Policy</a> and <a href="cookies.html" style="color:#00e5a0;text-decoration:underline">Cookie Policy</a>.</span>
   <div style="display:flex;gap:8px;flex-wrap:wrap">
-    <button onclick="cpRejectConsent()" style="background:transparent;color:#fff;border:1px solid #555;padding:8px 16px;border-radius:6px;cursor:pointer;font-weight:600">Reject</button>
+    <button onclick="cpRejectConsent()" style="background:transparent;color:#fff;border:1px solid #555;padding:8px 16px;border-radius:6px;cursor:pointer;font-weight:600">Reject All</button>
+    <button onclick="cpOpenPreferences()" style="background:transparent;color:#fff;border:1px solid #555;padding:8px 16px;border-radius:6px;cursor:pointer;font-weight:600">Manage Preferences</button>
     <button onclick="cpAcceptConsent()" style="background:#00e5a0;color:#000;border:none;padding:8px 20px;border-radius:6px;cursor:pointer;font-weight:600">Accept All</button>
   </div>
 </div>
