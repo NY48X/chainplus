@@ -13,6 +13,15 @@
   function gtag(){ window.dataLayer.push(arguments); }
   window.gtag = gtag;
 
+  // Consent Mode v2 defaults (denied until user chooses)
+  gtag('consent', 'default', {
+    ad_storage: 'denied',
+    ad_user_data: 'denied',
+    ad_personalization: 'denied',
+    analytics_storage: 'denied',
+    wait_for_update: 500
+  });
+
   // Load GTM only if consent granted
   function loadGTM(){
     if(window.__gtmLoaded) return;
@@ -40,12 +49,24 @@
   window.cpAcceptConsent = function(){
     setConsent('granted');
     hideBanner();
+    gtag('consent', 'update', {
+      ad_storage: 'granted',
+      ad_user_data: 'granted',
+      ad_personalization: 'granted',
+      analytics_storage: 'granted'
+    });
     loadGTM();
   };
   // Handle reject
   window.cpRejectConsent = function(){
     setConsent('denied');
     hideBanner();
+    gtag('consent', 'update', {
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+      analytics_storage: 'denied'
+    });
   };
   // Reopen preferences
   window.cpOpenConsent = function(){
@@ -56,6 +77,12 @@
   function initConsent(){
     const consent = getConsent();
     if(consent === 'granted'){
+      gtag('consent', 'update', {
+        ad_storage: 'granted',
+        ad_user_data: 'granted',
+        ad_personalization: 'granted',
+        analytics_storage: 'granted'
+      });
       loadGTM();
     } else if(consent === null){
       showBanner();

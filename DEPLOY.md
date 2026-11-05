@@ -2,7 +2,7 @@
 
 ## Live now
 - GitHub Pages: https://ny48x.github.io/chainplus/
-- Worker API: https://chainplus-api.miketembo828.workers.dev
+- Worker API: https://chainpulse-api.miketembo828.workers.dev
 - Repo: https://github.com/NY48X/chainplus
 
 ## Point your .tech domain to GitHub Pages
