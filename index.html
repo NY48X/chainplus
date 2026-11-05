@@ -159,9 +159,10 @@
 
 <main id="main">
 <noscript><div style="padding:20px;text-align:center;color:var(--text-2)">This page requires JavaScript to load live news and market data. Please enable JavaScript in your browser. In the meantime, you can browse our <a href="insights.html" style="color:var(--accent)">insights articles</a>, <a href="markets.html" style="color:var(--accent)">market data</a>, or <a href="breaking.html" style="color:var(--accent)">breaking news</a>.</div></noscript>
-  <div class="container">
+  <div class="container" style="padding-top:16px">
     <div id="searchBanner" class="search-banner hidden"></div>
 
+    <!-- Latest headlines preview -->
     <section class="section" style="padding-top:24px">
       <div class="layout">
         <div class="main-col">
@@ -175,14 +176,12 @@
             <div class="skeleton skeleton-card"></div>
             <div class="skeleton skeleton-card"></div>
           </div>
-          <div id="loadMoreWrap" class="center" style="margin-top:24px">
-            <button id="loadMoreBtn" class="btn-ghost" style="padding:10px 18px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text-2);font-size:13px;font-weight:500">Load more headlines</button>
-            <div id="loadStatus" class="muted small" style="margin-top:8px"></div>
+          <div class="center" style="margin-top:16px">
+            <a href="breaking.html" class="btn-ghost" style="padding:10px 18px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--accent);font-size:13px;font-weight:500;text-decoration:none;display:inline-block">View all breaking news →</a>
           </div>
         </div>
 
         <aside class="rail">
-
           <div class="widget">
             <div class="widget-head"><h3>Fear &amp; Greed</h3><span class="sub">index</span></div>
             <div class="fg-gauge" id="fgWidget"><div class="skeleton skeleton-line"></div></div>
@@ -191,50 +190,46 @@
           <div class="widget">
             <div class="widget-head"><h3>Trending now</h3><span class="sub">topics</span></div>
             <div id="trendingList"><div class="skeleton skeleton-line"></div></div>
+            <div class="center" style="margin-top:8px">
+              <a href="topic.html" style="font-size:12px;color:var(--accent);text-decoration:none">View all topics →</a>
+            </div>
           </div>
         </aside>
       </div>
     </section>
 
-    <section class="section" id="markets">
-      <div class="section-head">
-        <h2>Markets</h2>
-        <p class="sub">Live prices via CoinGecko · click a coin to filter headlines</p>
-      </div>
-      <div class="market-strip" id="marketStrip">
-        <div class="skeleton skeleton-card"></div>
-      </div>
-    </section>
-
-    <section class="section" id="open-source">
-      <div class="section-head">
-        <h2>Open source, trending</h2>
-        <p class="sub">Popular blockchain repositories on GitHub</p>
-      </div>
-      <div class="oss-grid" id="ossGrid">
-        <div class="skeleton skeleton-card"></div>
-        <div class="skeleton skeleton-card"></div>
-        <div class="skeleton skeleton-card"></div>
-      </div>
-    </section>
-
+    <!-- Section hub cards -->
     <section class="section">
       <div class="section-head">
-        <h2>Latest in brief</h2>
-        <p class="sub">Compact view of the freshest headlines</p>
+        <h2>Explore</h2>
+        <p class="sub">Dedicated pages for each topic</p>
       </div>
-      <div class="layout">
-        <div class="main-col">
-          <div class="compact-list" id="compactList"></div>
-        </div>
-        <aside class="rail">
-          <div class="widget">
-            <div class="widget-head"><h3>Editor's note</h3><span class="sub">original</span></div>
-            <p class="small muted" style="margin:0;line-height:1.6">
-              ChainPlus aggregates headlines and short excerpts from independent publishers and links to the original reporting. We do not republish full articles. Excerpts are limited and always attributed. See our <a href="methodology.html" style="color:var(--accent)">methodology</a> for details on sourcing, ranking and update cadence.
-            </p>
-          </div>
-        </aside>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
+        <a href="markets.html" style="display:block;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;text-decoration:none;color:var(--text);transition:transform 0.15s,box-shadow 0.15s">
+          <h3 style="font-family:var(--font-display);font-size:18px;margin:0 0 6px;color:var(--accent)">Markets</h3>
+          <p style="font-size:13px;color:var(--text-2);margin:0 0 12px;line-height:1.5">Live prices, 24h changes, sparkline charts, and 30-day price history for 100+ coins.</p>
+          <span style="font-size:12px;color:var(--accent)">View markets →</span>
+        </a>
+        <a href="breaking.html" style="display:block;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;text-decoration:none;color:var(--text);transition:transform 0.15s,box-shadow 0.15s">
+          <h3 style="font-family:var(--font-display);font-size:18px;margin:0 0 6px;color:#ef4444">Breaking</h3>
+          <p style="font-size:13px;color:var(--text-2);margin:0 0 12px;line-height:1.5">Real-time feed of urgent crypto developments with urgency classification.</p>
+          <span style="font-size:12px;color:#ef4444">View breaking news →</span>
+        </a>
+        <a href="topic.html" style="display:block;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;text-decoration:none;color:var(--text);transition:transform 0.15s,box-shadow 0.15s">
+          <h3 style="font-family:var(--font-display);font-size:18px;margin:0 0 6px;color:var(--accent)">Topics</h3>
+          <p style="font-size:13px;color:var(--text-2);margin:0 0 12px;line-height:1.5">Rising topics extracted from the news feed with sentiment analysis and momentum.</p>
+          <span style="font-size:12px;color:var(--accent)">View topics →</span>
+        </a>
+        <a href="opensource.html" style="display:block;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;text-decoration:none;color:var(--text);transition:transform 0.15s,box-shadow 0.15s">
+          <h3 style="font-family:var(--font-display);font-size:18px;margin:0 0 6px;color:var(--accent)">Open Source</h3>
+          <p style="font-size:13px;color:var(--text-2);margin:0 0 12px;line-height:1.5">Trending blockchain and crypto repositories on GitHub.</p>
+          <span style="font-size:12px;color:var(--accent)">View repositories →</span>
+        </a>
+        <a href="insights.html" style="display:block;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;text-decoration:none;color:var(--text);transition:transform 0.15s,box-shadow 0.15s">
+          <h3 style="font-family:var(--font-display);font-size:18px;margin:0 0 6px;color:var(--accent)">Insights</h3>
+          <p style="font-size:13px;color:var(--text-2);margin:0 0 12px;line-height:1.5">Original editorial content: explainers, analysis, and guides for crypto readers.</p>
+          <span style="font-size:12px;color:var(--accent)">Read insights →</span>
+        </a>
       </div>
     </section>
 

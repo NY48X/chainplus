@@ -1424,8 +1424,8 @@ async function fetchRSSFallback(){
       // Render rising topics dashboard
       try { renderRisingTopics(); } catch(e){ console.error('renderRisingTopics error:', e); }
     } else {
-      // news/index: load everything
-      try { await Promise.all([fetchNews(true,{updateHero:true}), loadTrending(), loadFG(), loadMarkets(), loadOSS(), renderTicker()]); } catch(e){ console.error('init load error:', e); }
+      // news/index: hub page — headlines preview + trending + FG only
+      try { await Promise.all([fetchNews(true,{updateHero:true}), loadTrending(), loadFG(), renderTicker()]); } catch(e){ console.error('init load error:', e); }
     }
     revealIn();
     state.pollTimer = setInterval(livePoll, 45000);
