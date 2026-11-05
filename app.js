@@ -546,13 +546,13 @@ async function fetchRSSFallback(){
   function renderTrending(){
     const el = $('#trendingList'); if(!el) return;
     if(!state.trending.length){ el.innerHTML = '<div class="muted small">No trending data.</div>'; return; }
-    const max = Math.max(...state.trending.slice(0,8).map(t=>t.count||1));
-    el.innerHTML = state.trending.slice(0,8).map((t,i)=>{
+    const max = Math.max(...state.trending.slice(0,5).map(t=>t.count||1));
+    el.innerHTML = state.trending.slice(0,5).map((t,i)=>{
       const sent = (t.sentiment||'neutral').toLowerCase();
       const sentCls = sent.includes('bull')?'sent-bullish':sent.includes('bear')?'sent-bearish':'sent-neutral';
       const color = sent.includes('bull')?'var(--accent)':sent.includes('bear')?'var(--danger)':'var(--muted-2)';
       const pct = Math.round(((t.count||0)/max)*100);
-      const heads = (t.recentHeadlines||[]).slice(0,2).map(h=>`<div class="small muted" style="margin-top:4px;line-height:1.3">• ${esc(decodeEntities(h))}</div>`).join('');
+      const heads = '';
       return `<div class="trend-row" data-topic="${esc(decodeEntities(t.topic))}">
         <div>
           <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
