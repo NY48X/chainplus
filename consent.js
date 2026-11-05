@@ -34,7 +34,7 @@
     gtag('config', GTM_ID);
   }
 
-  // Load AdSense only if consent granted (advertising cookies)
+  // Load AdSense always — serves non-personalized ads when consent is denied
   const ADSENSE_CLIENT = 'ca-pub-8503915493262909';
   function loadAdSense(){
     if(window.__adsenseLoaded) return;
@@ -45,6 +45,8 @@
     s.crossOrigin = 'anonymous';
     document.head.appendChild(s);
   }
+  // Load AdSense immediately (non-personalized by default until consent)
+  loadAdSense();
 
   // Show consent banner
   function showBanner(){
@@ -68,7 +70,6 @@
       analytics_storage: 'granted'
     });
     loadGTM();
-    loadAdSense();
   };
   // Handle reject
   window.cpRejectConsent = function(){
@@ -97,7 +98,6 @@
         analytics_storage: 'granted'
       });
       loadGTM();
-      loadAdSense();
     } else if(consent === null){
       showBanner();
     }
@@ -107,5 +107,5 @@
   } else {
     initConsent();
   }
-  // If 'denied', do nothing (no tracking)
+  // If 'denied', AdSense serves non-personalized ads; GTM stays off
 })();
