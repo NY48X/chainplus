@@ -1012,6 +1012,10 @@ async function fetchRSSFallback(){
         const q = e.target.value.trim();
         if(q === state.search) return;
         state.search = q; state.page = 1;
+        // Ensure news is loaded for search on any page
+        if(!state.articles.length){
+          try { await fetchNews(true, {updateHero:false}); } catch(e){ console.error(e); }
+        }
         if(q){ state.cat = 'all'; $$('#categoryChips .chip').forEach(x=>x.classList.remove('active')); const all=$('#categoryChips .chip'); if(all) all.classList.add('active'); }
         // Client-side filter to avoid rate-limited search endpoint
         let filtered = q ? state.articles.filter(a => (a.title||'').toLowerCase().includes(q.toLowerCase()) || (a.description||'').toLowerCase().includes(q.toLowerCase())) : state.articles;
