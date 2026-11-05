@@ -43,6 +43,7 @@
   <link rel="icon" type="image/png" sizes="48x48" href="favicon.png" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8503915493262909" crossorigin="anonymous"></script>
+<style>@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}</style>
 </head>
 <body data-page="breaking">
 <a class="skip-link" href="#main">Skip to content</a>
@@ -120,93 +121,38 @@
 
 <main id="main">
 <noscript><div style="padding:20px;text-align:center;color:var(--text-2)">This page requires JavaScript to load live headlines. Please enable JavaScript in your browser. In the meantime, you can browse our <a href="insights.html" style="color:var(--accent)">insights articles</a> or <a href="markets.html" style="color:var(--accent)">market data</a>.</div></noscript>
-  <div class="container">
+  <div class="container" style="padding-top:16px">
     <div id="searchBanner" class="search-banner hidden"></div>
 
-    <section class="section" style="padding-top:24px">
-      <div class="layout">
-        <div class="main-col">
-          <div class="section-head">
-            <h2 id="sectionTitle">Latest headlines</h2>
-            <p class="sub" id="sectionSub">Fresh from 300+ sources · sorted by recency</p>
-          </div>
-          <div id="storiesGrid" class="stories-grid">
-            <div class="skeleton skeleton-card"></div>
-            <div class="skeleton skeleton-card"></div>
-            <div class="skeleton skeleton-card"></div>
-            <div class="skeleton skeleton-card"></div>
-          </div>
-          <div id="loadMoreWrap" class="center" style="margin-top:24px">
-            <button id="loadMoreBtn" class="btn-ghost" style="padding:10px 18px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text-2);font-size:13px;font-weight:500">Load more headlines</button>
-            <div id="loadStatus" class="muted small" style="margin-top:8px"></div>
-          </div>
-        </div>
-
-        <aside class="rail">
-
-          <div class="widget">
-            <div class="widget-head"><h3>Fear &amp; Greed</h3><span class="sub">index</span></div>
-            <div class="fg-gauge" id="fgWidget"><div class="skeleton skeleton-line"></div></div>
-          </div>
-
-          <div class="widget">
-            <div class="widget-head"><h3>Trending now</h3><span class="sub">topics</span></div>
-            <div id="trendingList"><div class="skeleton skeleton-line"></div></div>
-          </div>
-        </aside>
+    <!-- Breaking hero -->
+    <section style="padding:24px 0 16px;border-bottom:1px solid var(--border);margin-bottom:24px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+        <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#ef4444;animation:blink 1.5s infinite"></span>
+        <h1 style="font-family:var(--font-display);font-size:28px;margin:0;color:var(--text)">Breaking Crypto News</h1>
+      </div>
+      <p style="color:var(--text-2);font-size:14px;margin:0 0 12px">Real-time feed of urgent developments · <span id="breakingCount">0</span> stories · auto-refreshes every 45s</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <span style="font-size:11px;padding:3px 10px;border-radius:12px;background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3)">● Critical</span>
+        <span style="font-size:11px;padding:3px 10px;border-radius:12px;background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3)">● Important</span>
+        <span style="font-size:11px;padding:3px 10px;border-radius:12px;background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3)">● Developing</span>
       </div>
     </section>
 
-    
-    
-    
+    <!-- Timeline feed -->
+    <div id="breakingFeed" style="max-width:800px;margin:0 auto">
+      <div class="skeleton skeleton-card"></div>
+      <div class="skeleton skeleton-card"></div>
+      <div class="skeleton skeleton-card"></div>
+    </div>
+
+    <div id="loadMoreWrap" class="center" style="margin-top:24px">
+      <button id="loadMoreBtn" class="btn-ghost" style="padding:10px 18px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text-2);font-size:13px;font-weight:500">Load more</button>
+      <div id="loadStatus" class="muted small" style="margin-top:8px"></div>
+    </div>
   </div>
 </main>
 
-<section class="section">
-  <div class="container">
-    <h2 style="font-family:var(--font-display);font-size:22px;margin:0 0 16px">Understanding Breaking Crypto News</h2>
-    <div style="max-width:720px;line-height:1.7;color:var(--text-2);font-size:15px">
-      <p>Breaking news in cryptocurrency moves markets fast. Regulatory announcements, exchange hacks, protocol exploits, and macroeconomic developments can shift prices within minutes. Our breaking news feed aggregates headlines from 300+ sources in real time, so you're never the last to know.</p>
 
-      <h3 style="font-family:var(--font-display);font-size:18px;margin:24px 0 8px;color:var(--text)">How We Source Breaking News</h3>
-      <p>We aggregate RSS feeds from the most trusted crypto news outlets, including CoinTelegraph, CoinDesk, Decrypt, Bitcoin Magazine, and dozens more. Headlines are deduplicated, categorized by topic, and sorted by recency. Our Cloudflare-powered backend caches and serves this data with sub-second latency.</p>
-
-      <h3 style="font-family:var(--font-display);font-size:18px;margin:24px 0 8px;color:var(--text)">What Makes News "Breaking"</h3>
-      <p>Not every headline is breaking. We prioritize stories that have immediate market impact: regulatory decisions, security incidents, major protocol upgrades, institutional adoption announcements, and macroeconomic events affecting crypto. Our AI-powered summary engine extracts the key facts from each article so you can grasp the essentials in seconds.</p>
-
-      <h3 style="font-family:var(--font-display);font-size:18px;margin:24px 0 8px;color:var(--text)">The Importance of Speed in Crypto Markets</h3>
-      <p>Crypto markets operate 24/7 across hundreds of exchanges worldwide. Unlike traditional markets with set trading hours, crypto never closes. This means breaking news can impact prices at any time — including weekends and holidays. Our live polling system checks for new headlines every 45 seconds, ensuring you see critical developments as they happen.</p>
-
-      <h3 style="font-family:var(--font-display);font-size:18px;margin:24px 0 8px;color:var(--text)">How to Use Breaking News Effectively</h3>
-      <p>Speed alone isn't enough. The key is context. A regulatory announcement in one jurisdiction may have different implications depending on your portfolio composition. An exchange hack may affect token prices differently than it affects the broader market. Our AI summaries help you quickly assess the scope and likely impact of each story.</p>
-      <p>We recommend: (1) Read the headline and summary first. (2) Check the Fear & Greed Index on our sidebar for market context. (3) Look at trending topics to see what the broader market is discussing. (4) Only then decide whether the news warrants action.</p>
-
-      <h3 style="font-family:var(--font-display);font-size:18px;margin:24px 0 8px;color:var(--text)">Risk Disclaimer</h3>
-      <p>Breaking news can be incomplete, misleading, or later corrected. Always verify critical information from multiple sources before making financial decisions. This page is for informational purposes only and does not constitute financial advice.</p>
-    </div>
-
-    <div style="max-width:720px;margin:32px auto 0">
-      <h3 style="font-family:var(--font-display);font-size:18px;margin:0 0 12px">Frequently Asked Questions</h3>
-      <details style="margin-bottom:12px;padding:12px 16px;border:1px solid var(--border);border-radius:8px;background:var(--surface)">
-        <summary style="cursor:pointer;font-weight:600;font-size:14px">How often do headlines update?</summary>
-        <p style="margin:8px 0 0;font-size:14px;color:var(--text-2);line-height:1.6">We check for new headlines every 45 seconds while you have the page open. The feed refreshes automatically without requiring a page reload.</p>
-      </details>
-      <details style="margin-bottom:12px;padding:12px 16px;border:1px solid var(--border);border-radius:8px;background:var(--surface)">
-        <summary style="cursor:pointer;font-weight:600;font-size:14px">Where do the headlines come from?</summary>
-        <p style="margin:8px 0 0;font-size:14px;color:var(--text-2);line-height:1.6">We aggregate RSS feeds from 300+ trusted crypto news sources. Headlines are deduplicated and sorted by publication time.</p>
-      </details>
-      <details style="margin-bottom:12px;padding:12px 16px;border:1px solid var(--border);border-radius:8px;background:var(--surface)">
-        <summary style="cursor:pointer;font-weight:600;font-size:14px">Are the AI summaries accurate?</summary>
-        <p style="margin:8px 0 0;font-size:14px;color:var(--text-2);line-height:1.6">Our AI summaries extract key facts from article text. They are designed to be informative but should not replace reading the full article for important decisions.</p>
-      </details>
-      <details style="margin-bottom:12px;padding:12px 16px;border:1px solid var(--border);border-radius:8px;background:var(--surface)">
-        <summary style="cursor:pointer;font-weight:600;font-size:14px">Can I filter headlines by topic?</summary>
-        <p style="margin:8px 0 0;font-size:14px;color:var(--text-2);line-height:1.6">Yes. Click any trending topic in the sidebar, or visit the Topics page to browse rising topics and filter articles by keyword.</p>
-      </details>
-    </div>
-  </div>
-</section>
 
 <section class="section">
   <div class="container">

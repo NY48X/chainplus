@@ -292,6 +292,8 @@ async function fetchRSSFallback(){
           state.articles = fresh.concat(state.articles);
           fresh.forEach(a=>state.knownLinks.add(a.link));
           toast(`${fresh.length} new headline${fresh.length>1?'s':''}`);
+          const pg = (document.body && document.body.dataset && document.body.dataset.page) || 'news';
+          if(pg === 'breaking') renderBreaking();
         }
       } else {
         state.articles = state.articles.concat(arts);
@@ -432,6 +434,52 @@ async function fetchRSSFallback(){
         </div>
       </div>`).join('');
     $$('#compactList .compact-item').forEach((el,i)=>{ el.addEventListener('click', ()=> openArticle(state.articles[i])); });
+    revealIn();
+  }
+
+  function classifyUrgency(title, desc){
+    const t = ((title||'') + ' ' + (desc||'')).toLowerCase();
+    const critical = /hack|exploit|breach|crash|collapse|ban|lawsuit|arrest|stolen|drain|attack|rug|scam|fraud|shutdown|halt/i;
+    const important = /surge|drop|announce|launch|partnership|regulation|sec |cftc|fed |rate cut|approve|reject|listing|delist/i;
+    if(critical.test(t)) return 'critical';
+    if(important.test(t)) return 'important';
+    return 'developing';
+  }
+
+  function renderBreaking(){
+    const feed = $('#breakingFeed'); if(!feed) return;
+    if(!state.articles.length){ feed.innerHTML = `<div class="empty" style="text-align:center;padding:40px;color:var(--text-2)">No breaking stories right now. Check back soon.</div>`; return; }
+    const countEl = $('#breakingCount'); if(countEl) countEl.textContent = state.articles.length;
+    feed.innerHTML = state.articles.map((a,i)=>{
+      const urg = classifyUrgency(a.title, a.description);
+      const urgColor = urg === 'critical' ? '#ef4444' : urg === 'important' ? '#f59e0b' : '#3b82f6';
+      const urgBg = urg === 'critical' ? 'rgba(239,68,68,0.12)' : urg === 'important' ? 'rgba(245,158,11,0.12)' : 'rgba(59,130,246,0.12)';
+      const time = a.timeAgo || timeAgo(a.pubDate);
+      const cred = a.credibility || (a.reputation? a.reputation/100 : 0.6);
+      return `
+        <article class="breaking-item reveal" data-idx="${i}" style="border-left:3px solid ${urgColor};background:var(--surface);border-radius:8px;padding:16px 20px;margin-bottom:12px;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap">
+            <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;padding:2px 8px;border-radius:4px;background:${urgBg};color:${urgColor}">${urg}</span>
+            <span style="font-size:11px;color:var(--text-2)">${esc(a.source||'Unknown')}</span>
+            <span style="font-size:11px;color:var(--text-2);margin-left:auto">${esc(time)}</span>
+            <span class="cred"><span class="cred-dot ${credClass(cred)}"></span>${Math.round(cred*100)}%</span>
+          </div>
+          <h3 style="font-family:var(--font-display);font-size:17px;margin:0 0 6px;line-height:1.3;color:var(--text)">${esc(decodeEntities(a.title))}</h3>
+          ${a.description ? `<p style="font-size:13px;color:var(--text-2);margin:0 0 8px;line-height:1.5">${esc(stripHtml(a.description)).slice(0,180)}${stripHtml(a.description).length>180?'…':''}</p>` : ''}
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:11px;padding:2px 8px;border-radius:4px;background:var(--bg-2);color:var(--text-2)">${esc(decodeEntities(a.category||'general'))}</span>
+            <button class="chip bookmark-btn" data-link="${esc(a.link)}" style="margin-left:auto;padding:2px 8px;font-size:11px">${state.bookmarks.has(a.link)?'★ Saved':'☆ Save'}</button>
+          </div>
+        </article>`;
+    }).join('');
+    $$('#breakingFeed .breaking-item').forEach((el,i)=>{
+      el.addEventListener('click', (e)=>{ if(e.target.closest('.bookmark-btn')) return; openArticle(state.articles[i]); });
+      el.addEventListener('mouseenter', ()=>{ el.style.transform='translateY(-2px)'; el.style.boxShadow='0 4px 12px rgba(0,0,0,0.2)'; });
+      el.addEventListener('mouseleave', ()=>{ el.style.transform=''; el.style.boxShadow=''; });
+    });
+    $$('#breakingFeed .bookmark-btn').forEach(b=>{
+      b.addEventListener('click', (e)=>{ e.stopPropagation(); toggleBookmark(b.dataset.link); });
+    });
     revealIn();
   }
 
@@ -1280,7 +1328,7 @@ async function fetchRSSFallback(){
 
   /* ---------- load more ---------- */
   const lb = $('#loadMoreBtn');
-  if(lb){ lb.addEventListener('click', ()=>{ state.page += 1; fetchNews(false); }); }
+  if(lb){ lb.addEventListener('click', ()=>{ state.page += 1; fetchNews(false).then(()=>{ const pg = (document.body && document.body.dataset && document.body.dataset.page) || 'news'; if(pg === 'breaking') renderBreaking(); }); }); }
   const lmob = $('#loadMoreOssBtn');
   if(lmob){ lmob.addEventListener('click', ()=>{ loadMoreOSS(); }); }
 
@@ -1346,8 +1394,6 @@ async function fetchRSSFallback(){
     } else if(page === 'breaking'){
       if(marketsSec) marketsSec.style.display = 'none';
       if(ossSec) ossSec.style.display = 'none';
-      const title = document.getElementById('sectionTitle');
-      if(title) title.textContent = 'Breaking headlines';
     } else if(page === 'trending'){
       if(marketsSec) marketsSec.style.display = 'none';
       if(ossSec) ossSec.style.display = 'none';
@@ -1373,7 +1419,8 @@ async function fetchRSSFallback(){
     } else if(page === 'trending'){
       try { await loadTrending(); } catch(e){ console.error('init load error:', e); }
     } else if(page === 'breaking'){
-      try { await Promise.all([fetchNews(true,{updateHero:false}), loadTrending(), loadFG(), renderTicker()]); } catch(e){ console.error('init load error:', e); }
+      try { await Promise.all([fetchNews(true,{updateHero:false}), renderTicker()]); } catch(e){ console.error('init load error:', e); }
+      try { renderBreaking(); } catch(e){ console.error('renderBreaking error:', e); }
     } else if(page === 'topic'){
       try { await Promise.all([fetchNews(true,{updateHero:false}), loadTrending()]); } catch(e){ console.error('init load error:', e); }
       // Render rising topics dashboard
