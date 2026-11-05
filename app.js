@@ -991,24 +991,30 @@ async function fetchRSSFallback(){
     b.textContent = msg; b.classList.remove('hidden');
     clearTimeout(b._t); b._t = setTimeout(()=>b.classList.add('hidden'), 4000);
   }
-  const si = $('#searchInput');
+const si = $('#searchInput');
   if(si){
     si.addEventListener('input', (e)=>{
       clearTimeout(state.searchDebounce);
       state.searchDebounce = setTimeout(async ()=>{
         const q = e.target.value.trim();
-        if(q === state.search) return;
+        if(q === state.search && q !== '') return;
         state.search = q; state.page = 1;
+        const grid = $('#storiesGrid');
+        // If no stories grid on this page, redirect to news page with search
+        if(!grid){
+          if(q){ window.location.href = 'news.html?q=' + encodeURIComponent(q); }
+          return;
+        }
         // Ensure news is loaded for search on any page
-        if(!state.articles.length){
+        if(state.articles.length < 20){
           try { await fetchNews(true, {updateHero:false}); } catch(e){ console.error(e); }
         }
         if(q){ state.cat = 'all'; $$('#categoryChips .chip').forEach(x=>x.classList.remove('active')); const all=$('#categoryChips .chip'); if(all) all.classList.add('active'); }
-        // Client-side filter to avoid rate-limited search endpoint
+        // Fetch more articles if needed for search
         let filtered = q ? state.articles.filter(a => (a.title||'').toLowerCase().includes(q.toLowerCase()) || (a.description||'').toLowerCase().includes(q.toLowerCase())) : state.articles;
-        if(q && filtered.length < 4){
+        if(q && filtered.length < 4 && state.articles.length < 100){
           try{
-            for(let p=2; p<=4 && filtered.length<8; p++){
+            for(let p=2; p<=5 && filtered.length<8 && state.articles.length < 100; p++){
               const data = await api(`/api/news?limit=${state.limit}&page=${p}`);
               const arts = (data.articles || data.news || []).filter(a=>!/eth\s*gas|⛽|gwei/i.test(a && a.title || ''));
               if(!arts.length) break;
@@ -1337,6 +1343,16 @@ async function fetchRSSFallback(){
       if(sub) sub.textContent = topic ? `Articles matching “${topic}”` : 'Filtered headlines';
     }
   }
+  // Handle ?q= search param on page load
+  (function(){
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get('q');
+    if(q){
+      const si = document.getElementById('searchInput');
+      if(si){ si.value = q; }
+    }
+  })();
+
   async function init(){
     const page = (document.body && document.body.dataset && document.body.dataset.page) || 'news';
     try { await loadCategories(); } catch(e){ console.error('categories error:', e); }
@@ -1364,6 +1380,12 @@ async function fetchRSSFallback(){
     }
     revealIn();
     state.pollTimer = setInterval(livePoll, 45000);
+    // Auto-search if ?q= param present
+    const _qp = new URLSearchParams(window.location.search).get('q');
+    if(_qp){
+      const _si = document.getElementById('searchInput');
+      if(_si){ _si.value = _qp; _si.dispatchEvent(new Event('input')); }
+    }
     applyPageMode();
     // Topic page: filter loaded articles by query topic
     const pg = (document.body && document.body.dataset && document.body.dataset.page) || 'news';
