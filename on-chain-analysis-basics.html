@@ -29,7 +29,7 @@
     "headline": "On-Chain Analysis: Reading the Blockchain",
     "description": "What is on-chain analysis, what data is available, and how can you use it to understand crypto markets?",
     "url": "https://chainplus.tech/on-chain-analysis-basics.html",
-    "datePublished": "2026-11-05"25",
+    "datePublished": "2026-11-05",
     "dateModified": "2026-11-05",
     "author": {
       "@type": "Organization",
@@ -44,20 +44,45 @@
   </script>
 </head>
 <body>
-  <header class="site-header">
-    <div class="container">
+  <header class="masthead">
+    <div class="masthead-top container">
       <a class="brand" href="index.html" aria-label="ChainPlus home">ChainPlus<span class="dot">.</span></a>
-      <nav class="desktop-nav">
-        <a href="index.html">Home</a>
+      <button id="mobileMenuBtn" class="iconbtn mobile-only" aria-label="Open menu" aria-expanded="false" style="margin-left:auto">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+      </button>
+      <nav class="mast-nav" aria-label="Primary">
+        <a href="index.html">News</a>
         <a href="markets.html">Markets</a>
+        <a href="opensource.html">Open source</a>
+        <a href="insights.html" class="active">Insights</a>
         <a href="breaking.html">Breaking</a>
         <a href="trending.html">Trending</a>
         <a href="topic.html">Topics</a>
-        <a href="opensource.html">Open Source</a>
-        <a href="insights.html" class="active">Insights</a>
+        <a href="methodology.html">Methodology</a>
+        <a href="about.html">About</a>
       </nav>
     </div>
   </header>
+
+  <nav class="mobile-nav container" id="mobileNav" aria-label="Mobile">
+    <a href="index.html">News</a>
+    <a href="markets.html">Markets</a>
+    <a href="opensource.html">Open source</a>
+    <a href="insights.html" class="active">Insights</a>
+    <a href="breaking.html">Breaking</a>
+    <a href="trending.html">Trending</a>
+    <a href="topic.html">Topics</a>
+    <a href="methodology.html">Methodology</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+  <nav aria-label="Breadcrumb" style="padding:12px 0;font-size:13px;color:var(--text-3);border-bottom:1px solid var(--border-soft)">
+    <div class="container">
+      <a href="index.html" style="color:var(--text-3)">Home</a> &rsaquo; 
+      <a href="insights.html" style="color:var(--text-3)">Insights</a> &rsaquo; 
+      <span style="color:var(--text-2)">On-Chain Analysis: Reading the Blockchain</span>
+    </div>
+  </nav>
 
   <main id="main">
     <div class="container page" style="max-width:720px">
