@@ -293,7 +293,7 @@ async function fetchRSSFallback(){
           fresh.forEach(a=>state.knownLinks.add(a.link));
           toast(`${fresh.length} new headline${fresh.length>1?'s':''}`);
           const pg = (document.body && document.body.dataset && document.body.dataset.page) || 'news';
-          if(pg === 'breaking') renderBreaking();
+          if(pg === 'news') renderBreaking();
         }
       } else {
         state.articles = state.articles.concat(arts);
@@ -396,7 +396,7 @@ async function fetchRSSFallback(){
     if(!grid) return;
     if(!state.articles.length){ grid.innerHTML = `<div class="empty" style="grid-column:1/-1">No articles found. Try another category or search.</div>`; return; }
     const page = (document.body && document.body.dataset && document.body.dataset.page) || 'news';
-    const maxStories = (page === 'news') ? 3 : state.articles.length;
+    const maxStories = (page === 'home') ? 8 : state.articles.length;
     const toRender = state.articles.slice(0, maxStories);
     grid.innerHTML = toRender.map((a,i)=>{
       const cred = a.credibility || (a.reputation? a.reputation/100 : 0.6);
@@ -1381,7 +1381,7 @@ async function fetchRSSFallback(){
       const compactSec = document.querySelector('.compact-list');
       if(compactSec){ const sec = compactSec.closest('section'); if(sec) sec.style.display = 'none'; }
     }
-    if(page === 'breaking' || page === 'topic'){
+    if(page === 'home' || page === 'news' || page === 'topic'){
       if(marketsSec) marketsSec.style.display = 'none';
       if(ossSec) ossSec.style.display = 'none';
       if(railEl) railEl.style.display = 'none';
@@ -1392,7 +1392,7 @@ async function fetchRSSFallback(){
     } else if(page === 'opensource'){
       if(ossSec && ossSec.parentNode){ ossSec.parentNode.insertBefore(ossSec, ossSec.parentNode.firstChild); }
       if(marketsSec) marketsSec.style.display = 'none';
-    } else if(page === 'breaking'){
+    } else if(page === 'news'){
       if(marketsSec) marketsSec.style.display = 'none';
       if(ossSec) ossSec.style.display = 'none';
     } else if(page === 'trending'){
@@ -1419,7 +1419,10 @@ async function fetchRSSFallback(){
       try { await loadOSS(); } catch(e){ console.error('init load error:', e); }
     } else if(page === 'trending'){
       try { await loadTrending(); } catch(e){ console.error('init load error:', e); }
-    } else if(page === 'breaking'){
+    } else if(page === 'home'){
+      // hub page — headlines preview + trending + FG only
+      try { await Promise.all([fetchNews(true,{updateHero:true}), loadTrending(), loadFG(), renderTicker()]); } catch(e){ console.error('init load error:', e); }
+    } else if(page === 'news'){
       try { await Promise.all([fetchNews(true,{updateHero:false}), renderTicker()]); } catch(e){ console.error('init load error:', e); }
       try { renderBreaking(); } catch(e){ console.error('renderBreaking error:', e); }
     } else if(page === 'topic'){
@@ -1427,7 +1430,7 @@ async function fetchRSSFallback(){
       // Render rising topics dashboard
       try { renderRisingTopics(); } catch(e){ console.error('renderRisingTopics error:', e); }
     } else {
-      // news/index: hub page — headlines preview + trending + FG only
+      // fallback
       try { await Promise.all([fetchNews(true,{updateHero:true}), loadTrending(), loadFG(), renderTicker()]); } catch(e){ console.error('init load error:', e); }
     }
     revealIn();
