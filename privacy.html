@@ -25,6 +25,7 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <link rel="icon" type="image/png" sizes="48x48" href="favicon.png" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="da29f2f3-29a6-4771-8322-269acbac897f" data-blockingmode="auto" type="text/javascript"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -128,7 +129,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <ul>
       <li><strong>Essential cookies</strong> — Required for the site to function (theme, language, cookie consent). Cannot be disabled.</li>
       <li><strong>Advertising cookies</strong> — The Google AdSense script loads on every page to serve advertisements. When consent is granted, personalized ads may be served and advertising cookies (such as __gads, __gpi, NID, IDE) are set. When consent is denied or not yet given, AdSense serves <strong>non-personalized</strong> ads only and no advertising cookies are placed. Analytics tracking (Google Tag Manager / GA4) is completely disabled until consent is granted. You can change your consent at any time via the Cookie Settings link in the footer.</li>
-      <li><strong>Analytics cookies</strong> — We use Google Tag Manager / Google Analytics 4 to measure page views, geography, and engagement. These are only set after you consent via our cookie banner.</li>
+      <li><strong>Analytics cookies</strong> — We use Google Tag Manager / Google Analytics 4 to measure page views, geography, and engagement. These are only set after you consent via Cookiebot, our certified Consent Management Platform.</li>
     </ul>
 
     <h2>5. Third-party services and data sharing</h2>
@@ -166,7 +167,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <li><strong>Objection</strong> — Object to processing based on legitimate interest.</li>
       <li><strong>Withdraw consent</strong> — Withdraw consent for newsletter or advertising at any time.</li>
       <li><strong>Opt out of sale/sharing</strong> — We do not sell personal information. You can opt out of personalized advertising via <a href="https://www.google.com/settings/ads" style="color:var(--accent)" target="_blank" rel="noopener">Google Ads Settings</a>.</li>
-      <li><strong>EEA/UK/Swiss visitors</strong> — If you are located in the European Economic Area, United Kingdom, or Switzerland, we use a consent management platform to obtain your consent before serving personalized advertisements. AdSense loads on every page but serves non-personalized ads until consent is granted. You can manage your consent preferences at any time through the Cookie Settings link in the footer.</li>
+      <li><strong>EEA/UK/Swiss visitors</strong> — If you are located in the European Economic Area, United Kingdom, or Switzerland, we use Cookiebot, a Google-certified Consent Management Platform, to obtain your consent before serving personalized advertisements. AdSense loads on every page but serves non-personalized ads until consent is granted. You can manage your consent preferences at any time through the Cookie Settings link in the footer or the Cookiebot widget.</li>
     </ul>
     <p>To exercise any of these rights, email <a href="mailto:support@chainplus.tech" style="color:var(--accent)">support@chainplus.tech</a>. We will respond within 30 days. We may need to verify your identity before processing your request.</p>
 
@@ -204,7 +205,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <h4>Legal</h4>
         <a href="privacy.html">Privacy Policy</a>
         <a href="cookies.html">Cookie Policy</a>
-        <a href="#" onclick="cpOpenConsent();return false">Cookie Settings</a>
+        <a href="#" onclick="if(window.Cookiebot)Cookiebot.renew();return false">Cookie Settings</a>
         <a href="terms.html">Terms of Use</a>
         <a href="contact.html">Contact</a>
         <a href="faq.html">FAQ</a>
@@ -223,14 +224,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </footer>
 
 <!-- Consent Management -->
-<script src="consent.js"></script>
-<div id="consent-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1a1a1a;color:#fff;padding:16px 24px;z-index:9999;font-size:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
-  <span style="flex:1;min-width:200px">We use cookies and similar technologies for analytics and personalized advertising. You can accept all, reject non-essential, or manage your preferences. See our <a href="privacy.html" style="color:#00e5a0;text-decoration:underline">Privacy Policy</a> and <a href="cookies.html" style="color:#00e5a0;text-decoration:underline">Cookie Policy</a>.</span>
-  <div style="display:flex;gap:8px;flex-wrap:wrap">
-    <button onclick="cpRejectConsent()" style="background:transparent;color:#fff;border:1px solid #555;padding:8px 16px;border-radius:6px;cursor:pointer;font-weight:600">Reject All</button>
-    <button onclick="cpOpenPreferences()" style="background:transparent;color:#fff;border:1px solid #555;padding:8px 16px;border-radius:6px;cursor:pointer;font-weight:600">Manage Preferences</button>
-    <button onclick="cpAcceptConsent()" style="background:#00e5a0;color:#000;border:none;padding:8px 20px;border-radius:6px;cursor:pointer;font-weight:600">Accept All</button>
-  </div>
 </div>
 
 </body>

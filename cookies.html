@@ -25,6 +25,7 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <link rel="icon" type="image/png" sizes="48x48" href="favicon.png" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="da29f2f3-29a6-4771-8322-269acbac897f" data-blockingmode="auto" type="text/javascript"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -98,7 +99,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <tbody>
         <tr style="border-bottom:1px solid var(--border)"><td style="padding:8px"><code>cp-theme</code></td><td style="padding:8px">localStorage</td><td style="padding:8px">Remembers your light/dark theme preference</td><td style="padding:8px">Persistent</td><td style="padding:8px">ChainPlus</td></tr>
         <tr style="border-bottom:1px solid var(--border)"><td style="padding:8px"><code>cp-lang</code></td><td style="padding:8px">localStorage</td><td style="padding:8px">Remembers your selected language</td><td style="padding:8px">Persistent</td><td style="padding:8px">ChainPlus</td></tr>
-        <tr style="border-bottom:1px solid var(--border)"><td style="padding:8px"><code>cp-cookies</code></td><td style="padding:8px">localStorage</td><td style="padding:8px">Records that you accepted the cookie banner</td><td style="padding:8px">Persistent</td><td style="padding:8px">ChainPlus</td></tr>
         <tr style="border-bottom:1px solid var(--border)"><td style="padding:8px"><code>cp-api-base</code></td><td style="padding:8px">localStorage</td><td style="padding:8px">Stores custom API base URL (if set)</td><td style="padding:8px">Persistent</td><td style="padding:8px">ChainPlus</td></tr>
         <tr style="border-bottom:1px solid var(--border)"><td style="padding:8px"><code>cp-news-cache</code></td><td style="padding:8px">localStorage</td><td style="padding:8px">Caches news headlines for offline resilience</td><td style="padding:8px">Persistent</td><td style="padding:8px">ChainPlus</td></tr>
         <tr style="border-bottom:1px solid var(--border)"><td style="padding:8px"><code>cp-markets-cache</code></td><td style="padding:8px">localStorage</td><td style="padding:8px">Caches market data for resilience</td><td style="padding:8px">Persistent</td><td style="padding:8px">ChainPlus</td></tr>
@@ -126,7 +126,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <h2>3. How to manage cookies</h2>
     <p>You can control cookies in several ways:</p>
     <ul>
-      <li><strong>Cookie banner</strong> — When you first visit the Site, a banner asks for your consent before setting any non-essential cookies. Advertising and analytics cookies are <strong>not</strong> set until you click "Accept All". If you click "Reject", AdSense serves non-personalized ads and only essential cookies (theme, language) are used. Analytics tracking is disabled. You can change your choice at any time via the cookie settings link in the footer.</li>
+      <li><strong>Cookie consent (Cookiebot)</strong> — We use Cookiebot, a Google-certified Consent Management Platform (CMP), to obtain and manage your cookie consent. When you first visit the Site, a banner asks for your consent before setting any non-essential cookies. Advertising and analytics cookies are <strong>not</strong> set until you grant consent. If you reject, AdSense serves non-personalized ads and only essential cookies (theme, language) are used. Analytics tracking is disabled. You can change your choice at any time via the Cookie Settings link in the footer or by clicking the Cookiebot icon.</li>
       <li><strong>Browser settings</strong> — Most browsers allow you to block or delete cookies. See your browser's help documentation.</li>
       <li><strong>Google Ads Settings</strong> — Opt out of personalized advertising at <a href="https://www.google.com/settings/ads" style="color:var(--accent)" target="_blank" rel="noopener">google.com/settings/ads</a>.</li>
       <li><strong>Network Advertising Initiative</strong> — Opt out at <a href="https://optout.networkadvertising.org/" style="color:var(--accent)" target="_blank" rel="noopener">optout.networkadvertising.org</a>.</li>
@@ -162,7 +162,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <h4>Legal</h4>
         <a href="privacy.html">Privacy Policy</a>
         <a href="cookies.html">Cookie Policy</a>
-        <a href="#" onclick="cpOpenConsent();return false">Cookie Settings</a>
+        <a href="#" onclick="if(window.Cookiebot)Cookiebot.renew();return false">Cookie Settings</a>
         <a href="terms.html">Terms of Use</a>
         <a href="contact.html">Contact</a>
         <a href="faq.html">FAQ</a>
@@ -181,14 +181,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </footer>
 
 <!-- Consent Management -->
-<script src="consent.js"></script>
-<div id="consent-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1a1a1a;color:#fff;padding:16px 24px;z-index:9999;font-size:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
-  <span style="flex:1;min-width:200px">We use cookies and similar technologies for analytics and personalized advertising. You can accept all, reject non-essential, or manage your preferences. See our <a href="privacy.html" style="color:#00e5a0;text-decoration:underline">Privacy Policy</a> and <a href="cookies.html" style="color:#00e5a0;text-decoration:underline">Cookie Policy</a>.</span>
-  <div style="display:flex;gap:8px;flex-wrap:wrap">
-    <button onclick="cpRejectConsent()" style="background:transparent;color:#fff;border:1px solid #555;padding:8px 16px;border-radius:6px;cursor:pointer;font-weight:600">Reject All</button>
-    <button onclick="cpOpenPreferences()" style="background:transparent;color:#fff;border:1px solid #555;padding:8px 16px;border-radius:6px;cursor:pointer;font-weight:600">Manage Preferences</button>
-    <button onclick="cpAcceptConsent()" style="background:#00e5a0;color:#000;border:none;padding:8px 20px;border-radius:6px;cursor:pointer;font-weight:600">Accept All</button>
-  </div>
 </div>
 
 </body>
