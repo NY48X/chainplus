@@ -34,19 +34,8 @@
     gtag('config', GTM_ID);
   }
 
-  // Load AdSense always — serves non-personalized ads when consent is denied
-  const ADSENSE_CLIENT = 'ca-pub-8503915493262909';
-  function loadAdSense(){
-    if(window.__adsenseLoaded) return;
-    window.__adsenseLoaded = true;
-    const s = document.createElement('script');
-    s.async = true;
-    s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + ADSENSE_CLIENT;
-    s.crossOrigin = 'anonymous';
-    document.head.appendChild(s);
-  }
-  // Load AdSense immediately (non-personalized by default until consent)
-  loadAdSense();
+  // AdSense script is loaded statically in HTML <head> with consent mode defaults.
+  // Consent Mode v2 (set above) ensures non-personalized ads until consent granted.
 
   // Show consent banner
   function showBanner(){
