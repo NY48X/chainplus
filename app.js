@@ -450,6 +450,89 @@ async function fetchRSSFallback(){
     return 'developing';
   }
 
+  /* ---------- ticker ---------- */
+  async function renderTicker(){
+    try{
+      const data = await api('/api/breaking?limit=12');
+      const arts = data.articles || [];
+      const html = arts.map(a=>`<a href="${esc(a.link)}" target="_blank" rel="noopener">${esc(decodeEntities(a.title))}</a>`).join('  ·  ');
+      const track = $('#tickerTrack');
+      if(track) track.innerHTML = `<span class="ticker-item">${html}  ·  ${html}</span>`;
+    }catch(e){ /* keep placeholder */ }
+  }
+
+  /* ---------- categories ---------- */
+  async function loadCategories(){
+    try{
+      const data = await api('/api/news/categories');
+      state.categories = Array.isArray(data.categories) ? data.categories : (Array.isArray(data) ? data : []);
+      const chips = $('#categoryChips'); if(!chips) return;
+      chips.innerHTML = '';
+      const all = document.createElement('button');
+      all.className = 'chip active'; all.dataset.cat='all'; all.textContent='All';
+      chips.appendChild(all);
+      state.categories.forEach(c=>{
+        const id = (typeof c === 'string') ? c : (c.id || c.name || c);
+        if(id === 'all') return;
+        const name = (typeof c === 'string') ? c.charAt(0).toUpperCase()+c.slice(1) : (c.name || c.id || c);
+        const b = document.createElement('button');
+        b.className = 'chip'; b.dataset.cat = id;
+        b.textContent = name + (c.sourceCount ? ` (${c.sourceCount})` : '');
+        chips.appendChild(b);
+      });
+      chips.addEventListener('click', (e)=>{
+        const b = e.target.closest('.chip'); if(!b) return;
+        $$('#categoryChips .chip').forEach(x=>x.classList.remove('active'));
+        b.classList.add('active');
+        state.cat = b.dataset.cat;
+        state.search = '';
+        const si = $('#searchInput'); if(si) si.value = '';
+        state.page = 1;
+        fetchNews(true, {updateHero:true}).then(async ()=>{
+          if(state.cat !== 'all' && state.articles.length < 8 && state.hasMore){
+            try{ state.page = 2; await fetchNews(false, {}); if(state.hasMore && state.articles.length < 12){ state.page = 3; await fetchNews(false, {}); } }catch(e){ console.error(e); }
+          }
+          showSearchBanner(state.cat==='all' ? 'Showing all categories' : `Category: ${b.textContent.replace(/\\s*\\(\\d+\\)$/,'')} (${state.articles.length} headlines)`);
+        });
+      });
+    }catch(e){ console.error(e); toast('Categories failed to load'); }
+  }
+
+  /* ---------- trending ---------- */
+  async function loadTrending(){
+    try{
+      const data = await api('/api/trending');
+      state.trending = data.trending || data.topics || [];
+      renderTrending();
+    }catch(e){ console.error(e); }
+  }
+  function renderTrending(){
+    const el = $('#trendingList'); if(!el) return;
+    if(!state.trending.length){ el.innerHTML = '<div class="muted small">No trending data.</div>'; return; }
+    const max = Math.max(...state.trending.slice(0,5).map(t=>t.count||1));
+    el.innerHTML = state.trending.slice(0,5).map((t,i)=>{
+      const sent = (t.sentiment||'neutral').toLowerCase();
+      const sentCls = sent.includes('bull')?'sent-bullish':sent.includes('bear')?'sent-bearish':'sent-neutral';
+      const color = sent.includes('bull')?'var(--accent)':sent.includes('bear')?'var(--danger)':'var(--muted-2)';
+      const pct = Math.round(((t.count||0)/max)*100);
+      return `<div class="trend-row" data-topic="${esc(decodeEntities(t.topic))}">
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+            <span class="trend-name">${esc(decodeEntities(t.topic))}</span>
+            <span class="trend-meta"><span class="trend-sent ${sentCls}">${esc(sent)}</span> ${t.count||''}</span>
+          </div>
+          <div class="trend-bar"><div class="trend-bar-fill" style="width:${pct}%;background:${color}"></div></div>
+        </div>
+      </div>`;
+    }).join('');
+    $$('#trendingList .trend-row').forEach(it=>{
+      it.addEventListener('click', ()=>{
+        const topic = it.dataset.topic;
+        if(topic) window.location.href = 'topic.html?topic=' + encodeURIComponent(topic);
+      });
+    });
+  }
+
   function renderRisingTopics(){
     const trending = state.trending || [];
     if(!trending.length) return;
