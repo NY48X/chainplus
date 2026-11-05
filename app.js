@@ -1446,6 +1446,8 @@ const si = $('#searchInput');
   async function init(){
     const page = (document.body && document.body.dataset && document.body.dataset.page) || 'news';
     try { await loadCategories(); } catch(e){ console.error('categories error:', e); }
+    // Keep ticker populated on every page
+    try { renderTicker(); } catch(e){ console.error('ticker error:', e); }
     // Page-aware loading: only fetch data needed for this page
     if(page === 'markets'){
       try { await loadMarkets(); } catch(e){ console.error('init load error:', e); }

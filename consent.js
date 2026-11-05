@@ -34,6 +34,18 @@
     gtag('config', GTM_ID);
   }
 
+  // Load AdSense only if consent granted (advertising cookies)
+  const ADSENSE_CLIENT = 'ca-pub-8503915493262909';
+  function loadAdSense(){
+    if(window.__adsenseLoaded) return;
+    window.__adsenseLoaded = true;
+    const s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + ADSENSE_CLIENT;
+    s.crossOrigin = 'anonymous';
+    document.head.appendChild(s);
+  }
+
   // Show consent banner
   function showBanner(){
     const b = document.getElementById('consent-banner');
@@ -56,6 +68,7 @@
       analytics_storage: 'granted'
     });
     loadGTM();
+    loadAdSense();
   };
   // Handle reject
   window.cpRejectConsent = function(){
@@ -84,6 +97,7 @@
         analytics_storage: 'granted'
       });
       loadGTM();
+      loadAdSense();
     } else if(consent === null){
       showBanner();
     }
