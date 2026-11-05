@@ -395,7 +395,10 @@ async function fetchRSSFallback(){
     const grid = $('#storiesGrid');
     if(!grid) return;
     if(!state.articles.length){ grid.innerHTML = `<div class="empty" style="grid-column:1/-1">No articles found. Try another category or search.</div>`; return; }
-    grid.innerHTML = state.articles.map((a,i)=>{
+    const page = (document.body && document.body.dataset && document.body.dataset.page) || 'news';
+    const maxStories = (page === 'news') ? 3 : state.articles.length;
+    const toRender = state.articles.slice(0, maxStories);
+    grid.innerHTML = toRender.map((a,i)=>{
       const cred = a.credibility || (a.reputation? a.reputation/100 : 0.6);
       const lead = (i===0 && state.page===1 && !state.search) ? ' story-lead' : '';
       const saved = state.bookmarks.has(a.link) ? ' saved' : '';
@@ -414,7 +417,7 @@ async function fetchRSSFallback(){
         </article>`;
     }).join('');
     $$('#storiesGrid .story').forEach((el,i)=>{
-      el.addEventListener('click', (e)=>{ if(e.target.closest('.bookmark-btn')) return; openArticle(state.articles[i]); });
+      el.addEventListener('click', (e)=>{ if(e.target.closest('.bookmark-btn')) return; openArticle(toRender[i]); });
     });
     $$('#storiesGrid .bookmark-btn').forEach(b=>{
       b.addEventListener('click', (e)=>{ e.stopPropagation(); toggleBookmark(b.dataset.link); });
