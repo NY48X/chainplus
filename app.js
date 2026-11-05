@@ -743,7 +743,6 @@ async function fetchRSSFallback(){
   }
 
   async function loadCoinChart(coinId){
-    console.log('[Chart] loadCoinChart called with:', coinId);
     const chartEl = document.getElementById('marketChart');
     const chartTitle = document.getElementById('marketChartTitle');
     if(!chartEl) return;
@@ -774,7 +773,6 @@ async function fetchRSSFallback(){
   }
 
   function drawChart(container, prices){
-    console.log('[Chart] drawChart called, prices:', prices.length, 'first:', prices[0] && prices[0].v, 'last:', prices[prices.length-1] && prices[prices.length-1].v);
     const w = container.clientWidth || 600;
     const h = 240;
     const pad = {top:20,right:20,bottom:30,left:60};
@@ -784,6 +782,10 @@ async function fetchRSSFallback(){
     const min = Math.min(...vals);
     const max = Math.max(...vals);
     const range = (max-min)||1;
+    // If all prices are the same (stablecoin), show a note
+    if (max === min) {
+      console.log('[Chart] Stable price detected:', min);
+    }
     const ts = prices.map(p=>p.t);
     const tMin = ts[0], tMax = ts[ts.length-1];
     const tRange = (tMax-tMin)||1;
