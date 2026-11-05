@@ -41,6 +41,7 @@
         <a href="topic.html">Topics</a>
       <a href="methodology.html">Methodology</a>
       <a href="about.html">About</a>
+      <a href="team.html">Team</a>
     </nav>
     <button onclick="(function(){var h=document.documentElement;var l=h.classList.toggle('light');localStorage.setItem('cp-theme',l?'light':'dark');})()" class="iconbtn" aria-label="Toggle theme" title="Toggle theme" style="margin-left:auto">
       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -57,6 +58,7 @@
     <a href="topic.html">Topics</a>
     <a href="methodology.html">Methodology</a>
     <a href="about.html">About</a>
+      <a href="team.html">Team</a>
     <a href="contact.html">Contact</a>
   </nav>
 
@@ -143,6 +145,7 @@
         <a href="index.html">Home</a>
         <a href="methodology.html">Methodology</a>
         <a href="about.html">About</a>
+      <a href="team.html">Team</a>
       </div>
       <div>
         <h4>Legal</h4>
@@ -165,12 +168,15 @@
   </div>
 </footer>
 
-<!-- Cookie Consent -->
-<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1a1a1a;color:#fff;padding:16px 24px;z-index:9999;font-size:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
-  <span>We use cookies to improve your experience and serve personalized ads. By continuing, you agree to our <a href="privacy.html" style="color:#00e5a0;text-decoration:underline">Privacy Policy</a> and <a href="cookies.html" style="color:#00e5a0;text-decoration:underline">Cookie Policy</a>.</span>
-  <button onclick="document.getElementById('cookie-banner').style.display='none';try{localStorage.setItem('cp-cookies','1')}catch(e){}" style="background:#00e5a0;color:#000;border:none;padding:8px 20px;border-radius:6px;cursor:pointer;font-weight:600">Accept</button>
+<!-- Consent Management -->
+<script src="consent.js"></script>
+<div id="consent-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#1a1a1a;color:#fff;padding:16px 24px;z-index:9999;font-size:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+  <span style="flex:1;min-width:200px">We use cookies and similar technologies for analytics and personalized advertising. You can accept all, reject non-essential, or manage your preferences. See our <a href="privacy.html" style="color:#00e5a0;text-decoration:underline">Privacy Policy</a> and <a href="cookies.html" style="color:#00e5a0;text-decoration:underline">Cookie Policy</a>.</span>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <button onclick="cpRejectConsent()" style="background:transparent;color:#fff;border:1px solid #555;padding:8px 16px;border-radius:6px;cursor:pointer;font-weight:600">Reject</button>
+    <button onclick="cpAcceptConsent()" style="background:#00e5a0;color:#000;border:none;padding:8px 20px;border-radius:6px;cursor:pointer;font-weight:600">Accept All</button>
+  </div>
 </div>
-<script>try{if(!localStorage.getItem('cp-cookies'))document.getElementById('cookie-banner').style.display='flex';}catch(e){}</script>
 
 </body>
 </html>
