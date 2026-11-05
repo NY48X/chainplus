@@ -139,7 +139,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 
 <main id="main">
-<noscript><div style="padding:20px;text-align:center;color:var(--text-2)">This page requires JavaScript to load live market data. Please enable JavaScript in your browser. In the meantime, you can browse our <a href="insights.html" style="color:var(--accent)">insights articles</a> or <a href="news.html" style="color:var(--accent)">breaking news</a>.</div></noscript>
+<noscript><div style="padding:20px;text-align:center;color:var(--text-2)">Live market data loads with JavaScript. If you have JavaScript disabled, you can still browse our <a href="insights.html" style="color:var(--accent)">insights articles</a>, <a href="news.html" style="color:var(--accent)">breaking news</a>, or <a href="methodology.html" style="color:var(--accent)">methodology</a> for data source details.</div></noscript>
   <div class="container">
     <div id="searchBanner" class="search-banner hidden"></div>
 
@@ -150,7 +150,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <p class="sub">Real-time prices, 24h changes, and sparkline charts for top cryptocurrencies</p>
       </div>
       <div style="max-width:720px;margin:0 auto 24px;line-height:1.7;color:var(--text-2)">
-        <p>Track live cryptocurrency prices for Bitcoin, Ethereum, Solana, and more. Each tile shows the current price, 24-hour percentage change, and a 7-day sparkline. Click any coin to filter headlines by that asset. Market data is sourced from CoinGecko. Prices refresh on page load.</p>
+        <p>Track live cryptocurrency prices for Bitcoin, Ethereum, Solana, and more. Each tile shows the current price, 24-hour percentage change, and a 7-day sparkline. Click any coin to filter headlines by that asset. Market data is sourced from CoinGecko. Prices refresh every 45 seconds.</p>
       </div>
     </section>
 
@@ -184,7 +184,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
       <h3 style="font-family:var(--font-display);font-size:18px;margin:24px 0 8px;color:var(--text)">How to Read the Market Data</h3>
       <ul style="padding-left:20px;margin:0 0 16px">
-        <li><strong>Price</strong> — The current trading price in USD, updated on page load from CoinGecko.</li>
+        <li><strong>Price</strong> — The current trading price in USD, updated every 45 seconds from CoinGecko.</li>
         <li><strong>24h Change</strong> — The percentage price change over the last 24 hours. Green indicates a price increase; red indicates a decrease.</li>
         <li><strong>Sparkline</strong> — A 7-day mini price chart showing the recent trend at a glance. An upward slope means the price has been rising over the week.</li>
         <li><strong>Market Cap</strong> — The total value of all coins in circulation (price × circulating supply). This is the primary metric for ranking cryptocurrencies.</li>
@@ -214,7 +214,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <h3 style="font-family:var(--font-display);font-size:18px;margin:0 0 12px">Frequently Asked Questions</h3>
       <details style="margin-bottom:12px;padding:12px 16px;border:1px solid var(--border);border-radius:8px;background:var(--surface)">
         <summary style="cursor:pointer;font-weight:600;font-size:14px">How often are prices updated?</summary>
-        <p style="margin:8px 0 0;font-size:14px;color:var(--text-2);line-height:1.6">Prices are fetched from CoinGecko on page load. Click any coin to view its 30-day price chart with historical prices at specific points.</p>
+        <p style="margin:8px 0 0;font-size:14px;color:var(--text-2);line-height:1.6">Prices are fetched from CoinGecko and refresh every 45 seconds. Click any coin to view its 30-day price chart with historical prices at specific points.</p>
       </details>
       <details style="margin-bottom:12px;padding:12px 16px;border:1px solid var(--border);border-radius:8px;background:var(--surface)">
         <summary style="cursor:pointer;font-weight:600;font-size:14px">What is a sparkline?</summary>
