@@ -784,7 +784,7 @@ async function fetchRSSFallback(){
         console.warn('CoinGecko returned', r.status);
         try{
           const cached = localStorage.getItem('cp-markets-cache');
-          if(cached){ state.markets = JSON.parse(cached); state.marketCoins = Object.values(state.markets||{}).map(d=>({id:d.id,sym:(d.symbol||'').toUpperCase(),name:d.name})); renderMarketStrip(); return; }
+          if(cached){ state.markets = JSON.parse(cached); state.marketCoins = Object.values(state.markets||{}).map(d=>({id:d.id,sym:(d.symbol||'').toUpperCase(),name:d.name})); renderMarketStrip(); try{ renderTopMovers(); }catch(e){} return; }
         }catch(e){}
         return;
       }
@@ -795,6 +795,7 @@ async function fetchRSSFallback(){
       // Build coin list for search
       state.marketCoins = (Array.isArray(data)?data:[]).map(d=>({id:d.id,sym:d.symbol.toUpperCase(),name:d.name}));
       renderMarketStrip();
+      try{ renderTopMovers(); }catch(e){ console.error(e); }
       try{ localStorage.setItem('cp-markets-cache', JSON.stringify(map)); }catch(e){}
     }catch(e){ console.error(e); toast('Markets unavailable'); }
   }
