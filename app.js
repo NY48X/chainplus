@@ -450,128 +450,6 @@ async function fetchRSSFallback(){
     return 'developing';
   }
 
-  function renderBreaking(){
-    const feed = $('#breakingFeed'); if(!feed) return;
-    if(!state.articles.length){ feed.innerHTML = `<div class="empty" style="text-align:center;padding:40px;color:var(--text-2)">No breaking stories right now. Check back soon.</div>`; return; }
-    const countEl = $('#breakingCount'); if(countEl) countEl.textContent = state.articles.length;
-    feed.innerHTML = state.articles.map((a,i)=>{
-      const urg = classifyUrgency(a.title, a.description);
-      const urgColor = urg === 'critical' ? '#ef4444' : urg === 'important' ? '#f59e0b' : '#3b82f6';
-      const urgBg = urg === 'critical' ? 'rgba(239,68,68,0.12)' : urg === 'important' ? 'rgba(245,158,11,0.12)' : 'rgba(59,130,246,0.12)';
-      const time = a.timeAgo || timeAgo(a.pubDate);
-      const cred = a.credibility || (a.reputation? a.reputation/100 : 0.6);
-      return `
-        <article class="breaking-item reveal" data-idx="${i}" style="border-left:3px solid ${urgColor};background:var(--surface);border-radius:8px;padding:16px 20px;margin-bottom:12px;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap">
-            <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;padding:2px 8px;border-radius:4px;background:${urgBg};color:${urgColor}">${urg}</span>
-            <span style="font-size:11px;color:var(--text-2)">${esc(a.source||'Unknown')}</span>
-            <span style="font-size:11px;color:var(--text-2);margin-left:auto">${esc(time)}</span>
-            <span class="cred"><span class="cred-dot ${credClass(cred)}"></span>${Math.round(cred*100)}%</span>
-          </div>
-          <h3 style="font-family:var(--font-display);font-size:17px;margin:0 0 6px;line-height:1.3;color:var(--text)">${esc(decodeEntities(a.title))}</h3>
-          ${a.description ? `<p style="font-size:13px;color:var(--text-2);margin:0 0 8px;line-height:1.5">${esc(stripHtml(a.description)).slice(0,180)}${stripHtml(a.description).length>180?'…':''}</p>` : ''}
-          <div style="display:flex;align-items:center;gap:8px">
-            <span style="font-size:11px;padding:2px 8px;border-radius:4px;background:var(--bg-2);color:var(--text-2)">${esc(decodeEntities(a.category||'general'))}</span>
-            <button class="chip bookmark-btn" data-link="${esc(a.link)}" style="margin-left:auto;padding:2px 8px;font-size:11px">${state.bookmarks.has(a.link)?'★ Saved':'☆ Save'}</button>
-          </div>
-        </article>`;
-    }).join('');
-    $$('#breakingFeed .breaking-item').forEach((el,i)=>{
-      el.addEventListener('click', (e)=>{ if(e.target.closest('.bookmark-btn')) return; openArticle(state.articles[i]); });
-      el.addEventListener('mouseenter', ()=>{ el.style.transform='translateY(-2px)'; el.style.boxShadow='0 4px 12px rgba(0,0,0,0.2)'; });
-      el.addEventListener('mouseleave', ()=>{ el.style.transform=''; el.style.boxShadow=''; });
-    });
-    $$('#breakingFeed .bookmark-btn').forEach(b=>{
-      b.addEventListener('click', (e)=>{ e.stopPropagation(); toggleBookmark(b.dataset.link); });
-    });
-    revealIn();
-  }
-
-  /* ---------- ticker ---------- */
-  async function renderTicker(){
-    try{
-      const data = await api('/api/breaking?limit=12');
-      const arts = data.articles || [];
-      const html = arts.map(a=>`<a href="${esc(a.link)}" target="_blank" rel="noopener">${esc(decodeEntities(a.title))}</a>`).join('  ·  ');
-      const track = $('#tickerTrack');
-      if(track) track.innerHTML = `<span class="ticker-item">${html}  ·  ${html}</span>`;
-    }catch(e){ /* keep placeholder */ }
-  }
-
-  /* ---------- categories ---------- */
-  async function loadCategories(){
-    try{
-      const data = await api('/api/news/categories');
-      state.categories = Array.isArray(data.categories) ? data.categories : (Array.isArray(data) ? data : []);
-      const chips = $('#categoryChips'); if(!chips) return;
-      chips.innerHTML = '';
-      const all = document.createElement('button');
-      all.className = 'chip active'; all.dataset.cat='all'; all.textContent='All';
-      chips.appendChild(all);
-      state.categories.forEach(c=>{
-        const id = (typeof c === 'string') ? c : (c.id || c.name || c);
-        if(id === 'all') return;
-        const name = (typeof c === 'string') ? c.charAt(0).toUpperCase()+c.slice(1) : (c.name || c.id || c);
-        const b = document.createElement('button');
-        b.className = 'chip'; b.dataset.cat = id;
-        b.textContent = name + (c.sourceCount ? ` (${c.sourceCount})` : '');
-        chips.appendChild(b);
-      });
-      chips.addEventListener('click', (e)=>{
-        const b = e.target.closest('.chip'); if(!b) return;
-        $$('#categoryChips .chip').forEach(x=>x.classList.remove('active'));
-        b.classList.add('active');
-        state.cat = b.dataset.cat;
-        state.search = '';
-        const si = $('#searchInput'); if(si) si.value = '';
-        state.page = 1;
-        fetchNews(true, {updateHero:true}).then(async ()=>{
-          if(state.cat !== 'all' && state.articles.length < 8 && state.hasMore){
-            try{ state.page = 2; await fetchNews(false, {}); if(state.hasMore && state.articles.length < 12){ state.page = 3; await fetchNews(false, {}); } }catch(e){ console.error(e); }
-          }
-          showSearchBanner(state.cat==='all' ? 'Showing all categories' : `Category: ${b.textContent.replace(/\s*\(\d+\)$/,'')} (${state.articles.length} headlines)`);
-        });
-      });
-    }catch(e){ console.error(e); toast('Categories failed to load'); }
-  }
-
-  /* ---------- trending ---------- */
-  async function loadTrending(){
-    try{
-      const data = await api('/api/trending');
-      state.trending = data.trending || data.topics || [];
-      renderTrending();
-    }catch(e){ console.error(e); }
-  }
-  function renderTrending(){
-    const el = $('#trendingList'); if(!el) return;
-    if(!state.trending.length){ el.innerHTML = '<div class="muted small">No trending data.</div>'; return; }
-    const max = Math.max(...state.trending.slice(0,5).map(t=>t.count||1));
-    el.innerHTML = state.trending.slice(0,5).map((t,i)=>{
-      const sent = (t.sentiment||'neutral').toLowerCase();
-      const sentCls = sent.includes('bull')?'sent-bullish':sent.includes('bear')?'sent-bearish':'sent-neutral';
-      const color = sent.includes('bull')?'var(--accent)':sent.includes('bear')?'var(--danger)':'var(--muted-2)';
-      const pct = Math.round(((t.count||0)/max)*100);
-      const heads = '';
-      return `<div class="trend-row" data-topic="${esc(decodeEntities(t.topic))}">
-        <div>
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
-            <span class="trend-name">${esc(decodeEntities(t.topic))}</span>
-            <span class="trend-meta"><span class="trend-sent ${sentCls}">${esc(sent)}</span> ${t.count||''}</span>
-          </div>
-          <div class="trend-bar"><div class="trend-bar-fill" style="width:${pct}%;background:${color}"></div></div>
-          ${heads}
-        </div>
-      </div>`;
-    }).join('');
-    $$('#trendingList .trend-row').forEach(it=>{
-      it.addEventListener('click', ()=>{
-        const topic = it.dataset.topic;
-        if(topic) window.location.href = 'topic.html?topic=' + encodeURIComponent(topic);
-      });
-    });
-  }
-
   function renderRisingTopics(){
     const trending = state.trending || [];
     if(!trending.length) return;
@@ -1351,7 +1229,7 @@ async function fetchRSSFallback(){
   // live flowing poll: prepend new articles without wiping
   async function livePoll(){
     const page = (document.body && document.body.dataset && document.body.dataset.page) || 'news';
-    if(page !== 'news' && page !== 'breaking' && page !== 'topic') return;
+    if(page !== 'news' && page !== 'home' && page !== 'topic') return;
     if(state.loading || state.search.trim() || state.cat!=='all') return;
     // On topic page, skip if a topic filter is active (filtered articles shown)
     if(page === 'topic'){
