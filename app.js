@@ -1430,6 +1430,9 @@ async function fetchRSSFallback(){
       if(marketsSec) marketsSec.style.display = 'none';
       if(ossSec) ossSec.style.display = 'none';
     }
+    if(page === 'news'){
+      if(railEl) railEl.style.display = 'none';
+    }
     if(page === 'topic'){
       if(railEl) railEl.style.display = 'none';
     }
@@ -1471,8 +1474,7 @@ async function fetchRSSFallback(){
       try { await Promise.all([fetchNews(true,{updateHero:true}), loadTrending(), loadMarkets(), renderTicker()]); } catch(e){ console.error('init load error:', e); }
       try { renderTopMovers(); } catch(e){ console.error('renderTopMovers error:', e); }
     } else if(page === 'news'){
-      try { await Promise.all([fetchNews(true,{updateHero:true}), loadTrending(), loadMarkets(), renderTicker()]); } catch(e){ console.error('init load error:', e); }
-      try { renderTopMovers(); } catch(e){ console.error('renderTopMovers error:', e); }
+      try { await Promise.all([fetchNews(true,{updateHero:true}), loadTrending(), renderTicker()]); } catch(e){ console.error('init load error:', e); }
     } else if(page === 'topic'){
       try { await Promise.all([fetchNews(true,{updateHero:false}), loadTrending()]); } catch(e){ console.error('init load error:', e); }
       // Render rising topics dashboard
