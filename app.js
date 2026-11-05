@@ -401,8 +401,11 @@ async function fetchRSSFallback(){
       const cred = a.credibility || (a.reputation? a.reputation/100 : 0.6);
       const lead = (i===0 && state.page===1 && !state.search) ? ' story-lead' : '';
       const saved = state.bookmarks.has(a.link) ? ' saved' : '';
+      const page = (document.body && document.body.dataset && document.body.dataset.page) || 'news';
+      const urgColor = (page === 'news') ? (classifyUrgency ? (classifyUrgency(a.title, a.description) === 'critical' ? '#ef4444' : classifyUrgency(a.title, a.description) === 'important' ? '#f59e0b' : '#3b82f6') : '') : '';
+      const borderStyle = urgColor ? `style="border-left:3px solid ${urgColor}"` : '';
       return `
-        <article class="story${lead} reveal" data-idx="${i}">
+        <article class="story${lead} reveal" data-idx="${i}" ${borderStyle}>
           <span class="story-cat">${esc(decodeEntities(a.category||'general'))}</span>
           <h3 class="story-title">${esc(decodeEntities(a.title))}</h3>
           ${a.description ? `<p class="story-dek">${esc(stripHtml(a.description))}</p>` : ''}
@@ -1426,6 +1429,8 @@ async function fetchRSSFallback(){
     if(page === 'home' || page === 'news' || page === 'topic'){
       if(marketsSec) marketsSec.style.display = 'none';
       if(ossSec) ossSec.style.display = 'none';
+    }
+    if(page === 'topic'){
       if(railEl) railEl.style.display = 'none';
     }
     if(page === 'markets'){
