@@ -125,6 +125,7 @@
 </div>
 
 <main id="main">
+<noscript><div style="padding:20px;text-align:center;color:var(--text-2)">This page requires JavaScript to load trending topics. Please enable JavaScript in your browser. In the meantime, you can browse our <a href="insights.html" style="color:var(--accent)">insights articles</a> or <a href="breaking.html" style="color:var(--accent)">breaking news</a>.</div></noscript>
   <div class="container">
     <div id="searchBanner" class="search-banner hidden"></div>
 
@@ -227,6 +228,21 @@
   </div>
 </section>
 
+<section class="section" style="padding:40px 0">
+  <div class="container" style="max-width:720px">
+    <h2 style="font-family:var(--font-display);font-size:22px;margin:0 0 16px">About Rising Topics</h2>
+    <div style="line-height:1.7;color:var(--text-2);font-size:15px">
+      <p>Rising Topics is ChainPlus's topic discovery dashboard. It analyzes hundreds of crypto news headlines in real time to identify which topics are gaining traction, how sentiment is shifting, and which stories are emerging before they hit mainstream coverage.</p>
+      <p>Unlike simple keyword counting, our trending engine uses bigram extraction (two-word phrases) to catch multi-word entities like "Pump.fun" or "ETF approval." It applies crypto-specific sentiment analysis, frequency thresholds, and daily rotating seeds to surface meaningful trends rather than noise.</p>
+      <h3 style="font-family:var(--font-display);font-size:18px;margin:24px 0 8px;color:var(--text)">How Topics Are Ranked</h3>
+      <p>Topics are ranked by mention frequency across our 300+ news sources. Single words need 2+ mentions to qualify; two-word phrases need 1+ mention. This balances sensitivity (catching emerging topics early) against noise (filtering out one-off mentions).</p>
+      <h3 style="font-family:var(--font-display);font-size:18px;margin:24px 0 8px;color:var(--text)">Sentiment Classification</h3>
+      <p>Each topic is classified as bullish, bearish, or neutral based on surrounding context. We use crypto-specific keyword matching (e.g., "surge" → bullish, "crash" → bearish) with word-boundary matching to reduce false positives. Sentiment is approximate — natural language is messy, and sarcasm or context-dependent usage can trip up keyword-based systems.</p>
+      <h3 style="font-family:var(--font-display);font-size:18px;margin:24px 0 8px;color:var(--text)">Topic Sectors</h3>
+      <p>Topics are grouped into sectors: Layer 1 (blockchain platforms), DeFi (decentralized finance), Security (hacks, exploits, audits), Markets (price movements, trading), NFT (non-fungible tokens), and Regulation (policy, SEC, compliance). This helps you quickly find topics relevant to your interests.</p>
+    </div>
+  </div>
+</section>
 <footer class="footer">
   <div class="container">
     <div class="footer-grid">
