@@ -22,17 +22,8 @@
     wait_for_update: 500
   });
 
-  // Load GTM only if consent granted
-  function loadGTM(){
-    if(window.__gtmLoaded) return;
-    window.__gtmLoaded = true;
-    const s = document.createElement('script');
-    s.async = true;
-    s.src = 'https://www.googletagmanager.com/gtm.js?id=' + GTM_ID;
-    document.head.appendChild(s);
-    gtag('js', new Date());
-    gtag('config', GTM_ID);
-  }
+  // GTM is loaded statically in HTML <head> with consent mode defaults.
+  // Consent Mode v2 controls whether GTM fires tags based on consent state.
 
   // AdSense script is loaded statically in HTML <head> with consent mode defaults.
   // Consent Mode v2 (set above) ensures non-personalized ads until consent granted.
@@ -58,7 +49,6 @@
       ad_personalization: 'granted',
       analytics_storage: 'granted'
     });
-    loadGTM();
   };
   // Handle reject
   window.cpRejectConsent = function(){
@@ -86,8 +76,7 @@
         ad_personalization: 'granted',
         analytics_storage: 'granted'
       });
-      loadGTM();
-    } else if(consent === null){
+      } else if(consent === null){
       showBanner();
     }
   }
