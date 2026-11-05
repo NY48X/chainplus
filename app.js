@@ -767,6 +767,49 @@ async function fetchRSSFallback(){
       </div>`;
   }
 
+  function renderTopMovers(){
+    const el = $('#topMoversWidget'); if(!el || !state.markets) return;
+    const coins = Object.values(state.markets);
+    const sorted = coins
+      .filter(c => c.price_change_percentage_24h != null && c.current_price > 0.0001)
+      .sort((a,b) => (b.price_change_percentage_24h||0) - (a.price_change_percentage_24h||0));
+    const gainers = sorted.slice(0, 3);
+    const losers = sorted.slice(-3).reverse();
+    const fmtPct = v => (v>=0?'+':'') + Number(v).toFixed(2) + '%';
+    const fmtPrice = v => v>=1 ? '$'+Number(v).toLocaleString('en-US',{maximumFractionDigits:2}) : '$'+Number(v).toFixed(4);
+    let html = '<div style="display:flex;flex-direction:column;gap:6px">';
+    html += '<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-2);margin-bottom:2px">Top Gainers</div>';
+    gainers.forEach(c => {
+      const chg = c.price_change_percentage_24h;
+      html += `<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:5px 8px;border-radius:6px;background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.15)">
+        <div style="display:flex;align-items:center;gap:6px;min-width:0">
+          <span style="font-weight:700;font-size:12px">${esc((c.symbol||'').toUpperCase())}</span>
+          <span style="font-size:10px;color:var(--text-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(c.name)}</span>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="font-size:11px;font-weight:600;color:#22c55e">${fmtPct(chg)}</div>
+          <div style="font-size:9px;color:var(--text-2)">${fmtPrice(c.current_price)}</div>
+        </div>
+      </div>`;
+    });
+    html += '<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-2);margin:6px 0 2px">Top Losers</div>';
+    losers.forEach(c => {
+      const chg = c.price_change_percentage_24h;
+      html += `<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:5px 8px;border-radius:6px;background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.15)">
+        <div style="display:flex;align-items:center;gap:6px;min-width:0">
+          <span style="font-weight:700;font-size:12px">${esc((c.symbol||'').toUpperCase())}</span>
+          <span style="font-size:10px;color:var(--text-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(c.name)}</span>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="font-size:11px;font-weight:600;color:#ef4444">${fmtPct(chg)}</div>
+          <div style="font-size:9px;color:var(--text-2)">${fmtPrice(c.current_price)}</div>
+        </div>
+      </div>`;
+    });
+    html += '</div>';
+    el.innerHTML = html;
+  }
+
   /* ---------- markets ---------- */
   async function loadMarkets(){
     try{
@@ -1419,17 +1462,20 @@ async function fetchRSSFallback(){
     } else if(page === 'trending'){
       try { await loadTrending(); } catch(e){ console.error('init load error:', e); }
     } else if(page === 'home'){
-      // hub page — headlines preview + trending + FG only
-      try { await Promise.all([fetchNews(true,{updateHero:true}), loadTrending(), loadFG(), renderTicker()]); } catch(e){ console.error('init load error:', e); }
+      // hub page — headlines preview + trending + top movers
+      try { await Promise.all([fetchNews(true,{updateHero:true}), loadTrending(), loadMarkets(), renderTicker()]); } catch(e){ console.error('init load error:', e); }
+      try { renderTopMovers(); } catch(e){ console.error('renderTopMovers error:', e); }
     } else if(page === 'news'){
-      try { await Promise.all([fetchNews(true,{updateHero:true}), loadTrending(), loadFG(), renderTicker()]); } catch(e){ console.error('init load error:', e); }
+      try { await Promise.all([fetchNews(true,{updateHero:true}), loadTrending(), loadMarkets(), renderTicker()]); } catch(e){ console.error('init load error:', e); }
+      try { renderTopMovers(); } catch(e){ console.error('renderTopMovers error:', e); }
     } else if(page === 'topic'){
       try { await Promise.all([fetchNews(true,{updateHero:false}), loadTrending()]); } catch(e){ console.error('init load error:', e); }
       // Render rising topics dashboard
       try { renderRisingTopics(); } catch(e){ console.error('renderRisingTopics error:', e); }
     } else {
       // fallback
-      try { await Promise.all([fetchNews(true,{updateHero:true}), loadTrending(), loadFG(), renderTicker()]); } catch(e){ console.error('init load error:', e); }
+      try { await Promise.all([fetchNews(true,{updateHero:true}), loadTrending(), loadMarkets(), renderTicker()]); } catch(e){ console.error('init load error:', e); }
+      try { renderTopMovers(); } catch(e){ console.error('renderTopMovers error:', e); }
     }
     revealIn();
     state.pollTimer = setInterval(livePoll, 45000);
