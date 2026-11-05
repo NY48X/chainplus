@@ -20,6 +20,20 @@
   <link rel="stylesheet" href="styles.css" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8503915493262909" crossorigin="anonymous"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "ChainPlus — Market Insights & Analysis",
+    "description": "Original crypto market analysis, on-chain intelligence, and editorial commentary from ChainPlus.",
+    "url": "https://chainplus.tech/insights.html",
+    "publisher": {
+      "@type": "Organization",
+      "name": "ChainPlus",
+      "url": "https://chainplus.tech"
+    }
+  }
+  </script>
 </head>
 <body>
   <header class="site-header">
@@ -44,6 +58,7 @@
     <article class="insight-card">
       <h2>What 300+ Crypto RSS Feeds Taught Us About Information Quality</h2>
       <p class="meta">Research · November 2, 2026</p>
+      <p class="author" style="font-size:13px;color:var(--text-3);margin:-4px 0 12px">By <a href="about.html" style="color:var(--accent)">ChainPlus Editorial Team</a></p>
       <p>We built ChainPlus on top of 300+ RSS and Atom feeds from crypto news publishers. After processing hundreds of thousands of headlines, here's what we learned about the state of crypto information — and why most of it is noise.</p>
       <p><strong>1. Duplicate content is rampant.</strong> The same story gets republished across 5-10 outlets within hours. CoinTelegraph, CoinDesk, Decrypt, and smaller outlets often run nearly identical headlines with slightly different wording. Our deduplication logic catches exact duplicates, but near-duplicates (same story, different angle) slip through. This means a "breaking" story can dominate the feed for hours even when nothing new is being said.</p>
       <p><strong>2. Price commentary dominates.</strong> Roughly 40% of crypto headlines are some variation of "Bitcoin drops X% as..." or "Ethereum surges amid..." These are reactive, not informative. They tell you what happened, not why. The genuinely useful headlines — regulatory developments, protocol upgrades, security incidents — are buried under price noise.</p>
@@ -56,6 +71,7 @@
     <article class="insight-card">
       <h2>Building a Trending Topics Engine for Crypto News</h2>
       <p class="meta">Engineering · November 1, 2026</p>
+      <p class="author" style="font-size:13px;color:var(--text-3);margin:-4px 0 12px">By <a href="about.html" style="color:var(--accent)">ChainPlus Editorial Team</a></p>
       <p>Extracting meaningful trending topics from crypto news is harder than it sounds. The vocabulary is specialized, the noise is high, and what counts as "trending" changes by the hour. Here's how we built ours and what we learned.</p>
       <p><strong>The basic approach:</strong> Tokenize headlines and descriptions, remove stop words, count word frequencies, and rank. Simple enough. But crypto text has unique challenges that standard NLP tools don't handle.</p>
       <p><strong>Challenge 1: Ticker symbols are words.</strong> BTC, ETH, SOL, DOGE — these are high-frequency tokens that should be treated as entities, not generic words. But they're also ambiguous: "sol" could be Solana or the Spanish word for sun. We handle this by maintaining a known-ticker list and treating matches as proper nouns.</p>
@@ -69,6 +85,7 @@
     <article class="insight-card">
       <h2>The CoinGecko Rate Limit Problem: How We Built a Resilient Market Data Pipeline</h2>
       <p class="meta">Engineering · October 31, 2026</p>
+      <p class="author" style="font-size:13px;color:var(--text-3);margin:-4px 0 12px">By <a href="about.html" style="color:var(--accent)">ChainPlus Editorial Team</a></p>
       <p>Fetching real-time market data for 100+ cryptocurrencies seems straightforward until you hit rate limits. CoinGecko's free API allows roughly 10-30 requests per minute. Fetching prices, market caps, and 7-day sparklines for 100 coins requires multiple paginated requests. During peak usage, we'd hit the limit and the market page would show nothing but skeletons.</p>
       <p><strong>Attempt 1: Retry with backoff.</strong> We added exponential backoff on 429 responses. This helped but didn't solve the problem — during high traffic, retries just delayed the inevitable failure. Users would stare at loading skeletons for 10+ seconds before seeing data.</p>
       <p><strong>Attempt 2: localStorage caching.</strong> We cache market data in localStorage with a TTL. On subsequent page loads, we show cached data immediately while fetching fresh data in the background. This dramatically improved perceived performance — the page renders instantly with slightly stale data, then updates when fresh data arrives.</p>
@@ -81,6 +98,7 @@
     <article class="insight-card">
       <h2>Why Crypto News Aggregators Fail (And What We Did Differently)</h2>
       <p class="meta">Product · October 30, 2026</p>
+      <p class="author" style="font-size:13px;color:var(--text-3);margin:-4px 0 12px">By <a href="about.html" style="color:var(--accent)">ChainPlus Editorial Team</a></p>
       <p>Most crypto news aggregators are just RSS readers with a nicer UI. They pull headlines, display them in a list, and call it a day. The problem isn't the aggregation — it's that they don't add any value beyond what the original publisher already provides.</p>
       <p><strong>The information overload problem:</strong> A typical crypto enthusiast follows 10-20 news sources. Each publishes 5-20 articles per day. That's 50-400 headlines per day. Nobody reads all of them. The result is that people either miss important stories or spend hours skimming headlines that say the same thing in different words.</p>
       <p><strong>What we do differently:</strong></p>
@@ -94,6 +112,7 @@
     <article class="insight-card">
       <h2>Extracting Signal from Crypto News: The NLP Challenges Nobody Talks About</h2>
       <p class="meta">Research · October 29, 2026</p>
+      <p class="author" style="font-size:13px;color:var(--text-3);margin:-4px 0 12px">By <a href="about.html" style="color:var(--accent)">ChainPlus Editorial Team</a></p>
       <p>Crypto has its own language. Ticker symbols, protocol names, slang, and jargon make standard NLP tools nearly useless. Here are the specific challenges we faced and how we handled them.</p>
       <p><strong>Ticker ambiguity.</strong> "SOL" could be Solana's token or the word "sol" in Spanish. "LINK" could be Chainlink or the English word. "ONE" could be Harmony's token or the number. Context disambiguation requires knowing which tokens exist and what they're commonly called. We maintain a ticker dictionary, but new tokens launch daily and our dictionary can't keep up.</p>
       <p><strong>Multi-word entities.</strong> "Pump.fun," "Jupiter Exchange," "Raydium CLMM" — these are single concepts that span multiple words. Standard tokenization splits them apart, losing the entity. We use bigram and trigram extraction to catch these, but we can't catch every multi-word entity. "Uniswap V3" works; "Uniswap v3 concentrated liquidity" doesn't.</p>
@@ -106,6 +125,7 @@
     <article class="insight-card">
       <h2>Real-Time Data in Crypto: The Architecture Behind ChainPlus</h2>
       <p class="meta">Architecture · October 28, 2026</p>
+      <p class="author" style="font-size:13px;color:var(--text-3);margin:-4px 0 12px">By <a href="about.html" style="color:var(--accent)">ChainPlus Editorial Team</a></p>
       <p>Crypto markets never close. News breaks at 3 AM. Prices move on weekends. A news aggregator that updates once per hour is useless. Here's how we built a system that stays current without melting our servers.</p>
       <p><strong>The backend: Cloudflare Worker.</strong> We run a Cloudflare Worker that aggregates RSS feeds, caches responses, and serves a unified API. The worker fetches 300+ feeds, parses XML directly (no third-party RSS services — they rate-limit Cloudflare IPs), deduplicates articles, categorizes them by keyword, and caches the result for 5 minutes. This means our API can serve thousands of requests per minute from cache without hitting upstream sources.</p>
       <p><strong>The caching strategy.</strong> We use multiple cache layers: (1) Worker-level cache (5-minute TTL for news, 1-minute for trending), (2) Browser localStorage cache (for offline resilience), (3) In-memory state (for instant re-rending without re-fetching). Each layer serves a different purpose: the worker cache reduces upstream load, localStorage enables offline access, and in-memory state makes navigation instant.</p>
@@ -118,6 +138,7 @@
     <article class="insight-card">
       <h2>Why Memecoin Volume Spikes Precede Broader Market Moves</h2>
       <p class="meta">Analysis · October 30, 2026</p>
+      <p class="author" style="font-size:13px;color:var(--text-3);margin:-4px 0 12px">By <a href="about.html" style="color:var(--accent)">ChainPlus Editorial Team</a></p>
       <p>Over the past six months, we've tracked a recurring pattern: when memecoin trading volume on Solana (pump.fun, Raydium) spikes by more than 3x the 7-day average, broader crypto market volatility tends to follow within 48-72 hours. This isn't because memecoins "lead" the market in a predictive sense — rather, they serve as a real-time proxy for retail risk appetite.</p>
       <p>When retail participants flood into high-risk, high-velocity assets, it signals elevated speculative sentiment. Historically, this has preceded both significant rallies (when accompanied by positive macro catalysts) and sharp corrections (when leverage is overextended). The key is context: volume alone doesn't predict direction, but it reliably predicts that <em>something</em> is about to move.</p>
       <p>Our recommendation: track memecoin volume as a sentiment indicator, not a trading signal. Pair it with funding rates and open interest data for a more complete picture of market positioning.</p>
@@ -126,6 +147,7 @@
     <article class="insight-card">
       <h2>On-Chain Wallet Clustering: Finding Smart Money Before It Moves</h2>
       <p class="meta">On-Chain Intelligence · October 29, 2026</p>
+      <p class="author" style="font-size:13px;color:var(--text-3);margin:-4px 0 12px">By <a href="about.html" style="color:var(--accent)">ChainPlus Editorial Team</a></p>
       <p>One of the most powerful (and underutilized) tools in crypto analysis is wallet clustering — grouping addresses that likely belong to the same entity. By analyzing transaction patterns, timing, and token flows, you can identify "smart money" wallets that consistently enter positions before major price movements.</p>
       <p>The challenge is noise: many wallets look similar on the surface. The signal comes from consistency — wallets that repeatedly buy early in a token's lifecycle, hold through volatility, and exit near tops. These patterns are rare but detectable with enough data.</p>
       <p>The top wallets by entry-timing score consistently outperform random entry by 2-4x. The key insight: smart money isn't about being right every time — it's about being right <em>early</em> often enough. And the adversarial reality is that sophisticated traders actively mask their activity through wallet rotation and consolidation, making clustering harder but more valuable when it works.</p>
@@ -134,6 +156,7 @@
     <article class="insight-card">
       <h2>The Death of the "Copy Trade" Era</h2>
       <p class="meta">Editorial · October 28, 2026</p>
+      <p class="author" style="font-size:13px;color:var(--text-3);margin:-4px 0 12px">By <a href="about.html" style="color:var(--accent)">ChainPlus Editorial Team</a></p>
       <p>Copy-trading — blindly following the trades of "smart" wallets — was the dominant retail strategy of 2024-2025. In 2026, it's becoming increasingly dangerous. Here's why:</p>
       <p><strong>1. Adversarial evasion.</strong> Sophisticated traders now use wallet rotation, consolidation, and clean-wallet exits to mask their activity. By the time a copy-trader sees the "smart" wallet's move, the original trader has already exited through a different address.</p>
       <p><strong>2. Latency arbitrage.</strong> Even with real-time on-chain data, execution latency means copy-traders always enter after the smart money. In fast-moving memecoin markets, a 2-second delay can mean a 50% worse entry price.</p>
@@ -144,6 +167,7 @@
     <article class="insight-card">
       <h2>The Crypto Market Data Problem: Why Prices Are Harder Than They Look</h2>
       <p class="meta">Markets · October 27, 2026</p>
+      <p class="author" style="font-size:13px;color:var(--text-3);margin:-4px 0 12px">By <a href="about.html" style="color:var(--accent)">ChainPlus Editorial Team</a></p>
       <p>Displaying a cryptocurrency price seems simple: fetch a number, show it on screen. In practice, it's one of the most complex parts of building a crypto site. Here's why.</p>
       <p><strong>1. Data freshness vs. accuracy.</strong> CoinGecko updates prices every 1-2 minutes. But "price" means different things on different exchanges. The price you see is an aggregate, and during volatile periods, the aggregate can lag reality by minutes. For a site that claims "real-time" data, this gap matters.</p>
       <p><strong>2. Market cap is a fiction.</strong> Market cap = price × circulating supply. But circulating supply is often estimated, not measured. For tokens with vesting schedules, locked tokens, or burned tokens, the "circulating" number is an approximation. This means market cap rankings can be misleading — a token with a low price but massive supply can rank above a token with a high price but small supply, even if the latter has more actual value traded.</p>
