@@ -292,8 +292,7 @@ async function fetchRSSFallback(){
           state.articles = fresh.concat(state.articles);
           fresh.forEach(a=>state.knownLinks.add(a.link));
           toast(`${fresh.length} new headline${fresh.length>1?'s':''}`);
-          const pg = (document.body && document.body.dataset && document.body.dataset.page) || 'news';
-          if(pg === 'news') renderBreaking();
+
         }
       } else {
         state.articles = state.articles.concat(arts);
@@ -1329,7 +1328,7 @@ async function fetchRSSFallback(){
 
   /* ---------- load more ---------- */
   const lb = $('#loadMoreBtn');
-  if(lb){ lb.addEventListener('click', ()=>{ state.page += 1; fetchNews(false).then(()=>{ const pg = (document.body && document.body.dataset && document.body.dataset.page) || 'news'; if(pg === 'breaking') renderBreaking(); }); }); }
+  if(lb){ lb.addEventListener('click', ()=>{ state.page += 1; fetchNews(false); }); }
   const lmob = $('#loadMoreOssBtn');
   if(lmob){ lmob.addEventListener('click', ()=>{ loadMoreOSS(); }); }
 
@@ -1423,8 +1422,7 @@ async function fetchRSSFallback(){
       // hub page — headlines preview + trending + FG only
       try { await Promise.all([fetchNews(true,{updateHero:true}), loadTrending(), loadFG(), renderTicker()]); } catch(e){ console.error('init load error:', e); }
     } else if(page === 'news'){
-      try { await Promise.all([fetchNews(true,{updateHero:false}), renderTicker()]); } catch(e){ console.error('init load error:', e); }
-      try { renderBreaking(); } catch(e){ console.error('renderBreaking error:', e); }
+      try { await Promise.all([fetchNews(true,{updateHero:true}), loadTrending(), loadFG(), renderTicker()]); } catch(e){ console.error('init load error:', e); }
     } else if(page === 'topic'){
       try { await Promise.all([fetchNews(true,{updateHero:false}), loadTrending()]); } catch(e){ console.error('init load error:', e); }
       // Render rising topics dashboard
