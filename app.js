@@ -780,8 +780,8 @@ async function fetchRSSFallback(){
   /* ---------- markets ---------- */
   async function loadMarkets(){
     try{
-      // Fetch top 100 coins by market cap (single request)
-      const r = await fetchRetry(`${CG}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=true&price_change_percentage=24h`);
+      // Fetch top 250 coins by market cap (single request, CoinGecko max per_page=250)
+      const r = await fetchRetry(`${CG}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=true&price_change_percentage=24h`);
       if(!r.ok){
         console.warn('CoinGecko returned', r.status);
         try{
@@ -794,11 +794,33 @@ async function fetchRSSFallback(){
       const map = {};
       (Array.isArray(data)?data:[]).forEach(d=>{ map[d.id] = d; });
       state.markets = map;
-      // Build coin list for search
       state.marketCoins = (Array.isArray(data)?data:[]).map(d=>({id:d.id,sym:d.symbol.toUpperCase(),name:d.name}));
       renderMarketStrip();
       try{ renderTopMovers(); }catch(e){ console.error(e); }
       try{ localStorage.setItem('cp-markets-cache', JSON.stringify(map)); }catch(e){}
+
+      // Background: fetch coins 251-1000 in batches for comprehensive search coverage
+      (async () => {
+        for(let page = 2; page <= 4; page++){
+          try {
+            const r2 = await fetchRetry(`${CG}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=${page}&sparkline=false&price_change_percentage=24h`, {}, 2);
+            if(!r2.ok) break;
+            const data2 = await r2.json();
+            if(!Array.isArray(data2) || !data2.length) break;
+            data2.forEach(d => {
+              if(!state.markets[d.id]){
+                state.markets[d.id] = d;
+                state.marketCoins.push({id:d.id, sym:d.symbol.toUpperCase(), name:d.name});
+              }
+            });
+            // Update cache
+            try{ localStorage.setItem('cp-markets-cache', JSON.stringify(state.markets)); }catch(e){}
+          } catch(e){ console.warn('Background coin fetch failed', e); break; }
+          // Small delay between pages to avoid rate limiting
+          await new Promise(res => setTimeout(res, 1000));
+        }
+        console.log('Total coins cached:', state.marketCoins.length);
+      })();
     }catch(e){ console.error(e); toast('Markets unavailable'); }
   }
 
