@@ -159,11 +159,39 @@ async function rateLimit(key,max,windowSec){
   try{await globalThis.SUBSCRIBERS.put(k,JSON.stringify(data),{expirationTtl:windowSec+60});}catch(e){}
   return true;
 }
+
+async function siteverify(token, expectedAction, remoteIp, secret, allowedHosts){
+  if(typeof token !== 'string' || token.length === 0 || token.length > 2048 || !allowedHosts || allowedHosts.length === 0) return false;
+  let result;
+  try {
+    const r = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      signal: AbortSignal.timeout(10000),
+      body: new URLSearchParams({
+        secret: secret,
+        response: token,
+        remoteip: remoteIp || "",
+      }),
+    });
+    if (!r.ok) return false;
+    result = await r.json();
+  } catch (e) {
+    return false;
+  }
+  if (!result || !result.success) return false;
+  if (result.action !== expectedAction) return false;
+  if (!allowedHosts.includes(result.hostname)) return false;
+  return true;
+}
+
 async function handle(req, env){
   // Support both service-worker (globals) and ES module (env param) formats
   if(env){
     if(env.SUBSCRIBERS) globalThis.SUBSCRIBERS = env.SUBSCRIBERS;
     if(env.RESEND_API_KEY) globalThis.RESEND_API_KEY = env.RESEND_API_KEY;
+    if(env.TURNSTILE_SECRET) globalThis.TURNSTILE_SECRET = env.TURNSTILE_SECRET;
+    if(env.TURNSTILE_HOSTNAMES) globalThis.TURNSTILE_HOSTNAMES = env.TURNSTILE_HOSTNAMES;
   }
   try{
   const u=new URL(req.url);const p=u.pathname;
@@ -173,6 +201,9 @@ async function handle(req, env){
         const ip=req.headers.get('CF-Connecting-IP')||'unknown';
         if(!(await rateLimit('contact:'+ip,5,300)))return j({error:'too many requests, try again later'},429,true);
         const body=await req.json();
+        const token=(body['cf-turnstile-response']||'').trim();
+        const allowedHosts=(globalThis.TURNSTILE_HOSTNAMES||'chainplus.tech').split(',').map(function(h){return h.trim();}).filter(Boolean);
+        if(!(await siteverify(token,'contact',ip,globalThis.TURNSTILE_SECRET,allowedHosts)))return j({error:'bot verification failed'},403,true);
         const name=(body.name||'').trim().slice(0,100);
         const email=(body.email||'').trim().toLowerCase().slice(0,254);
         const subject=(body.subject||'').trim().slice(0,200);
@@ -201,6 +232,9 @@ async function handle(req, env){
         const ip=req.headers.get('CF-Connecting-IP')||'unknown';
         if(!(await rateLimit('subscribe:'+ip,10,300)))return j({error:'too many requests, try again later'},429,true);
         const body=await req.json();
+        const token=(body['cf-turnstile-response']||'').trim();
+        const allowedHosts=(globalThis.TURNSTILE_HOSTNAMES||'chainplus.tech').split(',').map(function(h){return h.trim();}).filter(Boolean);
+        if(!(await siteverify(token,'subscribe',ip,globalThis.TURNSTILE_SECRET,allowedHosts)))return j({error:'bot verification failed'},403,true);
         const email=(body.email||'').trim().toLowerCase().slice(0,254);
         if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return j({error:'invalid email format'},400,true);
         const domain=email.split('@')[1];

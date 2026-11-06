@@ -63,6 +63,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-WQ5DD4BC');</script>
 <!-- End Google Tag Manager -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8503915493262909" crossorigin="anonymous" data-cookieconsent="marketing"></script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body data-page="news">
 <a class="skip-link" href="#main">Skip to content</a>
@@ -226,9 +227,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <div class="cta-widget">
       <h3 style="font-family:var(--font-display);font-size:24px;margin:0 0 8px">Stay in the loop</h3>
       <p class="muted small" style="margin:0 0 16px">Get the top crypto headlines in your inbox. No spam, unsubscribe anytime.</p>
-      <form class="form" style="max-width:420px;margin:0 auto" onsubmit="event.preventDefault(); (async()=>{const f=event.target;const i=f.querySelector('input[type=email]');const b=f.querySelector('button');b.disabled=true;b.textContent='...';try{const r=await fetch((window.CHAINPLUS_API||localStorage.getItem('cp-api-base')||'https://chainpulse-api.miketembo828.workers.dev')+'/api/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:i.value})});const d=await r.json();if(d.ok){window.__toast(d.message==='already subscribed'?'You\'re already subscribed!':'Thanks! You\'re subscribed.');i.value='';}else{window.__toast(d.error||'Something went wrong.');}}catch(e){window.__toast('Network error. Try again.');}b.disabled=false;b.textContent='Subscribe';})();">
+      <form class="form" style="max-width:420px;margin:0 auto" onsubmit="event.preventDefault(); (async()=>{const f=event.target;const i=f.querySelector('input[type=email]');const b=f.querySelector('button');b.disabled=true;b.textContent='...';try{const r=await fetch((window.CHAINPLUS_API||localStorage.getItem('cp-api-base')||'https://chainpulse-api.miketembo828.workers.dev')+'/api/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:i.value,'cf-turnstile-response':(f.querySelector('input[name="cf-turnstile-response"]')||{}).value||''})});const d=await r.json();if(d.ok){window.__toast(d.message==='already subscribed'?'You\'re already subscribed!':'Thanks! You\'re subscribed.');i.value='';}else{window.__toast(d.error||'Something went wrong.');}}catch(e){window.__toast('Network error. Try again.');}b.disabled=false;b.textContent='Subscribe';})();">
         <input type="email" placeholder="you@example.com" required />
-        <button type="submit">Subscribe</button>
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAAF13hunwl49-ZsZt" data-action="subscribe" style="margin:12px 0"></div>
+      <button type="submit">Subscribe</button>
       </form>
     </div>
   </div>

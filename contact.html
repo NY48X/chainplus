@@ -45,6 +45,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-WQ5DD4BC');</script>
 <!-- End Google Tag Manager -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8503915493262909" crossorigin="anonymous" data-cookieconsent="marketing"></script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -87,7 +88,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <h1>Contact us</h1>
     <p class="lead">We read every message. Use the form below for questions, corrections, takedown requests or partnership inquiries.</p>
 
-    <form class="form" onsubmit="event.preventDefault(); (async()=>{const f=event.target;const b=f.querySelector('button');b.disabled=true;b.textContent='Sending...';try{const r=await fetch((window.CHAINPLUS_API||localStorage.getItem('cp-api-base')||'https://chainpulse-api.miketembo828.workers.dev')+'/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:f.querySelector('#name').value,email:f.querySelector('#email').value,subject:f.querySelector('#subject').value,message:f.querySelector('#message').value})});const d=await r.json();if(d.ok){alert('Thanks! Your message has been sent.');f.reset();}else{alert(d.error||'Something went wrong.');}}catch(e){alert('Network error. Try again.');}b.disabled=false;b.textContent='Send message';})();">
+    <form class="form" onsubmit="event.preventDefault(); (async()=>{const f=event.target;const b=f.querySelector('button');b.disabled=true;b.textContent='Sending...';try{const r=await fetch((window.CHAINPLUS_API||localStorage.getItem('cp-api-base')||'https://chainpulse-api.miketembo828.workers.dev')+'/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:f.querySelector('#name').value,email:f.querySelector('#email').value,subject:f.querySelector('#subject').value,message:f.querySelector('#message').value,'cf-turnstile-response':(f.querySelector('input[name="cf-turnstile-response"]')||{}).value||''})});const d=await r.json();if(d.ok){alert('Thanks! Your message has been sent.');f.reset();}else{alert(d.error||'Something went wrong.');}}catch(e){alert('Network error. Try again.');}b.disabled=false;b.textContent='Send message';})();">
       <div>
         <label for="name">Name</label>
         <input id="name" name="name" type="text" required />
@@ -104,6 +105,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <label for="message">Message</label>
         <textarea id="message" name="message" required></textarea>
       </div>
+      <div class="cf-turnstile" data-sitekey="0x4AAAAAAF13hunwl49-ZsZt" data-action="contact" style="margin:12px 0"></div>
       <button type="submit">Send message</button>
     </form>
 
