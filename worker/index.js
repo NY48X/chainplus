@@ -49,6 +49,32 @@ async function rss(){
         desc=desc.replace(new RegExp(t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),'').trim();
         // Remove leading "Source:" or publisher-like prefixes (capitalized words followed by space at start)
         desc=desc.replace(/^[A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+)?\s*[—–-]\s*/,'').trim();
+        // Remove "This post [title] first appeared on..." and similar attribution suffixes
+        desc=desc.replace(/\s*This post\s+.*?\s+first appeared on\s+[^.]*\./gi,'').trim();
+        desc=desc.replace(/\s*This post first appeared on\s+[^.]*\./gi,'').trim();
+        desc=desc.replace(/\s*This article (first )?appeared on\s+[^.]*\./gi,'').trim();
+        desc=desc.replace(/\s*Originally (published|appeared) on\s+[^.]*\./gi,'').trim();
+        // Remove "and is written by..." / "by Author Name" trailing attribution
+        desc=desc.replace(/\s*and is written by\s+[^.]*\.?$/gi,'').trim();
+        desc=desc.replace(/\s*written by\s+[^.]*\.?$/gi,'').trim();
+        desc=desc.replace(/\s*Written by\s+[^.]*\.?$/gi,'').trim();
+        // Remove any remaining trailing "Source: X" or "via X" patterns
+        desc=desc.replace(/\s*(via|source:)\s+[^.]*\.?$/gi,'').trim();
+        // Remove trailing fragments that are just publisher name
+        desc=desc.replace(/\s+(Bitcoin Magazine|CoinDesk|CoinTelegraph|Decrypt|The Block)\s*$/gi,'').trim();
+        // Aggressive: remove everything from "first appeared on" to end of string
+        desc=desc.replace(/\s*first appeared on\s+.*$/gi,'').trim();
+        // Aggressive: remove everything from "written by" to end of string
+        desc=desc.replace(/\s+written by\s+.*$/gi,'').trim();
+        // Remove duplicate sentences (same sentence appearing twice)
+        const sentences = desc.split(/(?<=[.!?])\s+/);
+        const uniqueSentences = [];
+        const seenSentences = new Set();
+        for(const s of sentences){
+          const key = s.toLowerCase().replace(/\s+/g,' ').trim();
+          if(key && !seenSentences.has(key)){ seenSentences.add(key); uniqueSentences.push(s); }
+        }
+        desc = uniqueSentences.join(' ').trim();
         // Final cleanup
         desc=desc.replace(/\s+/g,' ').trim().slice(0,300);
         o.push({title:t,description:desc,link:l,source:src,pubDate:p,category:cat(t,desc),credibility:0.7});
