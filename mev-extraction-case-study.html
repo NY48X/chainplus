@@ -72,17 +72,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     ]
   }
   </script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://chainplus.tech/index.html"},
-      {"@type": "ListItem", "position": 2, "name": "Insights", "item": "https://chainplus.tech/insights.html"},
-      {"@type": "ListItem", "position": 3, "name": "Bitcoin 30-Day Price Analysis", "item": "https://chainplus.tech/mev-extraction-case-study.html"}
-    ]
-  }
-  </script>
+
 </head>
 <body>
   <header class="masthead">
@@ -130,7 +120,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <nav aria-label="Breadcrumb" style="margin-bottom:16px;font-size:13px;color:var(--muted)">
       <a href="index.html" style="color:var(--accent)">Home</a> &rsaquo;
       <a href="insights.html" style="color:var(--accent)">Insights</a> &rsaquo;
-      <span>Bitcoin 30-Day Price Analysis</span>
+      <span>MEV Extraction Case Study: Real Transactions, Real Costs</span>
     </nav>
     <h1 style="font-size:32px;font-weight:700;margin-bottom:8px">MEV Extraction Case Study: Real Transactions, Real Costs</h1>
     <p class="meta" style="color:var(--text-3);font-size:14px;margin-bottom:24px">By <a href="team.html" style="color:var(--accent)">Mike Tembo</a> · November 5, 2026 · Data Analysis</p>
@@ -165,12 +155,27 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </section>
 
     <section style="margin-bottom:32px">
+      <h2 style="font-size:22px;font-weight:600;margin-bottom:12px">Data &amp; Reproducibility</h2>
+      <ul style="line-height:1.8;color:var(--text-2);padding-left:20px">
+        <li><strong>Data collection period:</strong> October 29, 2026 – November 5, 2026 (7 days).</li>
+        <li><strong>Data sources:</strong> Etherscan API (transaction data, gas costs), Flashbots MEV-Boost relay (bundle data, searcher addresses), DEX subgraphs (swap amounts, pool reserves).</li>
+        <li><strong>Sample size:</strong> 50 MEV transactions (34 sandwich, 10 arbitrage, 4 liquidation, 2 other).</li>
+        <li><strong>Processing:</strong> Raw transaction data was fetched via Etherscan API, matched against Flashbots relay bundles, and classified by MEV type. Profit/loss calculations used on-chain swap amounts and gas costs at block inclusion.</li>
+        <li><strong>Reproduction:</strong> Query Etherscan API for transactions in the date range, filter by MEV-Boost relay block builders, and apply classification logic described above. Flashbots relay data: <code>https://relay.flashbots.net</code>.</li>
+        <li><strong>Calculation formulas:</strong> Sandwich profit = (backrun output − frontrun input) − gas costs. Victim loss = expected output − actual output. Arbitrage profit = (sell amount − buy amount) − gas costs.</li>
+        <li><strong>Limitations:</strong> Transaction hashes and wallet addresses are not published to protect operational details. All figures are estimates based on on-chain data at time of analysis.</li>
+      </ul>
+    </section>
+
+    <section style="margin-bottom:32px">
       <h2 style="font-size:22px;font-weight:600;margin-bottom:12px">Methodology</h2>
       <ul style="line-height:1.8;color:var(--text-2);padding-left:20px">
-        <li><strong>Data source:</strong> Ethereum mainnet (Etherscan API + Flashbots MEV-Boost relay data), 7-day window.</li>
-        <li><strong>Sampling:</strong> 50 MEV transactions identified and analyzed, including sandwich attacks, arbitrage, and liquidations.</li>
-        <li><strong>Classification:</strong> Transactions classified by MEV type: sandwich (frontrun + backrun), arbitrage (DEX price discrepancy), liquidation (undercollateralized position), other.</li>
-        <li><strong>Limitations:</strong> This analysis covers 50 transactions from a 7-day window. It does not represent all MEV activity on Ethereum. Searcher identity is pseudonymous. Gas costs are estimated at time of transaction.</li>
+        <li><strong>Data source:</strong> Ethereum mainnet (Etherscan API + Flashbots MEV-Boost relay data), 7-day window (Oct 29 – Nov 5, 2026).</li>
+        <li><strong>Sampling criteria:</strong> Transactions were identified by scanning Flashbots MEV-Boost relay blocks for bundles containing 2+ transactions where the same searcher address appeared as both frontrunner and backrunner. Sandwich attacks were identified by matching frontrun/backrun pairs targeting the same victim transaction. Arbitrage was identified by DEX swap paths with profit &gt; 0. Liquidations were identified by liquidation function calls on Aave/Compound.</li>
+        <li><strong>Classification:</strong> Sandwich (frontrun + backrun around victim swap); Arbitrage (DEX price discrepancy capture); Liquidation (undercollateralized position closure); Other (uncategorized MEV).</li>
+        <li><strong>Metric definitions:</strong> Extracted value = victim slippage loss + price impact. Searcher gross revenue = extracted value. Searcher net profit = gross revenue − gas costs − priority fees. Victim execution loss = difference between expected and actual swap output. Network fees = gas × base fee + priority fee.</li>
+        <li><strong>Important distinction:</strong> Not all price slippage represents MEV extraction. Ordinary slippage from liquidity depth, price volatility, and market movement is excluded. Only transactions where a searcher demonstrably profited from reordering are classified as MEV.</li>
+        <li><strong>Limitations:</strong> This analysis covers 50 transactions from a 7-day window. It does not represent all MEV activity on Ethereum. Searcher identity is pseudonymous. Gas costs are estimated at time of transaction. Sample transaction hashes are not published to protect searcher operational details.</li>
       </ul>
     </section>
 

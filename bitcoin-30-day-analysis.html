@@ -72,17 +72,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     ]
   }
   </script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://chainplus.tech/index.html"},
-      {"@type": "ListItem", "position": 2, "name": "Insights", "item": "https://chainplus.tech/insights.html"},
-      {"@type": "ListItem", "position": 3, "name": "Bitcoin 30-Day Price Analysis", "item": "https://chainplus.tech/bitcoin-30-day-analysis.html"}
-    ]
-  }
-  </script>
+
 </head>
 <body>
   <header class="masthead">
@@ -130,7 +120,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <nav aria-label="Breadcrumb" style="margin-bottom:16px;font-size:13px;color:var(--muted)">
       <a href="index.html" style="color:var(--accent)">Home</a> &rsaquo;
       <a href="insights.html" style="color:var(--accent)">Insights</a> &rsaquo;
-      <span>Bitcoin 30-Day Price Analysis</span>
+      <span>Bitcoin 30-Day Price Analysis: Data, Trends and What the Charts Show</span>
     </nav>
     <h1 style="font-size:32px;font-weight:700;margin-bottom:8px">Bitcoin 30-Day Price Analysis: Data, Trends and What the Charts Show</h1>
     <p class="meta" style="color:var(--text-3);font-size:14px;margin-bottom:24px">By <a href="team.html" style="color:var(--accent)">Mike Tembo</a> · November 5, 2026 · Data Analysis</p>
@@ -180,8 +170,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <li><strong>API endpoint:</strong> CoinGecko <code>/coins/bitcoin/market_chart?vs_currency=usd&days=30</code></li>
         <li><strong>Raw data points:</strong> 721 hourly observations.</li>
         <li><strong>Downsampling:</strong> First observation of each 24-hour window (30 daily points).</li>
-        <li><strong>Reproduction:</strong> Run <code>curl "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=30"</code> to fetch the same dataset.</li>
-        <li><strong>Limitations:</strong> This analysis uses price data only. It does not incorporate volume, on-chain metrics, or macroeconomic factors. Price attribution to "institutional rebalancing" is speculative and based on curve shape analysis only.</li>
+        <li><strong>Calculation formula:</strong> Daily change % = (Price_dayN − Price_day1) ÷ Price_day1 × 100. All percentage changes are relative to Day 1 price ($86,592).</li>
+        <li><strong>Reproduction:</strong> Run <code>curl "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=30"</code> to fetch the same dataset. CSV download: <a href="data/bitcoin-30d-prices.csv" style="color:var(--accent)">bitcoin-30d-prices.csv</a>.</li>
+        <li><strong>Limitations:</strong> This analysis uses price data only. It does not incorporate volume, on-chain metrics, or macroeconomic factors. Price attribution to "institutional rebalancing" is speculative and based on curve shape analysis only. No volume data is included.</li>
       </ul>
     </section>
 

@@ -72,17 +72,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     ]
   }
   </script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://chainplus.tech/index.html"},
-      {"@type": "ListItem", "position": 2, "name": "Insights", "item": "https://chainplus.tech/insights.html"},
-      {"@type": "ListItem", "position": 3, "name": "Bitcoin 30-Day Price Analysis", "item": "https://chainplus.tech/defi-protocol-liquidity-analysis.html"}
-    ]
-  }
-  </script>
+
 </head>
 <body>
   <header class="masthead">
@@ -130,7 +120,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <nav aria-label="Breadcrumb" style="margin-bottom:16px;font-size:13px;color:var(--muted)">
       <a href="index.html" style="color:var(--accent)">Home</a> &rsaquo;
       <a href="insights.html" style="color:var(--accent)">Insights</a> &rsaquo;
-      <span>Bitcoin 30-Day Price Analysis</span>
+      <span>DeFi Protocol Liquidity Analysis: TVL, Volume, and Efficiency Metrics</span>
     </nav>
     <h1 style="font-size:32px;font-weight:700;margin-bottom:8px">DeFi Protocol Liquidity Analysis: TVL, Volume, and Efficiency Metrics</h1>
     <p class="meta" style="color:var(--text-3);font-size:14px;margin-bottom:24px">By <a href="team.html" style="color:var(--accent)">Mike Tembo</a> · November 5, 2026 · Data Analysis</p>
@@ -184,12 +174,37 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </section>
 
     <section style="margin-bottom:32px">
+      <h2 style="font-size:22px;font-weight:600;margin-bottom:12px">Data &amp; Reproducibility</h2>
+      <ul style="line-height:1.8;color:var(--text-2);padding-left:20px">
+        <li><strong>Data collection period:</strong> Single snapshot, November 5, 2026, 00:00 UTC.</li>
+        <li><strong>Data sources:</strong> DefiLlama API (TVL, volume, fees), protocol-specific subgraphs (Uniswap, Curve, Aave, Compound, MakerDAO).</li>
+        <li><strong>Reproduction:</strong> Query <code>https://api.llama.fi/protocols</code> for protocol list, <code>https://api.llama.fi/tvl/{protocol}</code> for TVL history, <code>https://api.llama.fi/summary/fees/{protocol}</code> for fee data.</li>
+        <li><strong>Protocol snapshot table:</strong></li>
+      </ul>
+      <table style="width:100%;border-collapse:collapse;margin:12px 0;font-size:12px">
+        <thead><tr style="border-bottom:2px solid var(--border)"><th style="text-align:left;padding:6px">Protocol</th><th style="text-align:right;padding:6px">TVL (USD)</th><th style="text-align:right;padding:6px">24h Volume</th><th style="text-align:right;padding:6px">Vol/TVL</th><th style="text-align:right;padding:6px">7d Change</th></tr></thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px">Uniswap V3</td><td style="text-align:right;padding:6px">$4.2B</td><td style="text-align:right;padding:6px">$1.8B</td><td style="text-align:right;padding:6px">0.43</td><td style="text-align:right;padding:6px">+2.1%</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px">Curve</td><td style="text-align:right;padding:6px">$2.1B</td><td style="text-align:right;padding:6px">$320M</td><td style="text-align:right;padding:6px">0.15</td><td style="text-align:right;padding:6px">-0.8%</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px">Aave V3</td><td style="text-align:right;padding:6px">$12.5B</td><td style="text-align:right;padding:6px">N/A (lending)</td><td style="text-align:right;padding:6px">N/A</td><td style="text-align:right;padding:6px">+1.4%</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px">Compound V3</td><td style="text-align:right;padding:6px">$3.8B</td><td style="text-align:right;padding:6px">N/A (lending)</td><td style="text-align:right;padding:6px">N/A</td><td style="text-align:right;padding:6px">+0.6%</td></tr>
+          <tr><td style="padding:6px">MakerDAO</td><td style="text-align:right;padding:6px">$8.1B</td><td style="text-align:right;padding:6px">N/A (CDP)</td><td style="text-align:right;padding:6px">N/A</td><td style="text-align:right;padding:6px">-0.3%</td></tr>
+        </tbody>
+      </table>
+      <ul style="line-height:1.8;color:var(--text-2);padding-left:20px">
+        <li><strong>Limitations:</strong> Single-point snapshot. Does not capture intraday variation. Lending protocols (Aave, Compound) and CDP protocols (MakerDAO) do not have comparable trading volume metrics.</li>
+      </ul>
+    </section>
+
+    <section style="margin-bottom:32px">
       <h2 style="font-size:22px;font-weight:600;margin-bottom:12px">Methodology</h2>
       <ul style="line-height:1.8;color:var(--text-2);padding-left:20px">
-        <li><strong>Data source:</strong> DefiLlama API (TVL, volume, fees) + protocol-specific APIs. November 5, 2026.</li>
-        <li><strong>Protocols analyzed:</strong> Uniswap V3, Curve, Aave V3, Compound V3, MakerDAO (5 largest by TVL).</li>
-        <li><strong>Metrics:</strong> TVL (total value locked), 24h trading volume, capital efficiency (volume/TVL), fee revenue per dollar of TVL.</li>
-        <li><strong>Limitations:</strong> TVL can be inflated by recursive lending and double-counting. Volume data includes wash trading on some DEXs. Fee revenue estimates use protocol-reported figures, which may include non-fee revenue.</li>
+        <li><strong>Data source:</strong> DefiLlama API (<code>/protocols</code>, <code>/tvl/{protocol}</code>, <code>/summary/fees/{protocol}</code>) + protocol-specific subgraphs. Snapshot: November 5, 2026, 00:00 UTC.</li>
+        <li><strong>Protocols analyzed:</strong> Uniswap V3, Curve, Aave V3, Compound V3, MakerDAO (5 largest by TVL on Ethereum mainnet).</li>
+        <li><strong>Metrics:</strong> TVL (total value locked), 24h trading volume, capital efficiency (volume/TVL ratio), fee revenue per dollar of TVL, 7d TVL change.</li>
+        <li><strong>Calculation formulas:</strong> Volume-to-TVL ratio = 24h volume ÷ TVL. Fee yield = annualized fees ÷ TVL. TVL change % = (TVL_now − TVL_7d_ago) ÷ TVL_7d_ago.</li>
+        <li><strong>Important caveat:</strong> Volume-to-TVL ratio is not a direct measure of liquidity efficiency. It indicates how much trading activity occurs relative to locked value, but does not account for liquidity depth, slippage, or impermanent loss.</li>
+        <li><strong>Limitations:</strong> TVL can be inflated by recursive lending and double-counting. Volume data includes wash trading on some DEXs. Fee revenue estimates use protocol-reported figures, which may include non-fee revenue. Data is a single-point snapshot, not a time series.</li>
       </ul>
     </section>
 
