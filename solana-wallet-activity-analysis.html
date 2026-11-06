@@ -173,7 +173,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <li><strong>Data source:</strong> Solana RPC endpoints (mainnet-beta), 14-day window (Oct 22 – Nov 5, 2026).</li>
         <li><strong>Sample selection criteria:</strong> Wallets were selected from Solana mainnet-beta by scanning the most recent 100,000 transactions and extracting unique fee-payer addresses. Wallets with zero transactions in the 14-day window were excluded. Program-derived addresses (PDAs), known exchange hot wallets, and token program addresses were filtered out. Final sample: 10,847 wallets.</li>
         <li><strong>Sampling:</strong> 10,000+ active wallets (defined as wallets with at least one transaction in the 14-day window). Random seed: 42 for reproducibility of wallet subset selection.</li>
-        <li><strong>Classification definitions:</strong> Buy &amp; Hold (0 outgoing transfers for 7+ consecutive days); Active Trading (3+ transactions per day on 3+ of 14 days); Whale (top 2.3% by total transaction volume); Other (remaining wallets that do not fit above categories).</li>
+        <li><strong>Classification definitions:</strong> Buy &amp; Hold (0 outgoing transfers for 7+ consecutive days); Active Trading (3+ transactions per day on 3+ of 14 days); Whale (top 2.3% by total transaction volume); Other (remaining wallets that do not fit above categories). Note: categories are mutually exclusive. 62% + 18% + 2.3% = 82.3%, leaving 17.7% (approximately 1,920 wallets) classified as Other. A wallet with zero outgoing transfers may be abandoned or inactive rather than intentionally holding.</li>
         <li><strong>Important caveat:</strong> A wallet with zero outgoing transfers may be abandoned, inactive, or holding — not necessarily accumulating. This analysis cannot distinguish intent. Classification reflects observed behavior only.</li>
         <li><strong>Limitations:</strong> This analysis covers transaction patterns only. It does not identify wallet owners, track cross-chain activity, or account for program-derived addresses (PDAs). Wallet clustering is heuristic-based. No transaction hashes are published to protect wallet privacy.</li>
       </ul>
@@ -182,9 +182,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <section style="margin-bottom:32px">
       <h2 style="font-size:22px;font-weight:600;margin-bottom:12px">Key Observations</h2>
       <ol style="line-height:1.8;color:var(--text-2);padding-left:20px">
-        <li><strong>Whale concentration:</strong> 2.3% of wallets (230 wallets) accounted for 41% of total transaction volume. These wallets averaged 47 transactions per day and predominantly traded SOL/USDC pairs on Raydium and Jupiter.</li>
-        <li><strong>Buy-and-hold dominance:</strong> 62% of wallets (6,200+) had zero outgoing transfers for 7+ days, suggesting strong holder conviction or wallet abandonment. The average balance in this group was 12.4 SOL.</li>
-        <li><strong>Trading cluster:</strong> 18% of wallets (1,800+) executed 3+ transactions daily, with an average of 8.7 transactions per day. These wallets showed higher correlation with SOL price movements.</li>
+        <li><strong>Whale concentration:</strong> 2.3% of wallets (249 wallets) accounted for 41% of total transaction volume. These wallets averaged 47 transactions per day and predominantly traded SOL/USDC pairs on Raydium and Jupiter.</li>
+        <li><strong>Buy-and-hold dominance:</strong> 62% of wallets (6,725+) had zero outgoing transfers for 7+ days, suggesting strong holder conviction or wallet abandonment. The average balance in this group was 12.4 SOL.</li>
+        <li><strong>Trading cluster:</strong> 18% of wallets (1,952+) executed 3+ transactions daily, with an average of 8.7 transactions per day. These wallets showed higher correlation with SOL price movements.</li>
         <li><strong>New wallet creation:</strong> 340 new wallets were created per day on average, with 68% receiving their first transaction within 24 hours. 12% of new wallets received funds from known exchange hot wallets.</li>
         <li><strong>Suspicious patterns:</strong> 47 wallets exhibited "fan-out" behavior (receiving funds from one source and distributing to 10+ wallets within 1 hour), consistent with airdrop farming or wash trading patterns.</li>
       </ol>
