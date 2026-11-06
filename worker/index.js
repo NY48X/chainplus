@@ -23,9 +23,22 @@ async function rss(){
       const x=await r.text();
       const items=x.match(/<item[\s\S]*?<\/item>/gi)||[];
       items.forEach(function(it){
-        const t=decodeEntities(tag(it,'title')),l=tag(it,'link')||tag(it,'guid'),d=decodeEntities(tag(it,'description')||tag(it,'content:encoded')),p=tag(it,'pubDate')||tag(it,'published');
+        const t=decodeEntities(tag(it,'title')),l=tag(it,'link')||tag(it,'guid'),rawDesc=decodeEntities(tag(it,'description')||tag(it,'content:encoded')),p=tag(it,'pubDate')||tag(it,'published');
         if(!t||!l||seen.has(l))return;seen.add(l);
-        o.push({title:t,description:d.replace(/<[^>]+>/g,'').slice(0,300),link:l,source:new URL(u).hostname,pubDate:p,category:cat(t,d.replace(/<[^>]+>/g,'')),credibility:0.7});
+        // Clean description: strip HTML, remove repeated title/source, collapse whitespace
+        let desc=rawDesc.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+        // Remove repeated title from description
+        if(desc.toLowerCase().indexOf(t.toLowerCase())===0){desc=desc.slice(t.length).trim();}
+        // Remove repeated source/publisher name
+        const src=new URL(u).hostname.replace(/^www\./,'');
+        while(desc.toLowerCase().indexOf(src.toLowerCase())===0){desc=desc.slice(src.length).trim();}
+        // Remove "Publisher — headline" patterns
+        desc=desc.replace(new RegExp('\\b'+src.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\b\\s*[—–-]?\\s*','gi'),'').trim();
+        // Remove duplicate title occurrences anywhere in description
+        desc=desc.replace(new RegExp(t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),'').trim();
+        // Final cleanup
+        desc=desc.replace(/\s+/g,' ').trim().slice(0,300);
+        o.push({title:t,description:desc,link:l,source:src,pubDate:p,category:cat(t,desc),credibility:0.7});
       });
     }catch(e){}
   }));
