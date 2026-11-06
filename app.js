@@ -32,6 +32,7 @@
     loading: false,
     hasMore: true,
     searchDebounce: null,
+    globalSearchDebounce: null,
     pollTimer: null,
     knownLinks: new Set(),
     bookmarks: new Set(),
@@ -930,6 +931,12 @@ async function fetchRSSFallback(){
       });
     }
   }
+  function highlightMatch(text, q){
+    if(!q) return esc(text);
+    const idx = text.toLowerCase().indexOf(q);
+    if(idx < 0) return esc(text);
+    return esc(text.slice(0,idx)) + '<span class="suggest-highlight">' + esc(text.slice(idx, idx+q.length)) + '</span>' + esc(text.slice(idx+q.length));
+  }
   function renderMarketStrip(filter){
     const el = $('#marketStrip'); if(!el || !state.markets) return;
     const q = (filter||'').toLowerCase().trim();
@@ -956,6 +963,8 @@ async function fetchRSSFallback(){
         state.marketChartCoin = id;
         const wrap = document.getElementById('marketChartWrap');
         if(wrap) wrap.style.display = 'block';
+        // Auto-scroll to top so the chart is visible
+        window.scrollTo({top:0, behavior:'smooth'});
         loadCoinChart(id);
         // Filter headlines if stories grid exists
         const grid = $('#storiesGrid');
@@ -1095,6 +1104,79 @@ async function fetchRSSFallback(){
     clearTimeout(b._t); b._t = setTimeout(()=>b.classList.add('hidden'), 4000);
   }
 const si = $('#searchInput');
+  if(si){
+    // Create autocomplete suggestion dropdown
+    const siWrap = si.parentElement;
+    siWrap.style.position = 'relative';
+    const globalSug = document.createElement('div');
+    globalSug.className = 'search-suggestions';
+    globalSug.id = 'globalSuggestions';
+    siWrap.appendChild(globalSug);
+
+    function showGlobalSuggestions(q){
+      const ql = q.toLowerCase().trim();
+      if(!ql || ql.length < 2){ globalSug.classList.remove('show'); return; }
+      const items = [];
+      // Coins
+      const coins = (state.marketCoins.length ? state.marketCoins : (window.CP_DATA && window.CP_DATA.coins ? window.CP_DATA.coins.map(c=>({id:c.id,sym:c.sym,name:c.name})) : []));
+      coins.forEach(c => {
+        const sym = (c.sym||'').toLowerCase();
+        const name = (c.name||'').toLowerCase();
+        if(sym.includes(ql) || name.includes(ql)){
+          items.push({type:'coin', title: c.name, meta: c.sym, icon: c.sym.slice(0,4), action: () => { window.location.href = 'markets.html'; }});
+        }
+      });
+      // Headlines
+      if(state.articles && state.articles.length){
+        state.articles.filter(a => (a.title||'').toLowerCase().includes(ql)).slice(0,5).forEach(a => {
+          items.push({type:'headline', title: a.title, meta: a.source||'', icon: '📰', action: () => { if(typeof openArticle === 'function') openArticle(a); }});
+        });
+      }
+      // Topics
+      const topics = ['Bitcoin','Ethereum','Solana','DeFi','NFT','Regulation','Markets','Mining','Security','Layer 2','Stablecoins','Web3'];
+      topics.forEach(t => {
+        if(t.toLowerCase().includes(ql)){
+          items.push({type:'topic', title: t, meta: 'Topic', icon: '#', action: () => { window.location.href = 'topic.html?topic=' + encodeURIComponent(t); }});
+        }
+      });
+
+      if(!items.length){ globalSug.innerHTML = '<div class="suggest-empty">No suggestions</div>'; globalSug.classList.add('show'); return; }
+      // Group by type
+      let html = '';
+      const coins2 = items.filter(i=>i.type==='coin').slice(0,4);
+      const heads = items.filter(i=>i.type==='headline').slice(0,5);
+      const tops = items.filter(i=>i.type==='topic').slice(0,4);
+      if(coins2.length){ html += '<div class="suggest-section">Coins</div>'; html += coins2.map((it,i) => `<div class="suggest-item" data-idx="${items.indexOf(it)}"><div class="suggest-icon">${esc(it.icon)}</div><div class="suggest-text"><div class="suggest-title">${highlightMatch(it.title, ql)}</div><div class="suggest-meta">${esc(it.meta)}</div></div></div>`).join(''); }
+      if(heads.length){ html += '<div class="suggest-section">Headlines</div>'; html += heads.map((it) => `<div class="suggest-item" data-idx="${items.indexOf(it)}"><div class="suggest-icon">${esc(it.icon)}</div><div class="suggest-text"><div class="suggest-title">${highlightMatch(it.title, ql)}</div><div class="suggest-meta">${esc(it.meta)}</div></div></div>`).join(''); }
+      if(tops.length){ html += '<div class="suggest-section">Topics</div>'; html += tops.map((it) => `<div class="suggest-item" data-idx="${items.indexOf(it)}"><div class="suggest-icon">${esc(it.icon)}</div><div class="suggest-text"><div class="suggest-title">${highlightMatch(it.title, ql)}</div><div class="suggest-meta">${esc(it.meta)}</div></div></div>`).join(''); }
+      globalSug.innerHTML = html;
+      globalSug.classList.add('show');
+
+      globalSug.querySelectorAll('.suggest-item').forEach(el => {
+        el.addEventListener('click', () => {
+          const idx = parseInt(el.dataset.idx);
+          if(items[idx] && items[idx].action) items[idx].action();
+          globalSug.classList.remove('show');
+          si.value = '';
+        });
+      });
+    }
+
+    si.addEventListener('input', (e) => {
+      const q = e.target.value;
+      clearTimeout(state.globalSearchDebounce);
+      state.globalSearchDebounce = setTimeout(() => { showGlobalSuggestions(q); }, 200);
+    });
+    si.addEventListener('focus', (e) => { if(e.target.value.trim().length >= 2) showGlobalSuggestions(e.target.value); });
+    si.addEventListener('blur', () => { setTimeout(() => globalSug.classList.remove('show'), 200); });
+    si.addEventListener('keydown', (e) => {
+      if(e.key === 'Escape'){ globalSug.classList.remove('show'); si.blur(); }
+      if(e.key === 'Enter'){
+        const first = globalSug.querySelector('.suggest-item');
+        if(first){ first.click(); e.preventDefault(); }
+      }
+    });
+  }
   if(si){
     si.addEventListener('input', (e)=>{
       clearTimeout(state.searchDebounce);
@@ -1568,9 +1650,109 @@ const si = $('#searchInput');
       try { await translatePage(_lang); } catch(e){}
     }
   }
-  // Market search filter
+  // Market search with autocomplete suggestions
   const ms = document.getElementById('marketSearch');
-  if(ms){ ms.addEventListener('input', (e)=>{ renderMarketStrip(e.target.value); }); }
+  if(ms){
+    // Create suggestion dropdown
+    const wrap = ms.parentElement;
+    wrap.style.position = 'relative';
+    const sug = document.createElement('div');
+    sug.className = 'search-suggestions';
+    sug.id = 'marketSuggestions';
+    wrap.appendChild(sug);
+
+    function showMarketSuggestions(q){
+      const coins = (state.marketCoins.length ? state.marketCoins : window.CP_DATA.coins.map(c=>({id:c.id,sym:c.sym,name:c.name})));
+      const ql = q.toLowerCase().trim();
+      if(!ql){ sug.classList.remove('show'); return; }
+      // Sort: exact symbol match first, then name starts with, then contains
+      const scored = coins.map(c => {
+        const sym = (c.sym||'').toLowerCase();
+        const name = (c.name||'').toLowerCase();
+        let score = 0;
+        if(sym === ql) score = 100;
+        else if(sym.startsWith(ql)) score = 80;
+        else if(name.startsWith(ql)) score = 60;
+        else if(name.includes(ql)) score = 40;
+        else if(sym.includes(ql)) score = 30;
+        else score = -1;
+        return {c, score};
+      }).filter(x => x.score >= 0).sort((a,b) => b.score - a.score).slice(0, 8);
+
+      if(!scored.length){ sug.innerHTML = '<div class="suggest-empty">No coins found</div>'; sug.classList.add('show'); return; }
+      sug.innerHTML = scored.map(({c}) => {
+        const d = state.markets && state.markets[c.id];
+        const price = d ? fmtPrice(d.current_price) : '';
+        const chg = d && d.price_change_percentage_24h != null ? `${d.price_change_percentage_24h>=0?'+':''}${Number(d.price_change_percentage_24h).toFixed(2)}%` : '';
+        const chgCls = d && d.price_change_percentage_24h >= 0 ? 'chg-up' : 'chg-down';
+        return `<div class="suggest-item" data-id="${esc(c.id)}" data-sym="${esc(c.sym)}">
+          <div class="suggest-icon">${esc(c.sym).slice(0,4)}</div>
+          <div class="suggest-text">
+            <div class="suggest-title">${highlightMatch(c.name, ql)}</div>
+            <div class="suggest-meta">${esc(c.sym)} ${price ? '· ' + price : ''} ${chg ? '· <span class="' + chgCls + '">' + chg + '</span>' : ''}</div>
+          </div>
+        </div>`;
+      }).join('');
+      sug.classList.add('show');
+
+      // Click handlers
+      sug.querySelectorAll('.suggest-item').forEach(item => {
+        item.addEventListener('click', () => {
+          const id = item.dataset.id;
+          const sym = item.dataset.sym;
+          ms.value = sym;
+          sug.classList.remove('show');
+          // Scroll to top, show chart, filter headlines
+          state.marketChartCoin = id;
+          const wrap = document.getElementById('marketChartWrap');
+          if(wrap) wrap.style.display = 'block';
+          window.scrollTo({top:0, behavior:'smooth'});
+          loadCoinChart(id);
+          const grid = $('#storiesGrid');
+          if(grid && state.articles.length){
+            const q2 = sym.toLowerCase();
+            const filtered = state.articles.filter(a => (a.title||'').toLowerCase().includes(q2) || (a.description||'').toLowerCase().includes(q2));
+            if(filtered.length){ renderStoriesFiltered(filtered); showSearchBanner(`Showing ${filtered.length} headlines for ${sym}`); }
+            else { showSearchBanner(`No headlines for ${sym}`); }
+          }
+          // Related insights
+          const riWrap = document.getElementById('relatedInsights');
+          const riList = document.getElementById('relatedInsightsList');
+          if(riWrap && riList){
+            const insightsMap = {
+              'btc': [{title:'Bitcoin 30-Day Price Analysis', url:'bitcoin-30-day-analysis.html', desc:'Data-backed BTC trend analysis with charts and methodology'}],
+              'eth': [{title:'Understanding Ethereum: Smart Contracts and DeFi', url:'understanding-ethereum.html', desc:'What is Ethereum and how do smart contracts work'}],
+              'sol': [{title:'Solana Wallet Activity Analysis', url:'solana-wallet-activity-analysis.html', desc:'On-chain patterns and whale concentration across 10,000+ wallets'}],
+              'default': [
+                {title:'DeFi Protocol Liquidity Analysis', url:'defi-protocol-liquidity-analysis.html', desc:'TVL, volume, and capital efficiency across major DeFi protocols'},
+                {title:'MEV Extraction Case Study', url:'mev-extraction-case-study.html', desc:'Real MEV costs and mitigation strategies'}
+              ]
+            };
+            const key = sym.toLowerCase();
+            const items = insightsMap[key] || insightsMap['default'];
+            riList.innerHTML = items.map(it => `<a href="${it.url}" style="display:block;padding:12px;border:1px solid var(--border);border-radius:8px;background:var(--surface);text-decoration:none;color:var(--text)"><h4 style="font-family:var(--font-display);font-size:14px;margin:0 0 4px">${it.title}</h4><p style="font-size:12px;color:var(--text-2);margin:0;line-height:1.4">${it.desc}</p></a>`).join('');
+            riWrap.style.display = 'block';
+          }
+          renderMarketStrip(sym);
+        });
+      });
+    }
+
+    ms.addEventListener('input', (e) => {
+      const q = e.target.value;
+      showMarketSuggestions(q);
+      renderMarketStrip(q);
+    });
+    ms.addEventListener('focus', (e) => { if(e.target.value.trim()) showMarketSuggestions(e.target.value); });
+    ms.addEventListener('blur', () => { setTimeout(() => sug.classList.remove('show'), 200); });
+    ms.addEventListener('keydown', (e) => {
+      if(e.key === 'Escape'){ sug.classList.remove('show'); ms.blur(); }
+      if(e.key === 'Enter'){
+        const first = sug.querySelector('.suggest-item');
+        if(first){ first.click(); e.preventDefault(); }
+      }
+    });
+  }
 
   init().catch(e=>{ console.error(e); toast('Initialization failed'); });
 
