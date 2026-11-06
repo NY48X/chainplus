@@ -33,6 +33,7 @@
     hasMore: true,
     searchDebounce: null,
     globalSearchDebounce: null,
+    searchCache: {},
     pollTimer: null,
     knownLinks: new Set(),
     bookmarks: new Set(),
@@ -1113,11 +1114,12 @@ const si = $('#searchInput');
     globalSug.id = 'globalSuggestions';
     siWrap.appendChild(globalSug);
 
-    async function showGlobalSuggestions(q){
+    function showGlobalSuggestions(q){
       const ql = q.toLowerCase().trim();
       if(!ql || ql.length < 2){ globalSug.classList.remove('show'); return; }
+
+      // 1. Local results immediately
       const items = [];
-      // Coins from loaded list
       const coins = (state.marketCoins.length ? state.marketCoins : (window.CP_DATA && window.CP_DATA.coins ? window.CP_DATA.coins.map(c=>({id:c.id,sym:c.sym,name:c.name})) : []));
       let coinMatches = 0;
       coins.forEach(c => {
@@ -1128,21 +1130,6 @@ const si = $('#searchInput');
           items.push({type:'coin', title: c.name, meta: c.sym, icon: c.sym.slice(0,4), action: () => { window.location.href = 'markets.html'; }});
         }
       });
-      // If few matches, search CoinGecko for more
-      if(coinMatches < 3){
-        try {
-          const r = await fetchRetry(`${CG}/search?query=${encodeURIComponent(q)}`, {cache:'no-store'});
-          if(r.ok){
-            const data = await r.json();
-            const seen = new Set(coins.map(c => (c.name||'').toLowerCase()));
-            (data.coins || []).slice(0, 5).forEach(coin => {
-              if(seen.has((coin.name||'').toLowerCase())) return;
-              seen.add((coin.name||'').toLowerCase());
-              items.push({type:'coin', title: coin.name, meta: (coin.symbol||'').toUpperCase(), icon: (coin.symbol||'').slice(0,4).toUpperCase(), action: () => { window.location.href = 'markets.html'; }});
-            });
-          }
-        } catch(e){}
-      }
       // Headlines
       if(state.articles && state.articles.length){
         state.articles.filter(a => (a.title||'').toLowerCase().includes(ql)).slice(0,5).forEach(a => {
@@ -1157,13 +1144,45 @@ const si = $('#searchInput');
         }
       });
 
+      renderGlobalSugList(items, ql);
+
+      // 2. If few coin matches, search CoinGecko in background
+      if(coinMatches < 3){
+        const cacheKey = 'global_cg_' + ql;
+        if(state.searchCache[cacheKey]){
+          const extra = state.searchCache[cacheKey];
+          const allItems = [...items, ...extra];
+          renderGlobalSugList(allItems, ql);
+        } else {
+          (async () => {
+            try {
+              const r = await fetch(`${CG}/search?query=${encodeURIComponent(q)}`, {cache:'no-store', signal: AbortSignal.timeout(3000)});
+              if(!r.ok) return;
+              const data = await r.json();
+              const seen = new Set(coins.map(c => (c.name||'').toLowerCase()));
+              const extraItems = [];
+              (data.coins || []).slice(0, 5).forEach(coin => {
+                if(seen.has((coin.name||'').toLowerCase())) return;
+                seen.add((coin.name||'').toLowerCase());
+                extraItems.push({type:'coin', title: coin.name, meta: (coin.symbol||'').toUpperCase(), icon: (coin.symbol||'').slice(0,4).toUpperCase(), action: () => { window.location.href = 'markets.html'; }});
+              });
+              state.searchCache[cacheKey] = extraItems;
+              if(si.value.toLowerCase().trim() === ql){
+                renderGlobalSugList([...items, ...extraItems], ql);
+              }
+            } catch(e){}
+          })();
+        }
+      }
+    }
+
+    function renderGlobalSugList(items, ql){
       if(!items.length){ globalSug.innerHTML = '<div class="suggest-empty">No suggestions</div>'; globalSug.classList.add('show'); return; }
-      // Group by type
       let html = '';
       const coins2 = items.filter(i=>i.type==='coin').slice(0,4);
       const heads = items.filter(i=>i.type==='headline').slice(0,5);
       const tops = items.filter(i=>i.type==='topic').slice(0,4);
-      if(coins2.length){ html += '<div class="suggest-section">Coins</div>'; html += coins2.map((it,i) => `<div class="suggest-item" data-idx="${items.indexOf(it)}"><div class="suggest-icon">${esc(it.icon)}</div><div class="suggest-text"><div class="suggest-title">${highlightMatch(it.title, ql)}</div><div class="suggest-meta">${esc(it.meta)}</div></div></div>`).join(''); }
+      if(coins2.length){ html += '<div class="suggest-section">Coins</div>'; html += coins2.map((it) => `<div class="suggest-item" data-idx="${items.indexOf(it)}"><div class="suggest-icon">${esc(it.icon)}</div><div class="suggest-text"><div class="suggest-title">${highlightMatch(it.title, ql)}</div><div class="suggest-meta">${esc(it.meta)}</div></div></div>`).join(''); }
       if(heads.length){ html += '<div class="suggest-section">Headlines</div>'; html += heads.map((it) => `<div class="suggest-item" data-idx="${items.indexOf(it)}"><div class="suggest-icon">${esc(it.icon)}</div><div class="suggest-text"><div class="suggest-title">${highlightMatch(it.title, ql)}</div><div class="suggest-meta">${esc(it.meta)}</div></div></div>`).join(''); }
       if(tops.length){ html += '<div class="suggest-section">Topics</div>'; html += tops.map((it) => `<div class="suggest-item" data-idx="${items.indexOf(it)}"><div class="suggest-icon">${esc(it.icon)}</div><div class="suggest-text"><div class="suggest-title">${highlightMatch(it.title, ql)}</div><div class="suggest-meta">${esc(it.meta)}</div></div></div>`).join(''); }
       globalSug.innerHTML = html;
@@ -1182,7 +1201,7 @@ const si = $('#searchInput');
     si.addEventListener('input', (e) => {
       const q = e.target.value;
       clearTimeout(state.globalSearchDebounce);
-      state.globalSearchDebounce = setTimeout(() => { showGlobalSuggestions(q); }, 200);
+      state.globalSearchDebounce = setTimeout(() => { showGlobalSuggestions(q); }, 120);
     });
     si.addEventListener('focus', (e) => { if(e.target.value.trim().length >= 2) showGlobalSuggestions(e.target.value); });
     si.addEventListener('blur', () => { setTimeout(() => globalSug.classList.remove('show'), 200); });
@@ -1678,11 +1697,11 @@ const si = $('#searchInput');
     sug.id = 'marketSuggestions';
     wrap.appendChild(sug);
 
-    async function showMarketSuggestions(q){
+    function showMarketSuggestions(q){
       const ql = q.toLowerCase().trim();
       if(!ql){ sug.classList.remove('show'); return; }
 
-      // 1. Search loaded coins (top 100)
+      // 1. Search loaded coins immediately (synchronous)
       const loadedCoins = (state.marketCoins.length ? state.marketCoins : window.CP_DATA.coins.map(c=>({id:c.id,sym:c.sym,name:c.name})));
       const scored = loadedCoins.map(c => {
         const sym = (c.sym||'').toLowerCase();
@@ -1695,45 +1714,70 @@ const si = $('#searchInput');
         else if(sym.includes(ql)) score = 30;
         else score = -1;
         return {c, score, source:'loaded'};
-      }).filter(x => x.score >= 0);
+      }).filter(x => x.score >= 0).sort((a,b) => b.score - a.score).slice(0, 8);
 
-      // 2. If fewer than 5 matches, search CoinGecko for more coins
-      let extraCoins = [];
+      // Render local results immediately
+      renderMarketSugList(scored, ql, false);
+
+      // 2. If fewer than 5 matches, search CoinGecko in background
       if(scored.length < 5){
-        try {
-          const r = await fetchRetry(`${CG}/search?query=${encodeURIComponent(q)}`, {cache:'no-store'});
-          if(r.ok){
-            const data = await r.json();
-            const seen = new Set(loadedCoins.map(c => c.id));
-            (data.coins || []).slice(0, 8).forEach(coin => {
-              if(seen.has(coin.id)) return;
-              seen.add(coin.id);
-              const sym = (coin.symbol||'').toLowerCase();
-              const name = (coin.name||'').toLowerCase();
-              let score = 0;
-              if(sym === ql) score = 95;
-              else if(sym.startsWith(ql)) score = 75;
-              else if(name.startsWith(ql)) score = 55;
-              else if(name.includes(ql)) score = 35;
-              else if(sym.includes(ql)) score = 25;
-              else score = 10;
-              extraCoins.push({c:{id:coin.id, sym:(coin.symbol||'').toUpperCase(), name:coin.name, thumb:coin.thumb}, score, source:'search'});
-            });
-          }
-        } catch(e){ console.warn('CoinGecko search failed', e); }
+        const cacheKey = 'cg_search_' + ql;
+        if(state.searchCache[cacheKey]){
+          const extra = state.searchCache[cacheKey];
+          const merged = [...scored, ...extra].sort((a,b) => b.score - a.score).slice(0, 10);
+          renderMarketSugList(merged, ql, true);
+        } else {
+          (async () => {
+            try {
+              const r = await fetch(`${CG}/search?query=${encodeURIComponent(q)}`, {cache:'no-store', signal: AbortSignal.timeout(3000)});
+              if(!r.ok) return;
+              const data = await r.json();
+              const seen = new Set(loadedCoins.map(c => c.id));
+              const extraCoins = [];
+              (data.coins || []).slice(0, 8).forEach(coin => {
+                if(seen.has(coin.id)) return;
+                seen.add(coin.id);
+                const sym = (coin.symbol||'').toLowerCase();
+                const name = (coin.name||'').toLowerCase();
+                let score = 0;
+                if(sym === ql) score = 95;
+                else if(sym.startsWith(ql)) score = 75;
+                else if(name.startsWith(ql)) score = 55;
+                else if(name.includes(ql)) score = 35;
+                else if(sym.includes(ql)) score = 25;
+                else score = 10;
+                extraCoins.push({c:{id:coin.id, sym:(coin.symbol||'').toUpperCase(), name:coin.name, thumb:coin.thumb}, score, source:'search'});
+              });
+              state.searchCache[cacheKey] = extraCoins;
+              // Only update if query hasn't changed
+              if(ms.value.toLowerCase().trim() === ql){
+                const merged = [...scored, ...extraCoins].sort((a,b) => b.score - a.score).slice(0, 10);
+                renderMarketSugList(merged, ql, true);
+              }
+            } catch(e){ console.warn('CoinGecko search failed', e); }
+          })();
+        }
       }
+    }
 
-      // Merge and sort
-      const all = [...scored, ...extraCoins].sort((a,b) => b.score - a.score).slice(0, 10);
-      if(!all.length){ sug.innerHTML = '<div class="suggest-empty">No coins found. Try a different name.</div>'; sug.classList.add('show'); return; }
-
-      sug.innerHTML = all.map(({c, source}) => {
+    function renderMarketSugList(items, ql, hasExtra){
+      if(!items.length && !hasExtra){
+        sug.innerHTML = '<div class="suggest-empty">Searching more coins…</div>';
+        sug.classList.add('show');
+        return;
+      }
+      if(!items.length){
+        sug.innerHTML = '<div class="suggest-empty">No coins found. Try a different name.</div>';
+        sug.classList.add('show');
+        return;
+      }
+      sug.innerHTML = items.map(({c, source}) => {
         const d = state.markets && state.markets[c.id];
-        const price = d ? fmtPrice(d.current_price) : (source === 'search' ? 'loading…' : '');
+        const price = d ? fmtPrice(d.current_price) : '';
         const chg = d && d.price_change_percentage_24h != null ? `${d.price_change_percentage_24h>=0?'+':''}${Number(d.price_change_percentage_24h).toFixed(2)}%` : '';
         const chgCls = d && d.price_change_percentage_24h >= 0 ? 'chg-up' : 'chg-down';
         const thumb = c.thumb ? `<img src="${esc(c.thumb)}" style="width:28px;height:28px;border-radius:6px;object-fit:cover" alt="" />` : `<div class="suggest-icon">${esc(c.sym).slice(0,4)}</div>`;
-        return `<div class="suggest-item" data-id="${esc(c.id)}" data-sym="${esc(c.sym)}" data-name="${esc(c.name)}" data-source="${source}">
+        return `<div class="suggest-item" data-id="${esc(c.id)}" data-sym="${esc(c.sym)}" data-name="${esc(c.name)}" data-source="${source||'loaded'}">
           ${thumb}
           <div class="suggest-text">
             <div class="suggest-title">${highlightMatch(c.name, ql)}</div>
@@ -1753,10 +1797,9 @@ const si = $('#searchInput');
           ms.value = sym;
           sug.classList.remove('show');
 
-          // If coin not in loaded markets, fetch its data
           if(!state.markets || !state.markets[id]){
             try {
-              const r = await fetchRetry(`${CG}/coins/markets?vs_currency=usd&ids=${encodeURIComponent(id)}&sparkline=true&price_change_percentage=24h`, {cache:'no-store'});
+              const r = await fetch(`${CG}/coins/markets?vs_currency=usd&ids=${encodeURIComponent(id)}&sparkline=true&price_change_percentage=24h`, {cache:'no-store', signal: AbortSignal.timeout(5000)});
               if(r.ok){
                 const data = await r.json();
                 if(Array.isArray(data) && data.length){
@@ -1777,7 +1820,6 @@ const si = $('#searchInput');
           window.scrollTo({top:0, behavior:'smooth'});
           loadCoinChart(id);
 
-          // Update chart title with correct name
           const chartTitle = document.getElementById('marketChartTitle');
           const coin = state.markets && state.markets[id];
           if(chartTitle && coin) chartTitle.textContent = `${coin.name} (${coin.symbol.toUpperCase()}) — 30 Day Price`;
