@@ -156,6 +156,33 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </svg>
       </div>
       <p style="font-size:13px;color:var(--muted);margin-top:8px">Source: CoinGecko API. Hourly data downsampled to daily observations. November 5, 2026.</p>
+      <details style="margin-top:12px">
+        <summary style="cursor:pointer;font-size:13px;color:var(--accent);font-weight:500">View data table (accessible fallback)</summary>
+        <table style="width:100%;border-collapse:collapse;margin:12px 0;font-size:12px">
+          <thead><tr style="border-bottom:1px solid var(--border)"><th style="text-align:left;padding:6px">Day</th><th style="text-align:right;padding:6px">Price (USD)</th><th style="text-align:right;padding:6px">Change</th></tr></thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px">Day 1</td><td style="text-align:right;padding:6px">$86,592</td><td style="text-align:right;padding:6px">—</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px">Day 5</td><td style="text-align:right;padding:6px">$84,200</td><td style="text-align:right;padding:6px">-2.8%</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px">Day 10</td><td style="text-align:right;padding:6px">$83,100</td><td style="text-align:right;padding:6px">-4.0%</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px">Day 15</td><td style="text-align:right;padding:6px">$78,100</td><td style="text-align:right;padding:6px">-9.8%</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px">Day 20</td><td style="text-align:right;padding:6px">$79,200</td><td style="text-align:right;padding:6px">-8.5%</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px">Day 25</td><td style="text-align:right;padding:6px">$78,500</td><td style="text-align:right;padding:6px">-9.3%</td></tr>
+            <tr><td style="padding:6px">Day 30</td><td style="text-align:right;padding:6px">$79,226</td><td style="text-align:right;padding:6px">-8.5%</td></tr>
+          </tbody>
+        </table>
+      </details>
+    </section>
+
+    <section style="margin-bottom:32px">
+      <h2 style="font-size:22px;font-weight:600;margin-bottom:12px">Data &amp; Reproducibility</h2>
+      <ul style="line-height:1.8;color:var(--text-2);padding-left:20px">
+        <li><strong>Data collection period:</strong> October 6, 2026 – November 5, 2026 (30 days).</li>
+        <li><strong>API endpoint:</strong> CoinGecko <code>/coins/bitcoin/market_chart?vs_currency=usd&days=30</code></li>
+        <li><strong>Raw data points:</strong> 721 hourly observations.</li>
+        <li><strong>Downsampling:</strong> First observation of each 24-hour window (30 daily points).</li>
+        <li><strong>Reproduction:</strong> Run <code>curl "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=30"</code> to fetch the same dataset.</li>
+        <li><strong>Limitations:</strong> This analysis uses price data only. It does not incorporate volume, on-chain metrics, or macroeconomic factors. Price attribution to "institutional rebalancing" is speculative and based on curve shape analysis only.</li>
+      </ul>
     </section>
 
     <section style="margin-bottom:32px">
@@ -210,6 +237,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <a href="topic.html">Topics</a>
         <a href="opensource.html">Open Source</a>
         <a href="insights.html">Insights</a>
+      <a href="research.html">Research</a>
         <a href="about.html">About</a>
       <a href="team.html">Team</a>
         <a href="methodology.html">Methodology</a>
