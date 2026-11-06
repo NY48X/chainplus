@@ -965,6 +965,24 @@ async function fetchRSSFallback(){
           if(filtered.length){ renderStoriesFiltered(filtered); showSearchBanner(`Showing ${filtered.length} headlines for ${sym}`); }
           else { showSearchBanner(`No headlines for ${sym}`); }
         }
+        // Show related insights
+        const riWrap = document.getElementById('relatedInsights');
+        const riList = document.getElementById('relatedInsightsList');
+        if(riWrap && riList){
+          const insightsMap = {
+            'btc': [{title:'Bitcoin 30-Day Price Analysis', url:'bitcoin-30-day-analysis.html', desc:'Data-backed BTC trend analysis with charts and methodology'}],
+            'eth': [{title:'Understanding Ethereum: Smart Contracts and DeFi', url:'understanding-ethereum.html', desc:'What is Ethereum and how do smart contracts work'}],
+            'sol': [{title:'Solana Wallet Activity Analysis', url:'solana-wallet-activity-analysis.html', desc:'On-chain patterns and whale concentration across 10,000+ wallets'}],
+            'default': [
+              {title:'DeFi Protocol Liquidity Analysis', url:'defi-protocol-liquidity-analysis.html', desc:'TVL, volume, and capital efficiency across major DeFi protocols'},
+              {title:'MEV Extraction Case Study', url:'mev-extraction-case-study.html', desc:'Real MEV costs and mitigation strategies'}
+            ]
+          };
+          const key = sym.toLowerCase();
+          const items = insightsMap[key] || insightsMap['default'];
+          riList.innerHTML = items.map(it => `<a href="${it.url}" style="display:block;padding:12px;border:1px solid var(--border);border-radius:8px;background:var(--surface);text-decoration:none;color:var(--text)"><h4 style="font-family:var(--font-display);font-size:14px;margin:0 0 4px">${it.title}</h4><p style="font-size:12px;color:var(--text-2);margin:0;line-height:1.4">${it.desc}</p></a>`).join('');
+          riWrap.style.display = 'block';
+        }
       });
     });
   }
