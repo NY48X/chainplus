@@ -1152,6 +1152,18 @@ const si = $('#searchInput');
     if(!modal||!content) return;
     const related = state.articles.filter(x=>x.link!==a.link && (x.category===a.category)).slice(0,3);
     const relatedHtml = related.length ? `<div style="margin-top:16px"><h4 style="font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 8px">Related headlines</h4>${related.map(r=>`<div style="padding:6px 0;border-bottom:1px solid var(--border-soft);cursor:pointer" onclick="window.__openArticleByLink('${esc(r.link)}')"><span style="font-size:13px">${esc(r.title)}</span><span class="small muted" style="display:block">${esc(r.source||'')}</span></div>`).join('')}</div>` : '';
+    // Connected intelligence: related insights + market context
+    const coinMap = {bitcoin:'btc',ethereum:'eth',solana:'sol',cardano:'ada',ripple:'xrp',dogecoin:'doge'};
+    const titleLow = (a.title||'').toLowerCase();
+    const matchedCoin = Object.keys(coinMap).find(c => titleLow.includes(c));
+    const insightsLinks = {
+      btc: [{t:'Bitcoin 30-Day Price Analysis',u:'bitcoin-30-day-analysis.html'}],
+      eth: [{t:'Understanding Ethereum',u:'understanding-ethereum.html'}],
+      sol: [{t:'Solana Wallet Activity Analysis',u:'solana-wallet-activity-analysis.html'}]
+    };
+    const ri = matchedCoin && insightsLinks[coinMap[matchedCoin]] ? insightsLinks[coinMap[matchedCoin]] : [];
+    const riHtml = ri.length ? `<div style="margin-top:16px"><h4 style="font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 8px">ChainPlus Insights</h4>${ri.map(r=>`<div style="padding:6px 0"><a href="${r.u}" style="font-size:13px;color:var(--accent)">${esc(r.t)} →</a></div>`).join('')}</div>` : '';
+    const mktHtml = matchedCoin ? `<div style="margin-top:16px"><h4 style="font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 8px">Market Context</h4><p style="font-size:13px;color:var(--text-2)">View <a href="markets.html" style="color:var(--accent)">${matchedCoin.charAt(0).toUpperCase()+matchedCoin.slice(1)} price & chart</a> · <a href="topic.html" style="color:var(--accent)">Trending topics</a> · <a href="news.html" style="color:var(--accent)">All headlines</a></p></div>` : '';
     const saved = state.bookmarks.has(a.link);
     content.innerHTML = `
       <div class="modal-meta">
@@ -1173,7 +1185,7 @@ const si = $('#searchInput');
         <h4>Summary</h4>
         <p id="aiText">Generating summary…</p>
       </div>
-      ${relatedHtml}`;
+      ${relatedHtml}${riHtml}${mktHtml}`;
     modal.classList.add('open'); modal.setAttribute('aria-hidden','false');
     document.body.style.overflow='hidden';
     fetchSummary(a);
