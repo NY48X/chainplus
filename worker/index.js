@@ -21,21 +21,34 @@ async function rss(){
       const ctrl=new AbortController();const tid=setTimeout(function(){ctrl.abort();},8000);const r=await fetch(u,{headers:{'User-Agent':'ChainPlus/1.0'},signal:ctrl.signal});clearTimeout(tid);
       if(!r.ok)return;
       const x=await r.text();
+      const channelTitleMatch=x.match(/<channel>[\s\S]*?<title>([\s\S]*?)<\/title>/i);
+      const channelTitle=channelTitleMatch?decodeEntities(channelTitleMatch[1].trim()):'';
       const items=x.match(/<item[\s\S]*?<\/item>/gi)||[];
       items.forEach(function(it){
         const t=decodeEntities(tag(it,'title')),l=tag(it,'link')||tag(it,'guid'),rawDesc=decodeEntities(tag(it,'description')||tag(it,'content:encoded')),p=tag(it,'pubDate')||tag(it,'published');
         if(!t||!l||seen.has(l))return;seen.add(l);
-        // Clean description: strip HTML, remove repeated title/source, collapse whitespace
+        // Clean description: strip HTML, remove repeated title/source/publisher, collapse whitespace
         let desc=rawDesc.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+        const src=new URL(u).hostname.replace(/^www\./,'');
+        // Remove leading publisher name (e.g. "Bitcoin Magazine" from bitcoinmagazine.com)
+        // Publisher names to try removing from description start
+        const pubNames=channelTitle?[channelTitle]:[];
+        pubNames.push(src.split('.')[0]);
+        for(const pn of pubNames){
+          const pnVariants=[pn, pn.charAt(0).toUpperCase()+pn.slice(1)];
+          for(const pv of pnVariants){
+            if(desc.toLowerCase().startsWith(pv.toLowerCase()+' ')){desc=desc.slice(pv.length).trim();}
+            else if(desc.toLowerCase()===pv.toLowerCase()){desc='';}
+          }
+        }
         // Remove repeated title from description
         if(desc.toLowerCase().indexOf(t.toLowerCase())===0){desc=desc.slice(t.length).trim();}
-        // Remove repeated source/publisher name
-        const src=new URL(u).hostname.replace(/^www\./,'');
-        while(desc.toLowerCase().indexOf(src.toLowerCase())===0){desc=desc.slice(src.length).trim();}
-        // Remove "Publisher — headline" patterns
-        desc=desc.replace(new RegExp('\\b'+src.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\b\\s*[—–-]?\\s*','gi'),'').trim();
+        // Remove "Publisher — headline" or "Publisher: headline" patterns
+        desc=desc.replace(new RegExp('^'+src.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*[—–:-]?\\s*','gi'),'').trim();
         // Remove duplicate title occurrences anywhere in description
         desc=desc.replace(new RegExp(t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),'').trim();
+        // Remove leading "Source:" or publisher-like prefixes (capitalized words followed by space at start)
+        desc=desc.replace(/^[A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+)?\s*[—–-]\s*/,'').trim();
         // Final cleanup
         desc=desc.replace(/\s+/g,' ').trim().slice(0,300);
         o.push({title:t,description:desc,link:l,source:src,pubDate:p,category:cat(t,desc),credibility:0.7});
