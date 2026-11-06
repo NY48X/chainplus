@@ -2,7 +2,7 @@
 (function(){
   'use strict';
   const CONSENT_KEY = 'cp-consent';
-  const GTM_ID = 'GTM-T8P3MVPH';
+  const GTM_ID = 'GTM-WQ5DD4BC';
 
   // Consent state: 'granted' | 'denied' | null
   function getConsent(){ try { return localStorage.getItem(CONSENT_KEY); } catch(e){ return null; } }
