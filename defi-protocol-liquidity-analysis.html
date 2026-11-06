@@ -181,7 +181,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <li><strong>Reproduction:</strong> Query <code>https://api.llama.fi/protocols</code> for protocol list, <code>https://api.llama.fi/tvl/{protocol}</code> for TVL history, <code>https://api.llama.fi/summary/fees/{protocol}</code> for fee data.</li>
         <li><strong>Protocol snapshot table:</strong></li>
       </ul>
-      <table style="width:100%;border-collapse:collapse;margin:12px 0;font-size:12px">
+      <div style="overflow-x:auto"><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;margin:12px 0;font-size:12px">
         <thead><tr style="border-bottom:2px solid var(--border)"><th style="text-align:left;padding:6px">Protocol</th><th style="text-align:right;padding:6px">TVL (USD)</th><th style="text-align:right;padding:6px">24h Volume</th><th style="text-align:right;padding:6px">Vol/TVL</th><th style="text-align:right;padding:6px">7d Change</th></tr></thead>
         <tbody>
           <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px">Uniswap V3</td><td style="text-align:right;padding:6px">$4.2B</td><td style="text-align:right;padding:6px">$1.8B</td><td style="text-align:right;padding:6px">0.43</td><td style="text-align:right;padding:6px">+2.1%</td></tr>
@@ -190,7 +190,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px">Compound V3</td><td style="text-align:right;padding:6px">$3.8B</td><td style="text-align:right;padding:6px">N/A (lending)</td><td style="text-align:right;padding:6px">N/A</td><td style="text-align:right;padding:6px">+0.6%</td></tr>
           <tr><td style="padding:6px">MakerDAO</td><td style="text-align:right;padding:6px">$8.1B</td><td style="text-align:right;padding:6px">N/A (CDP)</td><td style="text-align:right;padding:6px">N/A</td><td style="text-align:right;padding:6px">-0.3%</td></tr>
         </tbody>
-      </table>
+      </table></div>
       <ul style="line-height:1.8;color:var(--text-2);padding-left:20px">
         <li><strong>Limitations:</strong> Single-point snapshot. Does not capture intraday variation. Lending protocols (Aave, Compound) and CDP protocols (MakerDAO) do not have comparable trading volume metrics.</li>
       </ul>
