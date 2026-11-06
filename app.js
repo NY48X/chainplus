@@ -1113,19 +1113,36 @@ const si = $('#searchInput');
     globalSug.id = 'globalSuggestions';
     siWrap.appendChild(globalSug);
 
-    function showGlobalSuggestions(q){
+    async function showGlobalSuggestions(q){
       const ql = q.toLowerCase().trim();
       if(!ql || ql.length < 2){ globalSug.classList.remove('show'); return; }
       const items = [];
-      // Coins
+      // Coins from loaded list
       const coins = (state.marketCoins.length ? state.marketCoins : (window.CP_DATA && window.CP_DATA.coins ? window.CP_DATA.coins.map(c=>({id:c.id,sym:c.sym,name:c.name})) : []));
+      let coinMatches = 0;
       coins.forEach(c => {
         const sym = (c.sym||'').toLowerCase();
         const name = (c.name||'').toLowerCase();
         if(sym.includes(ql) || name.includes(ql)){
+          coinMatches++;
           items.push({type:'coin', title: c.name, meta: c.sym, icon: c.sym.slice(0,4), action: () => { window.location.href = 'markets.html'; }});
         }
       });
+      // If few matches, search CoinGecko for more
+      if(coinMatches < 3){
+        try {
+          const r = await fetchRetry(`${CG}/search?query=${encodeURIComponent(q)}`, {cache:'no-store'});
+          if(r.ok){
+            const data = await r.json();
+            const seen = new Set(coins.map(c => (c.name||'').toLowerCase()));
+            (data.coins || []).slice(0, 5).forEach(coin => {
+              if(seen.has((coin.name||'').toLowerCase())) return;
+              seen.add((coin.name||'').toLowerCase());
+              items.push({type:'coin', title: coin.name, meta: (coin.symbol||'').toUpperCase(), icon: (coin.symbol||'').slice(0,4).toUpperCase(), action: () => { window.location.href = 'markets.html'; }});
+            });
+          }
+        } catch(e){}
+      }
       // Headlines
       if(state.articles && state.articles.length){
         state.articles.filter(a => (a.title||'').toLowerCase().includes(ql)).slice(0,5).forEach(a => {
