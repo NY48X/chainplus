@@ -66,11 +66,6 @@
     if(diff<604800) return Math.floor(diff/86400)+'d ago';
     return new Date(d).toLocaleDateString();
   }
-  function credClass(c){
-    if(c>=0.75) return 'cred-high';
-    if(c>=0.55) return 'cred-mid';
-    return 'cred-low';
-  }
   function toast(msg){
     const t = $('#toast'); if(!t) return; t.textContent = msg; t.classList.add('show');
     clearTimeout(t._t); t._t = setTimeout(()=>t.classList.remove('show'), 3200);
@@ -345,7 +340,6 @@ async function fetchRSSFallback(){
   function renderStoriesFiltered(list){
     const grid = $('#storiesGrid'); if(!grid) return;
     grid.innerHTML = list.map((a,i)=>{
-      const cred = a.credibility || (a.reputation? a.reputation/100 : 0.6);
       return `
         <article class="story reveal" data-idx="${i}">
           <span class="story-cat">${esc(decodeEntities(a.category||'general'))}</span>
@@ -355,7 +349,7 @@ async function fetchRSSFallback(){
             <span class="src">${esc(a.source||'Unknown')}</span>
             <span class="dot"></span>
             <span>${esc(a.timeAgo || timeAgo(a.pubDate))}</span>
-            <span class="cred"><span class="cred-dot ${credClass(cred)}"></span>${Math.round(cred*100)}%</span>
+
           </div>
         </article>`;
     }).join('');
@@ -401,7 +395,6 @@ async function fetchRSSFallback(){
     const maxStories = (page === 'home') ? 8 : state.articles.length;
     const toRender = state.articles.slice(0, maxStories);
     grid.innerHTML = toRender.map((a,i)=>{
-      const cred = a.credibility || (a.reputation? a.reputation/100 : 0.6);
       const lead = (i===0 && state.page===1 && !state.search) ? ' story-lead' : '';
       const saved = state.bookmarks.has(a.link) ? ' saved' : '';
       const page = (document.body && document.body.dataset && document.body.dataset.page) || 'news';
@@ -416,7 +409,7 @@ async function fetchRSSFallback(){
             <span class="src">${esc(a.source||'Unknown')}</span>
             <span class="dot"></span>
             <span>${esc(a.timeAgo || timeAgo(a.pubDate))}</span>
-            <span class="cred"><span class="cred-dot ${credClass(cred)}"></span>${Math.round(cred*100)}%</span>
+
             <button class="chip bookmark-btn${saved}" data-link="${esc(a.link)}" style="margin-left:auto;padding:2px 8px;font-size:11px">${state.bookmarks.has(a.link)?'★ Saved':'☆ Save'}</button>
           </div>
         </article>`;
