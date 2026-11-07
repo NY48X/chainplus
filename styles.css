@@ -224,7 +224,7 @@ input,textarea,select{font-family:inherit}
 .trend-bar-fill{height:100%;border-radius:2px;transition:width .6s var(--ease)}
 
 /* markets */
-.market-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.market-strip{min-height:200px;contain:layout;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
 .mkt-tile{padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);cursor:pointer;transition:border-color var(--dur),transform var(--dur);overflow:hidden}
 .mkt-tile:hover{border-color:var(--accent);transform:translateY(-2px)}
 .mt-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px}
@@ -314,7 +314,7 @@ html.terminal .spark{height:24px}
 
 /* skeletons */
 .skeleton{background:linear-gradient(90deg,var(--surface-2),var(--surface-3),var(--surface-2));background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:var(--radius)}
-.skeleton-card{height:120px}
+.skeleton-card{height:160px;min-height:160px}
 .skeleton-line{height:14px;margin:6px 0;border-radius:4px}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
