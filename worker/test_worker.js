@@ -15,7 +15,7 @@ ctx.setTimeout = globalThis.setTimeout;
 ctx.clearTimeout = globalThis.clearTimeout;
 ctx.console = console;
 
-const codeToEval = code.replace(/addEventListener\("fetch".*/, '');
+const codeToEval = code.replace(/addEventListener\("fetch".*/, '').replace(/^export\s+default.*$/m, '');
 vm.runInContext(codeToEval, ctx);
 
 const handle = ctx.handle;
