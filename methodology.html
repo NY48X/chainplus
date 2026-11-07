@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
-<script>window.addEventListener("CookiebotOnLoad", function(){ window._cbApi = window.Cookiebot; if(window._cbApi && window._cbApi.tagName) window._cbApi = null; console.log("CookiebotOnLoad fired, api:", !!window._cbApi); });</script>
-<script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="da29f2f3-29a6-4771-8322-269acbac897f" data-blockingmode="auto" type="text/javascript"></script>
+<script src="https://consent.cookiebot.com/uc.js" data-cbid="da29f2f3-29a6-4771-8322-269acbac897f" data-blockingmode="auto" type="text/javascript"></script>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Methodology — ChainPlus</title>
@@ -138,8 +137,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <h4>Legal</h4>
         <a href="privacy.html">Privacy Policy</a>
         <a href="cookies.html">Cookie Policy</a>
-        <a href="#" onclick="if(window._cbApi && typeof window._cbApi.renew==='function'){window._cbApi.renew();}else if(window._cbApi && typeof window._cbApi.show==='function'){window._cbApi.show();}else{alert('Cookiebot not ready. _cbApi: '+typeof window._cbApi);}return false;">Cookie Settings</a>
-        <a href="#" onclick="if(window._cbApi && typeof window._cbApi.renew==='function'){window._cbApi.renew();}else if(window._cbApi && typeof window._cbApi.show==='function'){window._cbApi.show();}else{alert('Cookiebot not ready. _cbApi: '+typeof window._cbApi);}return false;">Privacy settings</a>
+        <a href="#" onclick="var cb=window.Cookiebot; if(cb && cb.tagName){cb=null;} if(cb){if(typeof cb.renew==='function'){cb.renew();return false;} if(typeof cb.show==='function'){cb.show();return false;}} alert('Cookiebot not ready. Type: '+typeof window.Cookiebot+(window.Cookiebot&&window.Cookiebot.tagName?' (ELEMENT)':'')); return false;">Cookie Settings</a>
+        <a href="#" onclick="var cb=window.Cookiebot; if(cb && cb.tagName){cb=null;} if(cb){if(typeof cb.renew==='function'){cb.renew();return false;} if(typeof cb.show==='function'){cb.show();return false;}} alert('Cookiebot not ready. Type: '+typeof window.Cookiebot+(window.Cookiebot&&window.Cookiebot.tagName?' (ELEMENT)':'')); return false;">Privacy settings</a>
         <a href="terms.html">Terms of Use</a>
         <a href="contact.html">Contact</a>
         <a href="faq.html">FAQ</a>
