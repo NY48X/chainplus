@@ -120,7 +120,7 @@ input,textarea,select{font-family:inherit}
 .ticker-label{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);flex-shrink:0}
 .ticker-label .pulse{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 0 var(--accent-glow);animation:pulse 1.6s infinite}
 @keyframes pulse{0%{box-shadow:0 0 0 0 var(--accent-glow)}70%{box-shadow:0 0 0 8px transparent}100%{box-shadow:0 0 0 0 transparent}}
-.ticker-track{flex:1;overflow:hidden;white-space:nowrap;mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+.ticker-track{min-height:24px;flex:1;overflow:hidden;white-space:nowrap;mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
 .ticker-item{display:inline-block;animation:scroll 60s linear infinite}
 .ticker-item a{color:var(--text-2);margin:0 18px}
 .ticker-item a:hover{color:var(--accent);text-decoration:none}
@@ -164,7 +164,7 @@ input,textarea,select{font-family:inherit}
 .main-col{min-width:0}
 
 /* stories grid */
-.stories-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.stories-grid{display:grid;min-height:400px;grid-template-columns:repeat(2,1fr);gap:12px}
 @media(max-width:640px){.stories-grid{grid-template-columns:1fr}}
 .story{padding:16px;min-height:160px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);cursor:pointer;transition:border-color var(--dur),transform var(--dur);display:flex;flex-direction:column;gap:8px}
 .story:hover{border-color:var(--accent);transform:translateY(-2px)}
@@ -220,7 +220,7 @@ input,textarea,select{font-family:inherit}
 
 /* markets */
 .market-strip{min-height:200px;contain:layout;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
-.mkt-tile{padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);cursor:pointer;transition:border-color var(--dur),transform var(--dur);overflow:hidden}
+.mkt-tile{min-height:80px;padding:12px 14px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);cursor:pointer;transition:border-color var(--dur),transform var(--dur);overflow:hidden}
 .mkt-tile:hover{border-color:var(--accent);transform:translateY(-2px)}
 .mt-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px}
 .mt-sym{font-family:var(--font-mono);font-weight:600;font-size:13px;color:var(--text)}
@@ -246,7 +246,7 @@ html.terminal .hero-headline{font-size:26px}
 html.terminal .story-title{font-size:14px}
 html.terminal .chip{padding:3px 8px;font-size:11px}
 html.terminal .section{padding:14px 0}
-html.terminal .mkt-tile{padding:8px 10px}
+html.terminal .mkt-tile{min-height:80px;padding:8px 10px}
 html.terminal .mt-price{font-size:14px}
 html.terminal .spark{height:24px}
 
@@ -393,3 +393,6 @@ html.terminal .spark{height:24px}
 .suggest-highlight { color: var(--accent); font-weight: 600; }
 .suggest-empty { padding: 14px; text-align: center; color: var(--muted); font-size: 13px; }
 .suggest-section { padding: 6px 14px; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); background: var(--surface-2); font-family: var(--font-mono); }
+
+#trendingList{min-height:120px}
+#topMoversWidget{min-height:80px}
