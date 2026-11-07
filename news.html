@@ -258,8 +258,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <h4>Legal</h4>
         <a href="privacy.html">Privacy Policy</a>
         <a href="cookies.html">Cookie Policy</a>
-        <a href="#" onclick="alert('Cookie Settings clicked'); return false;">Cookie Settings</a>
-        <a href="#" onclick="alert('Privacy settings clicked'); return false;">Privacy settings</a>
+        <a href="#" onclick="if(window.Cookiebot){var m=[];for(var k in Cookiebot){if(typeof Cookiebot[k]=='function')m.push(k);}alert('Methods: '+m.join(', '));}else{alert('Cookiebot not loaded');}return false;">Cookie Settings</a>
+        <a href="#" onclick="if(window.Cookiebot){var m=[];for(var k in Cookiebot){if(typeof Cookiebot[k]=='function')m.push(k);}alert('Methods: '+m.join(', '));}else{alert('Cookiebot not loaded');}return false;">Privacy settings</a>
         <a href="terms.html">Terms of Use</a>
         <a href="contact.html">Contact</a>
         <a href="faq.html">FAQ</a>
