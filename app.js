@@ -186,7 +186,7 @@
     throw last || new Error('fetch failed');
   }
   async function api(path){
-    const r = await fetchRetry(API+path, {cache:'no-store'});
+    const r = await fetchRetry(API+path, {cache:'default'});
     return r.json();
   }
 
@@ -774,7 +774,7 @@ async function fetchRSSFallback(){
   async function loadMarkets(){
     try{
       // Fetch top 250 coins by market cap (single request, CoinGecko max per_page=250)
-      const r = await fetchRetry(`${CG}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=true&price_change_percentage=24h`);
+      const r = await fetchRetry(`${CG}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=true&price_change_percentage=24h`);
       if(!r.ok){
         console.warn('CoinGecko returned', r.status);
         try{
@@ -1619,19 +1619,21 @@ const si = $('#searchInput');
     } else if(page === 'trending'){
       try { await loadTrending(); } catch(e){ console.error('init load error:', e); }
     } else if(page === 'home'){
-      // hub page — headlines preview + trending + top movers
-      try { await Promise.all([fetchNews(true,{updateHero:true}), loadTrending(), loadMarkets(), renderTicker()]); } catch(e){ console.error('init load error:', e); }
-      try { renderTopMovers(); } catch(e){ console.error('renderTopMovers error:', e); }
+      // hub page — headlines first, then defer trending/markets/ticker
+      try { await fetchNews(true,{updateHero:true}); } catch(e){ console.error('init load error:', e); }
+      // Defer non-critical fetches to after first paint
+      setTimeout(()=>{ try{ loadTrending(); }catch(e){} try{ loadMarkets(); }catch(e){} try{ renderTicker(); }catch(e){} try{ renderTopMovers(); }catch(e){} }, 100);
     } else if(page === 'news'){
-      try { await Promise.all([fetchNews(true,{updateHero:true}), loadTrending(), renderTicker()]); } catch(e){ console.error('init load error:', e); }
+      try { await fetchNews(true,{updateHero:true}); } catch(e){ console.error('init load error:', e); }
+      setTimeout(()=>{ try{ loadTrending(); }catch(e){} try{ renderTicker(); }catch(e){} }, 100);
     } else if(page === 'topic'){
       try { await Promise.all([fetchNews(true,{updateHero:false}), loadTrending()]); } catch(e){ console.error('init load error:', e); }
       // Render rising topics dashboard
       try { renderRisingTopics(); } catch(e){ console.error('renderRisingTopics error:', e); }
     } else {
       // fallback
-      try { await Promise.all([fetchNews(true,{updateHero:true}), loadTrending(), loadMarkets(), renderTicker()]); } catch(e){ console.error('init load error:', e); }
-      try { renderTopMovers(); } catch(e){ console.error('renderTopMovers error:', e); }
+      try { await fetchNews(true,{updateHero:true}); } catch(e){ console.error('init load error:', e); }
+      setTimeout(()=>{ try{ loadTrending(); }catch(e){} try{ loadMarkets(); }catch(e){} try{ renderTicker(); }catch(e){} try{ renderTopMovers(); }catch(e){} }, 100);
     }
     revealIn();
     state.pollTimer = setInterval(livePoll, 45000);
