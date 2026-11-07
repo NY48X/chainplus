@@ -214,7 +214,7 @@ async function siteverify(token, expectedAction, remoteIp, secret, allowedHosts)
 }
 
 async function handle(req, env){
-  // Support both service-worker (globals) and ES module (env param) formats
+  // ES module format: env contains bindings
   if(env){
     if(env.SUBSCRIBERS) globalThis.SUBSCRIBERS = env.SUBSCRIBERS;
     if(env.RESEND_API_KEY) globalThis.RESEND_API_KEY = env.RESEND_API_KEY;
@@ -347,6 +347,5 @@ async function handle(req, env){
     return j({error:'not found'},404);
   }catch(e){return j({error:e.message||'internal error'},500);}
 }
-// Service-worker format (Cloudflare API deployment)
-// handle() accepts optional env param for ES module compatibility (wrangler deploy)
-addEventListener("fetch", event => { event.respondWith(handle(event.request)); });
+// ES module format (wrangler deploy)
+export default { async fetch(request, env, ctx) { return handle(request, env); } };
