@@ -2,7 +2,6 @@
 <html lang="en" class="dark">
 <head>
 <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="da29f2f3-29a6-4771-8322-269acbac897f" data-blockingmode="auto" type="text/javascript"></script>
-<script>setTimeout(function(){ console.log("Cookiebot check:", typeof Cookiebot, Cookiebot && Cookiebot.tagName ? "ELEMENT" : "API", "renew:", typeof (Cookiebot && !Cookiebot.tagName ? Cookiebot.renew : "N/A")); }, 3000);</script>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Cookie Policy — ChainPlus</title>
@@ -182,8 +181,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <h4>Legal</h4>
         <a href="privacy.html">Privacy Policy</a>
         <a href="cookies.html">Cookie Policy</a>
-        <a href="#" onclick="console.log('clicked, Cookiebot:', Cookiebot, Cookiebot && Cookiebot.tagName); if(Cookiebot && !Cookiebot.tagName){ try{Cookiebot.renew(); console.log('renew called');}catch(e){console.log('renew error:', e);} } else { console.log('Cookiebot is element or undefined'); } return false;">Cookie Settings</a>
-        <a href="#" onclick="console.log('clicked, Cookiebot:', Cookiebot, Cookiebot && Cookiebot.tagName); if(Cookiebot && !Cookiebot.tagName){ try{Cookiebot.renew(); console.log('renew called');}catch(e){console.log('renew error:', e);} } else { console.log('Cookiebot is element or undefined'); } return false;">Privacy settings</a>
+        <a href="javascript:Cookiebot.renew()" id="CookiebotPrivacyTrigger">Cookie Settings</a>
+        <a href="javascript:Cookiebot.renew()">Privacy settings</a>
         <a href="terms.html">Terms of Use</a>
         <a href="contact.html">Contact</a>
         <a href="faq.html">FAQ</a>
