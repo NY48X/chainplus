@@ -181,8 +181,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <h4>Legal</h4>
         <a href="privacy.html">Privacy Policy</a>
         <a href="cookies.html">Cookie Policy</a>
-        <a href="#" onclick="var cb=window.Cookiebot; alert('Cookiebot is element: '+(cb && cb.tagName?'YES (tag: '+cb.tagName+')':'NO')+' | type: '+typeof cb+' | CookieConsent: '+typeof window.CookieConsent+' | show: '+(window.CookieConsent&&typeof window.CookieConsent.show)+' | renew: '+(window.CookieConsent&&typeof window.CookieConsent.renew)); return false;">Cookie Settings</a>
-        <a href="#" onclick="var cb=window.Cookiebot; alert('Cookiebot is element: '+(cb && cb.tagName?'YES (tag: '+cb.tagName+')':'NO')+' | type: '+typeof cb+' | CookieConsent: '+typeof window.CookieConsent+' | show: '+(window.CookieConsent&&typeof window.CookieConsent.show)+' | renew: '+(window.CookieConsent&&typeof window.CookieConsent.renew)); return false;">Privacy settings</a>
+        <a href="#" onclick="alert('Cookiebot: '+(window.Cookiebot&&window.Cookiebot.tagName?'ELEMENT':'API')+' | CookieConsent: '+typeof window.CookieConsent+' | CookieConsentDialog: '+typeof window.CookieConsentDialog+' | CB: '+typeof window.CB); return false;">Cookie Settings</a>
+        <a href="#" onclick="alert('Cookiebot: '+(window.Cookiebot&&window.Cookiebot.tagName?'ELEMENT':'API')+' | CookieConsent: '+typeof window.CookieConsent+' | CookieConsentDialog: '+typeof window.CookieConsentDialog+' | CB: '+typeof window.CB); return false;">Privacy settings</a>
         <a href="terms.html">Terms of Use</a>
         <a href="contact.html">Contact</a>
         <a href="faq.html">FAQ</a>
