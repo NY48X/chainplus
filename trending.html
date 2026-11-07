@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script>window.CookiebotCallback_OnLoad = function(){ window._cbApi = (typeof Cookiebot !== "undefined" && !Cookiebot.tagName) ? Cookiebot : null; console.log("Cookiebot loaded, api:", !!window._cbApi); };</script>
+<script>window.addEventListener("CookiebotOnLoad", function(){ window._cbApi = window.Cookiebot; if(window._cbApi && window._cbApi.tagName) window._cbApi = null; console.log("CookiebotOnLoad fired, api:", !!window._cbApi); });</script>
 <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="da29f2f3-29a6-4771-8322-269acbac897f" data-blockingmode="auto" type="text/javascript"></script>
   <meta charset="UTF-8" />
   <meta http-equiv="refresh" content="0;url=topic.html" />
