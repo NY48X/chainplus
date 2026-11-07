@@ -340,7 +340,8 @@ async function handle(req, env){
       const q=(u.searchParams.get('q')||'').toLowerCase().trim();
       const lim=clamp(u.searchParams.get('limit'),1,50,20);
       if(!q)return j({articles:[],totalCount:0});
-      const a=await rss();
+      let a=await cacheGet('rss');
+      if(!a){a=await rss();await cachePut('rss',a,60);}
       const f=a.filter(function(x){return (x.title||'').toLowerCase().includes(q)||(x.description||'').toLowerCase().includes(q);}).slice(0,lim);
       return j({articles:f,totalCount:f.length},200,false,60);
     }
