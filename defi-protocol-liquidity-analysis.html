@@ -261,8 +261,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <a href="contact.html">Contact</a>
         <a href="privacy.html">Privacy</a>
         <a href="cookies.html">Cookie Policy</a>
-        <a href="#" onclick="if(window.Cookiebot){try{Cookiebot.renew();}catch(e){try{Cookiebot.show();}catch(e2){alert('Error: '+e2.message);}} }else{alert('Cookiebot not loaded. Please refresh.');}return false;">Cookie Settings</a>
-        <a href="#" onclick="if(window.Cookiebot){try{Cookiebot.renew();}catch(e){try{Cookiebot.show();}catch(e2){alert('Error: '+e2.message);}} }else{alert('Cookiebot not loaded. Please refresh.');}return false;">Privacy settings</a>
+        <a href="#" onclick="console.log('Cookiebot:', window.Cookiebot); if(window.Cookiebot){console.log('show:', typeof Cookiebot.show); console.log('renew:', typeof Cookiebot.renew); try{Cookiebot.renew(); console.log('renew called');}catch(e){console.log('renew error:', e); try{Cookiebot.show(); console.log('show called');}catch(e2){console.log('show error:', e2); alert('Error: '+e2.message);}} }else{alert('Cookiebot not loaded. Please refresh.');}return false;">Cookie Settings</a>
+        <a href="#" onclick="console.log('Cookiebot:', window.Cookiebot); if(window.Cookiebot){console.log('show:', typeof Cookiebot.show); console.log('renew:', typeof Cookiebot.renew); try{Cookiebot.renew(); console.log('renew called');}catch(e){console.log('renew error:', e); try{Cookiebot.show(); console.log('show called');}catch(e2){console.log('show error:', e2); alert('Error: '+e2.message);}} }else{alert('Cookiebot not loaded. Please refresh.');}return false;">Privacy settings</a>
         <a href="terms.html">Terms</a>
       </div>
       <div class="footer-links" style="margin-top:8px;font-size:12px">
