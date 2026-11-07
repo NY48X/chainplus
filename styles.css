@@ -127,7 +127,7 @@ input,textarea,select{font-family:inherit}
 @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
 /* hero */
-.hero{padding:28px 0 20px;border-bottom:1px solid var(--border-soft)}
+.hero{padding:28px 0 20px;border-bottom:1px solid var(--border-soft);min-height:200px}
 .hero-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:24px;align-items:start}
 @media(max-width:960px){.hero-grid{grid-template-columns:1fr}}
 .hero-main{min-width:0}
