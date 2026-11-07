@@ -12,6 +12,8 @@ function decodeEntities(s){
   return s;
 }
 function j(d,s,noCache,cacheSec){s=s||200;const cc=noCache?'no-store':'public, max-age='+(cacheSec!=null?cacheSec:300);return new Response(JSON.stringify(d),{status:s,headers:{...CORS,'Cache-Control':cc}});}
+async function cacheGet(k){try{if(!globalThis.SUBSCRIBERS)return null;const v=await globalThis.SUBSCRIBERS.get('cache:'+k);if(v)return JSON.parse(v);}catch(e){}return null;}
+async function cachePut(k,d,ttl){try{if(!globalThis.SUBSCRIBERS)return;await globalThis.SUBSCRIBERS.put('cache:'+k,JSON.stringify(d),{expirationTtl:ttl||60});}catch(e){}}
 function cat(title,desc){const t=((title||'')+' '+(desc||'')).toLowerCase();if(/bitcoin|btc/.test(t))return'bitcoin';if(/ethereum|eth\b|ether/.test(t))return'ethereum';if(/solana|sol\b/.test(t))return'solana';if(/defi|dex|yield|liquidity|amm|staking/.test(t))return'defi';if(/nft|tokeniz/.test(t))return'nft';if(/regulat|sec|cftc|law|legal|court|sue|ban|policy/.test(t))return'regulation';if(/market|price|surge|rally|crash|etf|stock|trade/.test(t))return'markets';return'general';}
 function tag(xml,t){const m=xml.match(new RegExp('<'+t+'[^>]*>([\\s\\S]*?)</'+t+'>','i'));return m?m[1].replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g,'$1').trim():'';}
 async function rss(){
@@ -77,7 +79,7 @@ async function rss(){
         desc = uniqueSentences.join(' ').trim();
         // Final cleanup
         desc=desc.replace(/\s+/g,' ').trim().slice(0,300);
-        o.push({title:t,description:desc,link:l,source:src,pubDate:p,category:cat(t,desc),credibility:0.7});
+        o.push({title:t,description:desc,link:l,source:src,pubDate:p,category:cat(t,desc)});
       });
     }catch(e){}
   }));
@@ -310,20 +312,25 @@ async function handle(req, env){
       const lim=clamp(u.searchParams.get('limit'),1,100,20);
       const pg=clamp(u.searchParams.get('page'),1,1000,1);
       const cat=u.searchParams.get('category');
-      let a=await rss();
+      let a=await cacheGet('rss');
+      if(!a){a=await rss();await cachePut('rss',a,60);}
       if(cat&&cat!=='all'){const q=cat.toLowerCase();a=a.filter(function(x){return (x.category||'').toLowerCase()===q;});}
       const s=(pg-1)*lim;const pgd=a.slice(s,s+lim);
       return j({articles:pgd,totalCount:a.length,page:pg,limit:lim,hasMore:s+lim<a.length,_source:'rss'},200,false,60);
     }
     if(p==='/api/trending'||p==='/api/trending/'){
-      const a=await rss();const t=trend(a);return j({trending:t},200,false,60);
+      let a=await cacheGet('rss');
+      if(!a){a=await rss();await cachePut('rss',a,60);}
+      const t=trend(a);return j({trending:t},200,false,60);
     }
     if(p==='/api/categories'||p==='/api/categories/'||p==='/api/news/categories'||p==='/api/news/categories/'){
       return j({categories:['all','bitcoin','ethereum','defi','solana','nft','regulation','markets']});
     }
     if(p==='/api/breaking'||p==='/api/breaking/'){
       const lim=clamp(u.searchParams.get('limit'),1,50,12);
-      const a=await rss();return j({articles:a.slice(0,lim),totalCount:a.length});
+      let a=await cacheGet('rss');
+      if(!a){a=await rss();await cachePut('rss',a,60);}
+      return j({articles:a.slice(0,lim),totalCount:a.length});
     }
     if(p==='/api/fear-greed'||p==='/api/fear-greed/'){
       try{const ctrl=new AbortController();const tid=setTimeout(function(){ctrl.abort();},5000);const r=await fetch('https://api.alternative.me/fng/?limit=1',{signal:ctrl.signal});clearTimeout(tid);if(r.ok){const d=await r.json();const v=d&&d.data&&d.data[0];if(v)return j({value:parseInt(v.value,10),classification:v.value_classification,timestamp:v.timestamp});}}catch(e){}

@@ -20,7 +20,7 @@
 <meta name="twitter:image" content="https://chainplus.tech/og-image.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link rel="preconnect" href="https://api.coingecko.com" />
+<link rel="preconnect" href="https://api.coingecko.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=optional" rel="stylesheet" />
 <link rel="preload" href="styles.css" as="style" />
 <link rel="stylesheet" href="styles.css" />
@@ -104,7 +104,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </ul>
 
     <h2>Ranking</h2>
-    <p>Items are sorted by publication time (newest first). Each item carries a source credibility score derived from the publisher's track record. Trending topics are extracted from recent headlines and tagged with sentiment (bullish, bearish, neutral).</p>
+    <p>Items are sorted by publication time (newest first). Trending topics are extracted from recent headlines and tagged with sentiment (bullish, bearish, neutral).</p>
 
     <h2>Market data</h2>
     <p>Live prices and 24-hour changes come from CoinGecko's free API for the top cryptocurrencies. Prices refresh on the same live cadence (every 45 seconds).</p>
@@ -159,6 +159,5 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- Consent Management -->
 </div>
 
-<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(()=>{});}</script>
 </body>
 </html>
