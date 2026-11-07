@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script src="https://consent.cookiebot.com/uc.js" data-cbid="da29f2f3-29a6-4771-8322-269acbac897f" data-blockingmode="auto" type="text/javascript"></script>
+<script>window.addEventListener("CookiebotOnLoad", function(e){ console.log("CookiebotOnLoad fired"); window._cbApi = (window.Cookiebot && !window.Cookiebot.tagName) ? window.Cookiebot : null; });</script>
+<script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="da29f2f3-29a6-4771-8322-269acbac897f" data-blockingmode="auto" type="text/javascript"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>How to Read Crypto Market Data: A Beginner's Guide — ChainPlus</title>
@@ -216,8 +217,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <a href="contact.html">Contact</a>
         <a href="privacy.html">Privacy</a>
         <a href="cookies.html">Cookie Policy</a>
-        <a href="#" onclick="var cb=window.Cookiebot; if(cb && cb.tagName){cb=null;} if(cb){if(typeof cb.renew==='function'){cb.renew();return false;} if(typeof cb.show==='function'){cb.show();return false;}} alert('Cookiebot not ready. Type: '+typeof window.Cookiebot+(window.Cookiebot&&window.Cookiebot.tagName?' (ELEMENT)':'')); return false;">Cookie Settings</a>
-        <a href="#" onclick="var cb=window.Cookiebot; if(cb && cb.tagName){cb=null;} if(cb){if(typeof cb.renew==='function'){cb.renew();return false;} if(typeof cb.show==='function'){cb.show();return false;}} alert('Cookiebot not ready. Type: '+typeof window.Cookiebot+(window.Cookiebot&&window.Cookiebot.tagName?' (ELEMENT)':'')); return false;">Privacy settings</a>
+        <a href="#" onclick="var cb=window._cbApi; if(!cb){cb=window.Cookiebot; if(cb && cb.tagName) cb=null;} if(cb && typeof cb.renew==='function'){cb.renew();return false;} if(cb && typeof cb.show==='function'){cb.show();return false;} alert('Cookiebot not ready. _cbApi: '+typeof window._cbApi+' Cookiebot: '+typeof window.Cookiebot+(window.Cookiebot&&window.Cookiebot.tagName?' (ELEMENT)':'')); return false;">Cookie Settings</a>
+        <a href="#" onclick="var cb=window._cbApi; if(!cb){cb=window.Cookiebot; if(cb && cb.tagName) cb=null;} if(cb && typeof cb.renew==='function'){cb.renew();return false;} if(cb && typeof cb.show==='function'){cb.show();return false;} alert('Cookiebot not ready. _cbApi: '+typeof window._cbApi+' Cookiebot: '+typeof window.Cookiebot+(window.Cookiebot&&window.Cookiebot.tagName?' (ELEMENT)':'')); return false;">Privacy settings</a>
         <a href="terms.html">Terms</a>
       </div>
       <div class="footer-links" style="margin-top:8px;font-size:12px">
