@@ -232,8 +232,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <a href="contact.html">Contact</a>
         <a href="privacy.html">Privacy</a>
         <a href="cookies.html">Cookie Policy</a>
-        <a href="#" onclick="if(window.Cookiebot)Cookiebot.renew();return false">Cookie Settings</a>
-        <a href="#" onclick="if(window.Cookiebot)window.Cookiebot.show();return false">Privacy settings</a>
+        <a href="#" onclick="if(window.Cookiebot){window.Cookiebot.show();}else{alert('Cookie settings are loading. Please try again in a moment.');}return false">Cookie Settings</a>
+        <a href="#" onclick="if(window.Cookiebot){window.Cookiebot.show();}else{alert('Cookie settings are loading. Please try again in a moment.');}return false">Privacy settings</a>
         <a href="terms.html">Terms</a>
       </div>
       <div class="footer-links" style="margin-top:8px;font-size:12px">
