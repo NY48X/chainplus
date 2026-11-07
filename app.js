@@ -341,7 +341,7 @@ async function fetchRSSFallback(){
     const grid = $('#storiesGrid'); if(!grid) return;
     grid.innerHTML = list.map((a,i)=>{
       return `
-        <article class="story reveal" data-idx="${i}">
+        <article class="story" data-idx="${i}" style="opacity:1;transform:none">
           <span class="story-cat">${esc(decodeEntities(a.category||'general'))}</span>
           <h3 class="story-title">${esc(decodeEntities(a.title))}</h3>
           ${a.description ? `<p class="story-dek">${esc(stripHtml(a.description))}</p>` : ''}
@@ -400,7 +400,7 @@ async function fetchRSSFallback(){
       const urgColor = (page === 'news') ? (classifyUrgency ? (classifyUrgency(a.title, a.description) === 'critical' ? '#ef4444' : classifyUrgency(a.title, a.description) === 'important' ? '#f59e0b' : '#3b82f6') : '') : '';
       const borderStyle = urgColor ? `style="border-left:3px solid ${urgColor}"` : '';
       return `
-        <article class="story${lead} reveal" data-idx="${i}" ${borderStyle}>
+        <article class="story${lead}" data-idx="${i}" ${borderStyle} style="opacity:1;transform:none">
           <span class="story-cat">${esc(decodeEntities(a.category||'general'))}</span>
           <h3 class="story-title">${esc(decodeEntities(a.title))}</h3>
           ${a.description ? `<p class="story-dek">${esc(stripHtml(a.description))}</p>` : ''}
@@ -424,7 +424,7 @@ async function fetchRSSFallback(){
   function renderCompact(){
     const el = $('#compactList'); if(!el) return;
     el.innerHTML = state.articles.slice(0,10).map((a,i)=>`
-      <div class="compact-item reveal" data-idx="${i}">
+      <div class="compact-item" data-idx="${i}" style="opacity:1;transform:none">
         <div class="compact-num">${String(i+1).padStart(2,'0')}</div>
         <div>
           <p class="compact-title">${esc(decodeEntities(a.title))}</p>
