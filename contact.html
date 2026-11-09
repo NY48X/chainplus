@@ -76,13 +76,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <a href="index.html">Home</a>
     <a href="markets.html">Markets</a>
     <a href="opensource.html">Open source</a>
-    <a href="insights.html" class="active">Insights</a>
+    <a href="insights.html">Insights</a>
     <a href="news.html">News</a>
     <a href="topic.html">Topics</a>
     <a href="methodology.html">Methodology</a>
     <a href="about.html">About</a>
       <a href="team.html">Team</a>
-    <a href="contact.html">Contact</a>
+    <a href="contact.html" class="active">Contact</a>
   </nav>
 
 <main id="main">
@@ -90,22 +90,22 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <h1>Contact us</h1>
     <p class="lead">We read every message. Use the form below for questions, corrections, takedown requests or partnership inquiries.</p>
 
-    <form class="form" onsubmit="event.preventDefault(); (async()=>{const f=event.target;const b=f.querySelector('button');b.disabled=true;b.textContent='Sending...';try{const r=await fetch((window.CHAINPLUS_API||localStorage.getItem('cp-api-base')||'https://chainpulse-api.miketembo828.workers.dev')+'/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:f.querySelector('#name').value,email:f.querySelector('#email').value,subject:f.querySelector('#subject').value,message:f.querySelector('#message').value,'cf-turnstile-response':(f.querySelector('input[name="cf-turnstile-response"]')||{}).value||''})});const d=await r.json();if(d.ok){alert('Thanks! Your message has been sent.');f.reset();}else{alert(d.error||'Something went wrong.');}}catch(e){alert('Network error. Try again.');}b.disabled=false;b.textContent='Send message';})();">
+    <form class="form" onsubmit="event.preventDefault(); (async()=>{const f=event.target;const b=f.querySelector('button');b.disabled=true;b.textContent='Sending...';try{const r=await fetch((window.CHAINPLUS_API||localStorage.getItem('cp-api-base')||'https://chainpulse-api.miketembo828.workers.dev')+'/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:f.querySelector('#name').value,email:f.querySelector('#email').value,subject:f.querySelector('#subject').value,message:f.querySelector('#message').value,'cf-turnstile-response':(f.querySelector('input[name="cf-turnstile-response"]')||{}).value||''})});const d=await r.json();if(d.ok){window.__toast('Thanks! Your message has been sent.');f.reset();}else{window.__toast(d.error||'Something went wrong.');}}catch(e){window.__toast('Network error. Try again.');}b.disabled=false;b.textContent='Send message';})();">
       <div>
         <label for="name">Name</label>
-        <input id="name" name="name" type="text" required />
+        <input id="name" name="name" type="text" required autocomplete="name" />
       </div>
       <div>
         <label for="email">Email</label>
-        <input id="email" name="email" type="email" required />
+        <input id="email" name="email" type="email" required autocomplete="email" />
       </div>
       <div>
         <label for="subject">Subject</label>
-        <input id="subject" name="subject" type="text" required />
+        <input id="subject" name="subject" type="text" required autocomplete="off" />
       </div>
       <div>
         <label for="message">Message</label>
-        <textarea id="message" name="message" required></textarea>
+        <textarea id="message" name="message" required autocomplete="off"></textarea>
       </div>
       <div class="cf-turnstile" data-sitekey="0x4AAAAAAF13hunwl49-ZsZt" data-action="contact" style="margin:12px 0"></div>
       <button type="submit">Send message</button>
@@ -113,6 +113,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
     <h2>Other ways to reach us</h2>
     <p>Email: <a href="mailto:support@chainplus.tech" style="color:var(--accent)">support@chainplus.tech</a></p>
+    <p>For common questions, see our <a href="faq.html" style="color:var(--accent)">FAQ</a>. For details on how we source and present content, see our <a href="methodology.html" style="color:var(--accent)">Methodology</a>.</p>
   </div>
   <section class="section" style="padding:0 0 40px">
     <div class="container" style="max-width:720px">
@@ -135,27 +136,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       </details>
     </div>
   </section>
-  <section class="section" style="padding:0 0 40px">
-    <div class="container" style="max-width:720px">
-      <h2 style="font-family:var(--font-display);font-size:22px;margin:0 0 16px">Frequently Asked Questions</h2>
-      <details style="margin-bottom:12px;padding:12px 16px;border:1px solid var(--border);border-radius:8px;background:var(--surface)">
-        <summary style="cursor:pointer;font-weight:600;font-size:14px">How quickly do you respond?</summary>
-        <p style="margin:8px 0 0;font-size:14px;color:var(--text-2);line-height:1.6">We aim to respond to all inquiries within 48 hours. For urgent matters, please include "URGENT" in your subject line.</p>
-      </details>
-      <details style="margin-bottom:12px;padding:12px 16px;border:1px solid var(--border);border-radius:8px;background:var(--surface)">
-        <summary style="cursor:pointer;font-weight:600;font-size:14px">Can I request a feature?</summary>
-        <p style="margin:8px 0 0;font-size:14px;color:var(--text-2);line-height:1.6">Yes. We welcome feature requests and feedback. Please describe the feature you'd like and how it would improve your experience.</p>
-      </details>
-      <details style="margin-bottom:12px;padding:12px 16px;border:1px solid var(--border);border-radius:8px;background:var(--surface)">
-        <summary style="cursor:pointer;font-weight:600;font-size:14px">How do I report a bug?</summary>
-        <p style="margin:8px 0 0;font-size:14px;color:var(--text-2);line-height:1.6">Please describe the issue, the page where it occurred, your browser and device, and any error messages. Screenshots are helpful.</p>
-      </details>
-      <details style="margin-bottom:12px;padding:12px 16px;border:1px solid var(--border);border-radius:8px;background:var(--surface)">
-        <summary style="cursor:pointer;font-weight:600;font-size:14px">Can I submit a news tip?</summary>
-        <p style="margin:8px 0 0;font-size:14px;color:var(--text-2);line-height:1.6">Yes. Send it to support@chainplus.tech with "News Tip" in the subject line. We review all submissions but cannot guarantee coverage.</p>
-      </details>
-    </div>
-  </section>
+
 </main>
 <footer class="footer">
   <div class="container">
@@ -165,37 +146,37 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <p class="footer-desc">Real-time blockchain and cryptocurrency news, market data and sentiment.</p>
       </div>
       <div>
-        <h4>Site</h4>
+        <h3>Site</h3>
         <a href="index.html">Home</a>
         <a href="methodology.html">Methodology</a>
         <a href="about.html">About</a>
       <a href="team.html">Team</a>
       </div>
       <div>
-        <h4>Legal</h4>
+        <h3>Legal</h3>
         <a href="privacy.html">Privacy Policy</a>
         <a href="cookies.html">Cookie Policy</a>
         <a href="javascript:Cookiebot.renew()" id="CookiebotPrivacyTrigger">Cookie Settings</a>
-        <a href="javascript:Cookiebot.renew()">Privacy settings</a>
         <a href="terms.html">Terms of Use</a>
         <a href="contact.html">Contact</a>
         <a href="faq.html">FAQ</a>
       </div>
       <div>
-        <h4>Data</h4>
+        <h3>Data</h3>
         <a href="https://cryptocurrency.cv" target="_blank" rel="noopener">News API</a>
         <a href="https://www.coingecko.com" target="_blank" rel="noopener">CoinGecko</a>
         <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 ChainPlus. Not financial advice.</span>
+      <span>© 2026 ChainPlus. All rights reserved. Not financial advice.</span>
     </div>
   </div>
 </footer>
 
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script>if(!window.__toast){window.__toast=function(m){var t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.className='toast';t.setAttribute('role','status');t.setAttribute('aria-live','polite');document.body.appendChild(t);}t.textContent=m;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(function(){t.classList.remove('show')},4000);}};</script>
 <!-- Consent Management -->
-</div>
 
 </body>
 </html>

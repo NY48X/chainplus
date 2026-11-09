@@ -33,8 +33,9 @@
     "datePublished": "2026-09-18",
     "dateModified": "2026-09-18",
     "author": {
-      "@type": "Organization",
-      "name": "Mike Tembo"
+      "@type": "Person",
+      "name": "Mike Tembo",
+      "url": "https://chainplus.tech/team.html"
     },
     "publisher": {
       "@type": "Organization",
@@ -120,13 +121,28 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <article>
         <h1>Layer 2 Scaling: How Ethereum Plans to Scale</h1>
         <p class="meta" style="color:var(--text-3);font-size:14px;margin-bottom:24px">By <a href="team.html" style="color:var(--accent)">Mike Tembo</a> · September 18, 2026 · Explainer</p>
+    <nav class="toc" aria-label="Table of contents">
+      <p class="toc-heading" style="font-weight:600;margin:0 0 8px">Contents</p>
+      <ul style="margin:0;padding-left:20px;line-height:1.8">
+      <li><a href="#what-is-layer-2">What Is Layer 2?</a></li>
+      <li><a href="#types-of-layer-2">Types of Layer 2</a></li>
+      <li><a href="#the-fragmentation-problem">The Fragmentation Problem</a></li>
+      <li><a href="#how-to-use-layer-2">How to Use Layer 2</a></li>
+      <li><a href="#the-future">The Future</a></li>
+      <li><a href="#layer-2-security">Layer 2 Security</a></li>
+      <li><a href="#layer-2-economics">Layer 2 Economics</a></li>
+      <li><a href="#frequently-asked-questions">Frequently Asked Questions</a></li>
+      <li><a href="#related-articles">Related Articles</a></li>
+      </ul>
+    </nav>
+
         <p>Ethereum is the most popular smart contract platform, but it has a scaling problem. The base layer (Layer 1) processes only 15-30 transactions per second. During peak demand, gas fees can exceed $50 per transaction. Layer 2 (L2) networks are the solution.</p>
 
-<h2>What Is Layer 2?</h2>
+<h2 id="what-is-layer-2">What Is Layer 2?</h2>
 <p>Layer 2 networks are separate blockchains built on top of Ethereum. They process transactions off-chain (on their own network) and post compressed transaction data back to Ethereum for security. This allows them to process thousands of transactions per second at a fraction of the cost.</p>
 <p>Think of it like a highway: Ethereum (Layer 1) is the main road with limited capacity. Layer 2 networks are express lanes that handle most traffic, only merging back to the main road periodically.</p>
 
-<h2>Types of Layer 2</h2>
+<h2 id="types-of-layer-2">Types of Layer 2</h2>
 <h3>Optimistic Rollups (Arbitrum, Optimism, Base)</h3>
 <p>Optimistic rollups assume all transactions are valid by default. They post transaction data to Ethereum and allow a 7-day challenge period during which anyone can submit a fraud proof if they detect an invalid transaction.</p>
 <p><strong>Pros:</strong> Easier to build, compatible with existing Ethereum tools, lower fees.</p>
@@ -137,11 +153,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <p><strong>Pros:</strong> Instant finality, stronger security guarantees, no withdrawal delay.</p>
 <p><strong>Cons:</strong> More complex to build, limited smart contract compatibility (improving rapidly).</p>
 
-<h2>The Fragmentation Problem</h2>
+<h2 id="the-fragmentation-problem">The Fragmentation Problem</h2>
 <p>The biggest challenge with Layer 2 is fragmentation. Each L2 has its own liquidity, DeFi ecosystem, and user base. Moving assets between L2s requires bridges, which have historically been vulnerable to hacks (over $2 billion lost in bridge exploits).</p>
 <p>Projects like the Superchain (Optimism's vision) and AggLayer (Polygon's approach) aim to connect L2s into a unified ecosystem. If successful, users won't need to know which chain they're on.</p>
 
-<h2>How to Use Layer 2</h2>
+<h2 id="how-to-use-layer-2">How to Use Layer 2</h2>
 <p>Most major wallets (MetaMask, Rainbow, Coinbase Wallet) support Layer 2 networks. To use them:</p>
 <ol>
 <li>Add the L2 network to your wallet (most wallets have one-click setup).</li>
@@ -151,10 +167,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </ol>
 <p>Fees on Layer 2 are typically 10-100x cheaper than mainnet. A swap that costs $15 on Ethereum might cost $0.15 on Arbitrum.</p>
 
-<h2>The Future</h2>
+<h2 id="the-future">The Future</h2>
 <p>Layer 2 scaling is Ethereum's bet for the future. The goal is to process millions of transactions per second across a network of interconnected L2s, all secured by Ethereum's base layer. Whether this vision succeeds depends on solving the fragmentation problem and improving the user experience of moving between chains.</p>
       
-<h2>Layer 2 Security</h2>
+<h2 id="layer-2-security">Layer 2 Security</h2>
 <p>Layer 2 networks inherit security from Ethereum, but the security model varies:</p>
 <ul>
 <li><strong>Optimistic rollups:</strong> Security depends on at least one honest party submitting fraud proofs. If no one challenges invalid transactions, they're accepted.</li>
@@ -162,11 +178,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <li><strong>Bridges:</strong> The bridge between L1 and L2 is often the weakest point. Bridge hacks have resulted in billions in losses.</li>
 </ul>
 
-<h2>Layer 2 Economics</h2>
+<h2 id="layer-2-economics">Layer 2 Economics</h2>
 <p>Layer 2 networks charge fees for transactions. These fees are typically much lower than L1 fees but still generate revenue for the L2 operator. Some L2s (like Base, operated by Coinbase) are run by centralized entities, raising questions about decentralization.</p>
 <p>The L2 token (if any) may capture value from network usage. Arbitrum's ARB token and Optimism's OP token are examples. But the value accrual mechanism is often unclear, making L2 tokens speculative investments.</p>
 
-<h2>Frequently Asked Questions</h2>
+<h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
 <h3>Which Layer 2 should I use?</h3>
 <p>Arbitrum has the most DeFi activity and liquidity. Optimism (and Base, built on Optimism's stack) has strong ecosystem support. zkSync offers the best security guarantees. For beginners, Base (Coinbase's L2) offers the simplest onboarding.</p>
 <h3>Are Layer 2 networks safe?</h3>
@@ -176,7 +192,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <h3>Will Layer 2 make Ethereum obsolete?</h3>
 <p>No. Layer 2 networks depend on Ethereum for security. Ethereum is the settlement layer; L2s are the execution layer. Both are needed. Ethereum's value proposition strengthens as L2 adoption grows.</p>
 
-<h2>Related Articles</h2>
+<h2 id="related-articles">Related Articles</h2>
 <ul style="padding-left:20px;line-height:2">
   <li><a href="understanding-ethereum.html" style="color:var(--accent)">Understanding Ethereum</a></li>
   <li><a href="defi-explained.html" style="color:var(--accent)">DeFi Explained</a></li>
@@ -214,7 +230,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <a href="https://www.coingecko.com" target="_blank" rel="noopener">CoinGecko</a>
         <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
       </div>
-      <p class="footer-copy">© 2026 ChainPlus. All rights reserved.</p>
+      <p class="footer-copy">© 2026 ChainPlus. All rights reserved. Not financial advice.</p>
     </div>
   </footer>
 <!-- Consent Management -->

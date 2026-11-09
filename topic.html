@@ -29,43 +29,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=optional" rel="stylesheet" />
 <link rel="preload" href="styles.css" as="style" />
 <link rel="stylesheet" href="styles.css" />
-<style>
-  .rising-hero { text-align: center; padding: 40px 0 24px; }
-  .rising-hero h1 { font-family: var(--font-display); font-size: 36px; margin: 0 0 8px; background: linear-gradient(135deg, #00e5a0, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .rising-hero p { color: var(--text-2); font-size: 16px; max-width: 600px; margin: 0 auto; }
-  .pulse-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 24px 0; }
-  .pulse-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; position: relative; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
-  .pulse-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
-  .pulse-card .rank { position: absolute; top: 12px; right: 16px; font-size: 28px; font-weight: 800; opacity: 0.15; font-family: var(--font-display); }
-  .pulse-card .topic-name { font-family: var(--font-display); font-size: 20px; font-weight: 700; margin: 0 0 4px; }
-  .pulse-card .topic-meta { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--text-2); }
-  .pulse-card .mention-bar { height: 4px; background: var(--border); border-radius: 2px; margin-top: 12px; overflow: hidden; }
-  .pulse-card .mention-bar .fill { height: 100%; border-radius: 2px; transition: width 0.5s; }
-  .pulse-card.bullish { border-left: 3px solid #22c55e; }
-  .pulse-card.bearish { border-left: 3px solid #ef4444; }
-  .pulse-card.neutral { border-left: 3px solid #6b7280; }
-  .pulse-card.bullish .fill { background: #22c55e; }
-  .pulse-card.bearish .fill { background: #ef4444; }
-  .pulse-card.neutral .fill { background: #6b7280; }
-  .momentum-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; }
-  .momentum-badge.rising { background: rgba(34,197,94,0.15); color: #22c55e; }
-  .momentum-badge.hot { background: rgba(239,68,68,0.15); color: #ef4444; }
-  .momentum-badge.stable { background: rgba(107,114,128,0.15); color: #9ca3af; }
-  .sector-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 16px 0; }
-  .sector-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
-  .sector-card h4 { margin: 0 0 8px; font-size: 14px; }
-  .sector-card .topic-chips { display: flex; flex-wrap: wrap; gap: 6px; }
-  .sector-card .chip { font-size: 12px; padding: 4px 10px; border-radius: 12px; background: var(--border); color: var(--text-2); cursor: pointer; transition: background 0.2s; }
-  .sector-card .chip:hover { background: var(--accent); color: #000; }
-  .topic-spotlight { background: linear-gradient(135deg, rgba(0,229,160,0.1), rgba(59,130,246,0.1)); border: 1px solid var(--border); border-radius: 16px; padding: 32px; margin: 24px 0; text-align: center; }
-  .topic-spotlight h2 { font-family: var(--font-display); font-size: 28px; margin: 0 0 8px; }
-  .topic-spotlight .spotlight-stat { font-size: 48px; font-weight: 800; font-family: var(--font-display); color: var(--accent); }
-  .topic-spotlight .spotlight-label { color: var(--text-2); font-size: 14px; }
-  .emerging-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
-  .emerging-tag { padding: 6px 14px; border-radius: 20px; font-size: 13px; background: var(--surface); border: 1px solid var(--border); cursor: pointer; transition: all 0.2s; }
-  .emerging-tag:hover { border-color: var(--accent); color: var(--accent); }
-  .emerging-tag .new-badge { font-size: 9px; background: #ef4444; color: #fff; padding: 1px 5px; border-radius: 3px; margin-left: 6px; font-weight: 700; }
-</style>
+
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <link rel="icon" type="image/png" sizes="48x48" href="favicon.png" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
@@ -106,7 +70,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <a href="insights.html">Insights</a>
       <a href="research.html">Research</a>
       <a href="news.html">News</a>
-        <a href="topic.html">Topics</a>
+        <a href="topic.html" class="active">Topics</a>
       <a href="methodology.html">Methodology</a>
       <a href="about.html">About</a>
       <a href="team.html">Team</a>
@@ -150,9 +114,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <a href="index.html">Home</a>
     <a href="markets.html">Markets</a>
     <a href="opensource.html">Open source</a>
-    <a href="insights.html" class="active">Insights</a>
+    <a href="insights.html">Insights</a>
+    <a href="research.html">Research</a>
     <a href="news.html">News</a>
-    <a href="topic.html">Topics</a>
+    <a href="topic.html" class="active">Topics</a>
     <a href="methodology.html">Methodology</a>
     <a href="about.html">About</a>
       <a href="team.html">Team</a>
@@ -260,7 +225,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <h3 style="font-family:var(--font-display);font-size:24px;margin:0 0 8px">Stay in the loop</h3>
       <p class="muted small" style="margin:0 0 16px">Get the top crypto headlines in your inbox. No spam, unsubscribe anytime.</p>
       <form class="form" style="max-width:420px;margin:0 auto" onsubmit="event.preventDefault(); (async()=>{const f=event.target;const i=f.querySelector('input[type=email]');const b=f.querySelector('button');b.disabled=true;b.textContent='...';try{const r=await fetch((window.CHAINPLUS_API||localStorage.getItem('cp-api-base')||'https://chainpulse-api.miketembo828.workers.dev')+'/api/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:i.value,'cf-turnstile-response':(f.querySelector('input[name="cf-turnstile-response"]')||{}).value||''})});const d=await r.json();if(d.ok){window.__toast(d.message==='already subscribed'?'You\\'re already subscribed!':'Thanks! You\\'re subscribed.');i.value='';}else{window.__toast(d.error||'Something went wrong.');}}catch(e){window.__toast('Network error. Try again.');}b.disabled=false;b.textContent='Subscribe';})();">
-        <input type="email" placeholder="you@example.com" required />
+        <input type="email" placeholder="you@example.com" required aria-label="Email address" />
         <div class="cf-turnstile" data-sitekey="0x4AAAAAAF13hunwl49-ZsZt" data-action="subscribe" style="margin:12px 0"></div>
       <button type="submit">Subscribe</button>
       </form>
@@ -291,7 +256,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <p class="footer-desc">Real-time blockchain and cryptocurrency news and sentiment — aggregated from 300+ verified sources and refreshed live every 45 seconds.</p>
       </div>
       <div>
-        <h4>Site</h4>
+        <h3>Site</h3>
         <a href="index.html">Home</a>
         <a href="markets.html">Markets</a>
         <a href="methodology.html">Methodology</a>
@@ -299,31 +264,29 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <a href="team.html">Team</a>
       </div>
       <div>
-        <h4>Legal</h4>
+        <h3>Legal</h3>
         <a href="privacy.html">Privacy Policy</a>
         <a href="cookies.html">Cookie Policy</a>
         <a href="javascript:Cookiebot.renew()" id="CookiebotPrivacyTrigger">Cookie Settings</a>
-        <a href="javascript:Cookiebot.renew()">Privacy settings</a>
         <a href="terms.html">Terms of Use</a>
         <a href="contact.html">Contact</a>
         <a href="faq.html">FAQ</a>
       </div>
       <div>
-        <h4>Data</h4>
+        <h3>Data</h3>
         <a href="https://cryptocurrency.cv" target="_blank" rel="noopener">News API</a>
         <a href="https://www.coingecko.com" target="_blank" rel="noopener">CoinGecko</a>
         <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 ChainPlus. Not financial advice.</span>
+      <span>© 2026 ChainPlus. All rights reserved. Not financial advice.</span>
       <span>Updated every 45 seconds · 300+ sources</span>
     </div>
   </div>
 </footer>
 
 <!-- Consent Management -->
-</div>
 
 <script src="app.js" defer></script>
 </body>

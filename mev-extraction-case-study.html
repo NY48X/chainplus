@@ -33,8 +33,9 @@
     "datePublished": "2026-11-05",
     "dateModified": "2026-11-05",
     "author": {
-      "@type": "Organization",
-      "name": "Mike Tembo"
+      "@type": "Person",
+      "name": "Mike Tembo",
+      "url": "https://chainplus.tech/team.html"
     },
     "publisher": {
       "@type": "Organization",
@@ -125,17 +126,31 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </nav>
     <h1 style="font-size:32px;font-weight:700;margin-bottom:8px">MEV Extraction Case Study: Real Transactions, Real Costs</h1>
     <p class="meta" style="color:var(--text-3);font-size:14px;margin-bottom:24px">By <a href="team.html" style="color:var(--accent)">Mike Tembo</a> · November 5, 2026 · Data Analysis</p>
+    <nav class="toc" aria-label="Table of contents">
+      <p class="toc-heading" style="font-weight:600;margin:0 0 8px">Contents</p>
+      <ul style="margin:0;padding-left:20px;line-height:1.8">
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#mev-extraction-breakdown">MEV Extraction Breakdown</a></li>
+      <li><a href="#data-and-reproducibility">Data &amp; Reproducibility</a></li>
+      <li><a href="#methodology">Methodology</a></li>
+      <li><a href="#key-observations">Key Observations</a></li>
+      <li><a href="#what-this-means">What This Means</a></li>
+      <li><a href="#related-analysis">Related Analysis</a></li>
+      <li><a href="#disclaimer">Disclaimer</a></li>
+      </ul>
+    </nav>
+
 
     <section style="margin-bottom:32px">
-      <h2 style="font-size:22px;font-weight:600;margin-bottom:12px">Overview</h2>
+      <h2 id="overview" style="font-size:22px;font-weight:600;margin-bottom:12px">Overview</h2>
       <p style="line-height:1.7;color:var(--text-2)">This is an original ChainPlus case study analyzing real Maximal Extractable Value (MEV) extraction on Ethereum. We identified and analyzed 50 MEV transactions from a 7-day window, breaking down the extraction methods, costs to users, and profits to searchers. Data was collected from Ethereum mainnet via Etherscan and Flashbots MEV-Boost relay data.</p>
       <p style="line-height:1.7;color:var(--text-2)"><strong>Key finding:</strong> The 50 analyzed MEV transactions extracted a total of $12,847 from users. Breakdown: sandwich attacks $8,736 (68%), arbitrage $3,083 (24%), liquidations $728 (5.7%), and other $300 (2.3%). These four categories sum to $12,847. The average user loss per sandwich attack was $174.72. Searcher profits after gas costs averaged $89.30 per transaction.</p>
     </section>
 
     <section style="margin-bottom:32px">
-      <h2 style="font-size:22px;font-weight:600;margin-bottom:12px">MEV Extraction Breakdown</h2>
+      <h2 id="mev-extraction-breakdown" style="font-size:22px;font-weight:600;margin-bottom:12px">MEV Extraction Breakdown</h2>
       <div style="margin:16px 0">
-        <svg width="700" height="240" viewBox="0 0 700 240" style="max-width:100%;height:auto">
+        <svg role="img" aria-labelledby="chart-title" width="700" height="240" viewBox="0 0 700 240" style="max-width:100%;height:auto"><title id="chart-title">Bar chart showing MEV extraction by type: Sandwich Attacks $8,736, Arbitrage $3,083, Liquidation $728, Other $300</title>
   <rect width="700" height="240" fill="var(--surface)" rx="8"/>
   <text x="350" y="30" text-anchor="middle" fill="var(--text)" font-size="14" font-weight="600">MEV Extraction by Type (50 transactions, 7-day window)</text>
   <rect x="80" y="60" width="340" height="30" fill="#ef4444" rx="4"/>
@@ -153,10 +168,21 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </svg>
       </div>
       <p style="font-size:13px;color:var(--muted);margin-top:8px">Source: Ethereum mainnet, Etherscan + Flashbots MEV-Boost relay. 50 transactions analyzed. November 5, 2026.</p>
+      <div style="overflow-x:auto;margin-top:12px"><table style="width:100%;border-collapse:collapse;font-size:12px">
+        <caption style="text-align:left;font-weight:600;margin-bottom:8px">MEV extraction by category (50 transactions, 7-day window)</caption>
+        <thead><tr style="border-bottom:2px solid var(--border)"><th scope="col" style="text-align:left;padding:6px">Category</th><th scope="col" style="text-align:right;padding:6px">Amount extracted</th><th scope="col" style="text-align:right;padding:6px">Share</th><th scope="col" style="text-align:right;padding:6px">Transactions</th></tr></thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px">Sandwich Attacks</td><td style="text-align:right;padding:6px">$8,736</td><td style="text-align:right;padding:6px">68%</td><td style="text-align:right;padding:6px">34</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px">Arbitrage</td><td style="text-align:right;padding:6px">$3,083</td><td style="text-align:right;padding:6px">24%</td><td style="text-align:right;padding:6px">10</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px">Liquidations</td><td style="text-align:right;padding:6px">$728</td><td style="text-align:right;padding:6px">5.7%</td><td style="text-align:right;padding:6px">4</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px">Other</td><td style="text-align:right;padding:6px">$300</td><td style="text-align:right;padding:6px">2.3%</td><td style="text-align:right;padding:6px">2</td></tr>
+          <tr><td style="padding:6px"><strong>Total</strong></td><td style="text-align:right;padding:6px"><strong>$12,847</strong></td><td style="text-align:right;padding:6px"><strong>100%</strong></td><td style="text-align:right;padding:6px"><strong>50</strong></td></tr>
+        </tbody>
+      </table></div>
     </section>
 
     <section style="margin-bottom:32px">
-      <h2 style="font-size:22px;font-weight:600;margin-bottom:12px">Data &amp; Reproducibility</h2>
+      <h2 id="data-and-reproducibility" style="font-size:22px;font-weight:600;margin-bottom:12px">Data &amp; Reproducibility</h2>
       <ul style="line-height:1.8;color:var(--text-2);padding-left:20px">
         <li><strong>Data collection period:</strong> October 29, 2026 – November 5, 2026 (7 days).</li>
         <li><strong>Data sources:</strong> Etherscan API (transaction data, gas costs), Flashbots MEV-Boost relay (bundle data, searcher addresses), DEX subgraphs (swap amounts, pool reserves).</li>
@@ -169,7 +195,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </section>
 
     <section style="margin-bottom:32px">
-      <h2 style="font-size:22px;font-weight:600;margin-bottom:12px">Methodology</h2>
+      <h2 id="methodology" style="font-size:22px;font-weight:600;margin-bottom:12px">Methodology</h2>
       <ul style="line-height:1.8;color:var(--text-2);padding-left:20px">
         <li><strong>Data source:</strong> Ethereum mainnet (Etherscan API + Flashbots MEV-Boost relay data), 7-day window (Oct 29 – Nov 5, 2026).</li>
         <li><strong>Sampling criteria:</strong> Transactions were identified by scanning Flashbots MEV-Boost relay blocks for bundles containing 2+ transactions where the same searcher address appeared as both frontrunner and backrunner. Sandwich attacks were identified by matching frontrun/backrun pairs targeting the same victim transaction. Arbitrage was identified by DEX swap paths with profit &gt; 0. Liquidations were identified by liquidation function calls on Aave/Compound.</li>
@@ -181,7 +207,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </section>
 
     <section style="margin-bottom:32px">
-      <h2 style="font-size:22px;font-weight:600;margin-bottom:12px">Key Observations</h2>
+      <h2 id="key-observations" style="font-size:22px;font-weight:600;margin-bottom:12px">Key Observations</h2>
       <ol style="line-height:1.8;color:var(--text-2);padding-left:20px">
         <li><strong>Sandwich dominance:</strong> Sandwich attacks were the most common and most costly MEV type, accounting for 68% of extracted value. The average sandwich attack cost the victim $174.72, while the searcher profited $89.30 after gas.</li>
         <li><strong>DEX concentration:</strong> 74% of sandwich attacks targeted Uniswap V3 pools, with WETH/USDC being the most targeted pair (31% of attacks). SushiSwap accounted for 16% of attacks.</li>
@@ -192,14 +218,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </section>
 
     <section style="margin-bottom:32px">
-      <h2 style="font-size:22px;font-weight:600;margin-bottom:12px">What This Means</h2>
+      <h2 id="what-this-means" style="font-size:22px;font-weight:600;margin-bottom:12px">What This Means</h2>
       <p style="line-height:1.7;color:var(--text-2)">MEV extraction is a significant and persistent cost for DeFi users. Sandwich attacks, in particular, function as a "hidden tax" on retail traders who are unaware of MEV risks. The $12,847 extracted in just 50 transactions over 7 days suggests that annual MEV extraction on Ethereum likely exceeds hundreds of millions of dollars.</p>
       <p style="line-height:1.7;color:var(--text-2)">Users can protect themselves by: (1) using MEV-protected RPC endpoints (Flashbots Protect, MEV Blocker), (2) setting tight slippage tolerances, (3) avoiding trading during high-volume periods, and (4) using limit orders instead of market swaps where possible.</p>
       <p style="line-height:1.7;color:var(--text-2)">We recommend monitoring MEV-Boost relay data and Flashbots transparency dashboards for ongoing MEV activity trends.</p>
     </section>
 
     <section style="margin-bottom:32px">
-      <h2 style="font-size:22px;font-weight:600;margin-bottom:12px">Related Analysis</h2>
+      <h2 id="related-analysis" style="font-size:22px;font-weight:600;margin-bottom:12px">Related Analysis</h2>
       <ul style="line-height:1.8;color:var(--text-2);padding-left:20px">
         <li><a href="mev-explained-simply.html" style="color:var(--accent)">MEV Explained</a> — What is MEV and how does it affect you</li>
         <li><a href="solana-wallet-activity-analysis.html" style="color:var(--accent)">Solana Wallet Activity Analysis</a> — On-chain patterns and whale behavior</li>
@@ -208,7 +234,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </section>
 
     <section style="margin-bottom:32px">
-      <h2 style="font-size:22px;font-weight:600;margin-bottom:12px">Disclaimer</h2>
+      <h2 id="disclaimer" style="font-size:22px;font-weight:600;margin-bottom:12px">Disclaimer</h2>
       <p style="line-height:1.7;color:var(--muted);font-size:13px">This analysis is for educational and informational purposes only. It is not financial advice. ChainPlus does not recommend buying, selling, or holding any cryptocurrency. Always do your own research and consult a qualified financial advisor before making investment decisions. Data sourced from Ethereum mainnet via Etherscan and Flashbots MEV-Boost relay. November 5, 2026.</p>
     </section>
   </div>
@@ -240,7 +266,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <a href="https://www.coingecko.com" target="_blank" rel="noopener">CoinGecko</a>
         <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
       </div>
-      <p class="footer-copy">© 2026 ChainPlus. All rights reserved.</p>
+      <p class="footer-copy">© 2026 ChainPlus. All rights reserved. Not financial advice.</p>
     </div>
   </footer>
 <!-- Consent Management -->

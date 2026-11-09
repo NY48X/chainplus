@@ -4,8 +4,8 @@ function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replac
 function decodeEntities(s){
   if(!s) return '';
   // Decode numeric entities (&#39; &#x27;)
-  s = s.replace(/&#(\d+);/g, function(_, n){ return String.fromCharCode(parseInt(n,10)); });
-  s = s.replace(/&#x([0-9a-fA-F]+);/g, function(_, n){ return String.fromCharCode(parseInt(n,16)); });
+  s = s.replace(/&#(\d+);/g, function(_, n){ try{ return String.fromCodePoint(parseInt(n,10)); }catch(e){ return _; } });
+  s = s.replace(/&#x([0-9a-fA-F]+);/g, function(_, n){ try{ return String.fromCodePoint(parseInt(n,16)); }catch(e){ return _; } });
   // Decode named entities
   const entities = {'amp':'&','lt':'<','gt':'>','quot':'"','apos':"'",'nbsp':' ','mdash':'—','ndash':'–','hellip':'…','rsquo':'’','lsquo':'‘','rdquo':'”','ldquo':'“','bull':'•','copy':'©','reg':'®','trade':'™'};
   s = s.replace(/&([a-zA-Z]+);/g, function(m, name){ return entities[name.toLowerCase()] !== undefined ? entities[name.toLowerCase()] : m; });
@@ -16,6 +16,8 @@ async function cacheGet(k){try{if(!globalThis.SUBSCRIBERS)return null;const v=aw
 async function cachePut(k,d,ttl){try{if(!globalThis.SUBSCRIBERS)return;await globalThis.SUBSCRIBERS.put('cache:'+k,JSON.stringify(d),{expirationTtl:ttl||60});}catch(e){}}
 function cat(title,desc){const t=((title||'')+' '+(desc||'')).toLowerCase();if(/bitcoin|btc/.test(t))return'bitcoin';if(/ethereum|eth\b|ether/.test(t))return'ethereum';if(/solana|sol\b/.test(t))return'solana';if(/defi|dex|yield|liquidity|amm|staking/.test(t))return'defi';if(/nft|tokeniz/.test(t))return'nft';if(/regulat|sec|cftc|law|legal|court|sue|ban|policy/.test(t))return'regulation';if(/market|price|surge|rally|crash|etf|stock|trade/.test(t))return'markets';return'general';}
 function tag(xml,t){const m=xml.match(new RegExp('<'+t+'[^>]*>([\\s\\S]*?)</'+t+'>','i'));return m?m[1].replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g,'$1').trim():'';}
+function tagAttr(xml,t,attr){const m=xml.match(new RegExp('<'+t+'[^>]*\\b'+attr+'="([^"]*)"','i'));return m?m[1].trim():'';}
+function atomLink(xml){const alt=xml.match(/<link[^>]*rel=["']alternate["'][^>]*href=["']([^"']+)["']/i)||xml.match(/<link[^>]*href=["']([^"']+)["'][^>]*rel=["']alternate["']/i);if(alt)return alt[1].trim();return tagAttr(xml,'link','href');}
 async function rss(){
   const o=[],seen=new Set();
   await Promise.all(F.map(async function(u){
@@ -25,9 +27,9 @@ async function rss(){
       const x=await r.text();
       const channelTitleMatch=x.match(/<channel>[\s\S]*?<title>([\s\S]*?)<\/title>/i);
       const channelTitle=channelTitleMatch?decodeEntities(channelTitleMatch[1].trim()):'';
-      const items=x.match(/<item[\s\S]*?<\/item>/gi)||[];
+      const items=x.match(/<(?:item|entry)[\s\S]*?<\/(?:item|entry)>/gi)||[];
       items.forEach(function(it){
-        const t=decodeEntities(tag(it,'title')),l=tag(it,'link')||tag(it,'guid'),rawDesc=decodeEntities(tag(it,'description')||tag(it,'content:encoded')),p=tag(it,'pubDate')||tag(it,'published');
+        const t=decodeEntities(tag(it,'title')),l=tag(it,'link')||tag(it,'guid')||atomLink(it),rawDesc=decodeEntities(tag(it,'description')||tag(it,'content:encoded')||tag(it,'summary')||tag(it,'content')),p=tag(it,'pubDate')||tag(it,'published')||tag(it,'updated');
         if(!t||!l||seen.has(l))return;seen.add(l);
         // Clean description: strip HTML, remove repeated title/source/publisher, collapse whitespace
         let desc=rawDesc.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
@@ -166,6 +168,7 @@ function isDisposable(domain){
   return false;
 }
 function clamp(v,lo,hi,d){v=parseInt(v,10);if(isNaN(v))v=d;return Math.max(lo,Math.min(hi,v));}
+function bodyTooLarge(req){const cl=req.headers.get('Content-Length');return cl!==null&&parseInt(cl,10)>10240;}
 async function hasMX(domain){
   try{
     const r=await fetch('https://cloudflare-dns.com/dns-query?name='+encodeURIComponent(domain)+'&type=MX',{headers:{'Accept':'application/dns-json'}});
@@ -175,16 +178,19 @@ async function hasMX(domain){
   }catch(e){return true;}
 }
 async function rateLimit(key,max,windowSec){
-  if(!globalThis.SUBSCRIBERS)return true;
+  // NOTE: KV get/put is not atomic, so concurrent requests can race each other and both pass under the limit.
+  // Fail closed when KV is unavailable/errors: return false so callers reject the request (trading availability for security, preventing a rate-limit bypass while KV is down).
+  if(!globalThis.SUBSCRIBERS)return false;
   const k='rl:'+key;
-  const raw=await globalThis.SUBSCRIBERS.get(k);
+  let raw;
+  try{raw=await globalThis.SUBSCRIBERS.get(k);}catch(e){return false;}
   const now=Date.now();
   let data;
   try{data=raw?JSON.parse(raw):null;}catch(e){data=null;}
   if(!data||now>data.reset){data={count:0,reset:now+windowSec*1000};}
   if(data.count>=max)return false;
   data.count++;
-  try{await globalThis.SUBSCRIBERS.put(k,JSON.stringify(data),{expirationTtl:windowSec+60});}catch(e){}
+  try{await globalThis.SUBSCRIBERS.put(k,JSON.stringify(data),{expirationTtl:windowSec+60});}catch(e){return false;}
   return true;
 }
 
@@ -228,6 +234,7 @@ async function handle(req, env){
       try{
         const ip=req.headers.get('CF-Connecting-IP')||'unknown';
         if(!(await rateLimit('contact:'+ip,5,300)))return j({error:'too many requests, try again later'},429,true);
+        if(bodyTooLarge(req))return j({error:'request too large'},413,true);
         const body=await req.json();
         const token=(body['cf-turnstile-response']||'').trim();
         const allowedHosts=(globalThis.TURNSTILE_HOSTNAMES||'chainplus.tech').split(',').map(function(h){return h.trim();}).filter(Boolean);
@@ -253,12 +260,13 @@ async function handle(req, env){
         });
         if(!res.ok)return j({error:'failed to send message'},502,true);
         return j({ok:true,message:'message sent'},200,true);
-      }catch(e){return j({error:e.message||'contact failed'},500,true);}
+      }catch(e){console.error('Contact handler error:', e && e.message);return j({error:'contact failed'},500,true);}
     }
     if(p==='/api/subscribe' && req.method==='POST'){
       try{
         const ip=req.headers.get('CF-Connecting-IP')||'unknown';
         if(!(await rateLimit('subscribe:'+ip,10,300)))return j({error:'too many requests, try again later'},429,true);
+        if(bodyTooLarge(req))return j({error:'request too large'},413,true);
         const body=await req.json();
         const token=(body['cf-turnstile-response']||'').trim();
         const allowedHosts=(globalThis.TURNSTILE_HOSTNAMES||'chainplus.tech').split(',').map(function(h){return h.trim();}).filter(Boolean);
@@ -293,20 +301,21 @@ async function handle(req, env){
           }catch(e){ console.error('Resend welcome email failed:', e && e.message); }
         }
         return j({ok:true,message:'subscribed'},200,true);
-      }catch(e){return j({error:e.message||'subscribe failed'},500,true);}
+      }catch(e){console.error('Subscribe handler error:', e && e.message);return j({error:'subscribe failed'},500,true);}
     }
-    if(p==='/api/unsubscribe' && (req.method==='POST'||req.method==='GET')){
+    if(p==='/api/unsubscribe'){
+      if(req.method!=='POST')return j({error:'method not allowed'},405,true);
       try{
-        let email='';
-        if(req.method==='POST'){const body=await req.json();email=(body.email||'').trim().toLowerCase();}
-        else{email=(u.searchParams.get('email')||'').trim().toLowerCase();}
+        if(bodyTooLarge(req))return j({error:'request too large'},413,true);
+        const body=await req.json();
+        const email=(body.email||'').trim().toLowerCase();
         if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return j({error:'invalid email'},400,true);
         if(globalThis.SUBSCRIBERS){
           const existing=await globalThis.SUBSCRIBERS.get(email);
           if(existing){await globalThis.SUBSCRIBERS.delete(email);}
         }
         return j({ok:true,message:'unsubscribed'},200,true);
-      }catch(e){return j({error:e.message||'unsubscribe failed'},500,true);}
+      }catch(e){console.error('Unsubscribe handler error:', e && e.message);return j({error:'unsubscribe failed'},500,true);}
     }
     if(p==='/api/news'||p==='/api/news/'){
       const lim=clamp(u.searchParams.get('limit'),1,100,20);
@@ -346,7 +355,7 @@ async function handle(req, env){
       return j({articles:f,totalCount:f.length},200,false,60);
     }
     return j({error:'not found'},404);
-  }catch(e){return j({error:e.message||'internal error'},500);}
+  }catch(e){console.error('Unhandled handler error:', e && e.message);return j({error:'internal error'},500);}
 }
 // ES module format (wrangler deploy)
 export default { async fetch(request, env, ctx) { return handle(request, env); } };

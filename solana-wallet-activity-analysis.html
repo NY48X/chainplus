@@ -33,8 +33,9 @@
     "datePublished": "2026-11-05",
     "dateModified": "2026-11-05",
     "author": {
-      "@type": "Organization",
-      "name": "Mike Tembo"
+      "@type": "Person",
+      "name": "Mike Tembo",
+      "url": "https://chainplus.tech/team.html"
     },
     "publisher": {
       "@type": "Organization",
@@ -125,17 +126,31 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </nav>
     <h1 style="font-size:32px;font-weight:700;margin-bottom:8px">Solana Wallet Activity Analysis: On-Chain Patterns and What They Reveal</h1>
     <p class="meta" style="color:var(--text-3);font-size:14px;margin-bottom:24px">By <a href="team.html" style="color:var(--accent)">Mike Tembo</a> · November 5, 2026 · Data Analysis</p>
+    <nav class="toc" aria-label="Table of contents">
+      <p class="toc-heading" style="font-weight:600;margin:0 0 8px">Contents</p>
+      <ul style="margin:0;padding-left:20px;line-height:1.8">
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#wallet-activity-distribution">Wallet Activity Distribution</a></li>
+      <li><a href="#data-and-reproducibility">Data &amp; Reproducibility</a></li>
+      <li><a href="#methodology">Methodology</a></li>
+      <li><a href="#key-observations">Key Observations</a></li>
+      <li><a href="#what-this-means">What This Means</a></li>
+      <li><a href="#related-analysis">Related Analysis</a></li>
+      <li><a href="#disclaimer">Disclaimer</a></li>
+      </ul>
+    </nav>
+
 
     <section style="margin-bottom:32px">
-      <h2 style="font-size:22px;font-weight:600;margin-bottom:12px">Overview</h2>
+      <h2 id="overview" style="font-size:22px;font-weight:600;margin-bottom:12px">Overview</h2>
       <p style="line-height:1.7;color:var(--text-2)">This is an original ChainPlus analysis of Solana (SOL) on-chain wallet activity. We examined transaction patterns, wallet clustering, and token transfer behavior across 10,000+ active wallets over a 14-day period. Data was collected from Solana RPC endpoints and analyzed for behavioral patterns, accumulation/distribution signals, and suspicious activity markers.</p>
       <p style="line-height:1.7;color:var(--text-2)"><strong>Key finding:</strong> Approximately 62% of active Solana wallets exhibited "buy-and-hold" behavior (no outgoing transfers for 7+ days), while 18% showed rapid trading patterns (3+ transactions per day). A small cluster of 2.3% of wallets accounted for 41% of total transaction volume, indicating significant whale concentration.</p>
     </section>
 
     <section style="margin-bottom:32px">
-      <h2 style="font-size:22px;font-weight:600;margin-bottom:12px">Wallet Activity Distribution</h2>
+      <h2 id="wallet-activity-distribution" style="font-size:22px;font-weight:600;margin-bottom:12px">Wallet Activity Distribution</h2>
       <div style="margin:16px 0">
-        <svg width="700" height="240" viewBox="0 0 700 240" style="max-width:100%;height:auto">
+        <svg role="img" aria-labelledby="chart-title" width="700" height="240" viewBox="0 0 700 240" style="max-width:100%;height:auto"><title id="chart-title">Bar chart showing Solana wallet activity classification: Buy &amp; Hold 62%, Active Trading 18%, Whale 2.3%, Other 17.7%</title>
   <rect width="700" height="240" fill="var(--surface)" rx="8"/>
   <text x="350" y="30" text-anchor="middle" fill="var(--text)" font-size="14" font-weight="600">Solana Wallet Activity Classification (14-day window)</text>
   <rect x="80" y="60" width="200" height="30" fill="#00e5a0" rx="4"/>
@@ -153,10 +168,20 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </svg>
       </div>
       <p style="font-size:13px;color:var(--muted);margin-top:8px">Source: Solana RPC endpoints. 10,000+ wallets analyzed. November 5, 2026.</p>
+      <div style="overflow-x:auto;margin-top:12px"><table style="width:100%;border-collapse:collapse;font-size:12px">
+        <caption style="text-align:left;font-weight:600;margin-bottom:8px">Solana wallet activity breakdown by category (14-day window, n=10,847)</caption>
+        <thead><tr style="border-bottom:2px solid var(--border)"><th scope="col" style="text-align:left;padding:6px">Category</th><th scope="col" style="text-align:right;padding:6px">Wallets (count)</th><th scope="col" style="text-align:right;padding:6px">Share (%)</th><th scope="col" style="text-align:left;padding:6px">Definition</th></tr></thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px">Buy &amp; Hold</td><td style="text-align:right;padding:6px">6,725</td><td style="text-align:right;padding:6px">62%</td><td style="padding:6px">No outgoing transfers for 7+ days</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px">Active Trading</td><td style="text-align:right;padding:6px">1,952</td><td style="text-align:right;padding:6px">18%</td><td style="padding:6px">3+ transactions per day</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px">Whale</td><td style="text-align:right;padding:6px">249</td><td style="text-align:right;padding:6px">2.3%</td><td style="padding:6px">Top 2.3% by volume (41% of total volume)</td></tr>
+          <tr><td style="padding:6px">Other</td><td style="text-align:right;padding:6px">1,920</td><td style="text-align:right;padding:6px">17.7%</td><td style="padding:6px">Mixed or irregular activity</td></tr>
+        </tbody>
+      </table></div>
     </section>
 
     <section style="margin-bottom:32px">
-      <h2 style="font-size:22px;font-weight:600;margin-bottom:12px">Data &amp; Reproducibility</h2>
+      <h2 id="data-and-reproducibility" style="font-size:22px;font-weight:600;margin-bottom:12px">Data &amp; Reproducibility</h2>
       <ul style="line-height:1.8;color:var(--text-2);padding-left:20px">
         <li><strong>Data collection period:</strong> October 22, 2026 – November 5, 2026 (14 days).</li>
         <li><strong>Data source:</strong> Solana mainnet-beta RPC endpoints (<code>getSignaturesForAddress</code>, <code>getTransaction</code>).</li>
@@ -169,7 +194,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </section>
 
     <section style="margin-bottom:32px">
-      <h2 style="font-size:22px;font-weight:600;margin-bottom:12px">Methodology</h2>
+      <h2 id="methodology" style="font-size:22px;font-weight:600;margin-bottom:12px">Methodology</h2>
       <ul style="line-height:1.8;color:var(--text-2);padding-left:20px">
         <li><strong>Data source:</strong> Solana RPC endpoints (mainnet-beta), 14-day window (Oct 22 – Nov 5, 2026).</li>
         <li><strong>Sample selection criteria:</strong> Wallets were selected from Solana mainnet-beta by scanning the most recent 100,000 transactions and extracting unique fee-payer addresses. Wallets with zero transactions in the 14-day window were excluded. Program-derived addresses (PDAs), known exchange hot wallets, and token program addresses were filtered out. Final sample: 10,847 wallets.</li>
@@ -181,7 +206,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </section>
 
     <section style="margin-bottom:32px">
-      <h2 style="font-size:22px;font-weight:600;margin-bottom:12px">Key Observations</h2>
+      <h2 id="key-observations" style="font-size:22px;font-weight:600;margin-bottom:12px">Key Observations</h2>
       <ol style="line-height:1.8;color:var(--text-2);padding-left:20px">
         <li><strong>Whale concentration:</strong> 2.3% of wallets (249 wallets) accounted for 41% of total transaction volume. These wallets averaged 47 transactions per day and predominantly traded SOL/USDC pairs on Raydium and Jupiter.</li>
         <li><strong>Buy-and-hold dominance:</strong> 62% of wallets (6,725+) had zero outgoing transfers for 7+ days, suggesting strong holder conviction or wallet abandonment. The average balance in this group was 12.4 SOL.</li>
@@ -192,14 +217,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </section>
 
     <section style="margin-bottom:32px">
-      <h2 style="font-size:22px;font-weight:600;margin-bottom:12px">What This Means</h2>
+      <h2 id="what-this-means" style="font-size:22px;font-weight:600;margin-bottom:12px">What This Means</h2>
       <p style="line-height:1.7;color:var(--text-2)">Solana's on-chain activity reveals a market dominated by holders (62%) with a small but influential trading minority (18%) and significant whale concentration (2.3% of wallets, 41% of volume). This structure suggests that price movements are disproportionately driven by a small number of large wallets, while the majority of participants are passive holders.</p>
       <p style="line-height:1.7;color:var(--text-2)">The presence of 47 wallets with fan-out behavior warrants further investigation. These patterns are consistent with airdrop farming, wash trading, or Sybil attacks — all of which can distort on-chain metrics and mislead traders who rely on wallet activity as a sentiment indicator.</p>
       <p style="line-height:1.7;color:var(--text-2)">We recommend cross-referencing wallet activity with DEX volume data and monitoring the identified fan-out wallets for continued suspicious behavior.</p>
     </section>
 
     <section style="margin-bottom:32px">
-      <h2 style="font-size:22px;font-weight:600;margin-bottom:12px">Related Analysis</h2>
+      <h2 id="related-analysis" style="font-size:22px;font-weight:600;margin-bottom:12px">Related Analysis</h2>
       <ul style="line-height:1.8;color:var(--text-2);padding-left:20px">
         <li><a href="on-chain-analysis-basics.html" style="color:var(--accent)">On-Chain Analysis Basics</a> — Learn to read exchange flows and whale activity</li>
         <li><a href="bitcoin-30-day-analysis.html" style="color:var(--accent)">Bitcoin 30-Day Price Analysis</a> — Data-backed BTC trend analysis</li>
@@ -208,7 +233,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </section>
 
     <section style="margin-bottom:32px">
-      <h2 style="font-size:22px;font-weight:600;margin-bottom:12px">Disclaimer</h2>
+      <h2 id="disclaimer" style="font-size:22px;font-weight:600;margin-bottom:12px">Disclaimer</h2>
       <p style="line-height:1.7;color:var(--muted);font-size:13px">This analysis is for educational and informational purposes only. It is not financial advice. ChainPlus does not recommend buying, selling, or holding any cryptocurrency. Always do your own research and consult a qualified financial advisor before making investment decisions. Data sourced from Solana RPC endpoints on November 5, 2026.</p>
     </section>
   </div>
@@ -240,7 +265,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <a href="https://www.coingecko.com" target="_blank" rel="noopener">CoinGecko</a>
         <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
       </div>
-      <p class="footer-copy">© 2026 ChainPlus. All rights reserved.</p>
+      <p class="footer-copy">© 2026 ChainPlus. All rights reserved. Not financial advice.</p>
     </div>
   </footer>
 <!-- Consent Management -->

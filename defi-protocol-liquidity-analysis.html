@@ -33,8 +33,9 @@
     "datePublished": "2026-11-05",
     "dateModified": "2026-11-05",
     "author": {
-      "@type": "Organization",
-      "name": "Mike Tembo"
+      "@type": "Person",
+      "name": "Mike Tembo",
+      "url": "https://chainplus.tech/team.html"
     },
     "publisher": {
       "@type": "Organization",
@@ -125,17 +126,31 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </nav>
     <h1 style="font-size:32px;font-weight:700;margin-bottom:8px">DeFi Protocol Liquidity Analysis: TVL, Volume, and Efficiency Metrics</h1>
     <p class="meta" style="color:var(--text-3);font-size:14px;margin-bottom:24px">By <a href="team.html" style="color:var(--accent)">Mike Tembo</a> · November 5, 2026 · Data Analysis</p>
+    <nav class="toc" aria-label="Table of contents">
+      <p class="toc-heading" style="font-weight:600;margin:0 0 8px">Contents</p>
+      <ul style="margin:0;padding-left:20px;line-height:1.8">
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#tvl-and-capital-efficiency-comparison">TVL and Capital Efficiency Comparison</a></li>
+      <li><a href="#data-and-reproducibility">Data &amp; Reproducibility</a></li>
+      <li><a href="#methodology">Methodology</a></li>
+      <li><a href="#key-observations">Key Observations</a></li>
+      <li><a href="#what-this-means">What This Means</a></li>
+      <li><a href="#related-analysis">Related Analysis</a></li>
+      <li><a href="#disclaimer">Disclaimer</a></li>
+      </ul>
+    </nav>
+
 
     <section style="margin-bottom:32px">
-      <h2 style="font-size:22px;font-weight:600;margin-bottom:12px">Overview</h2>
+      <h2 id="overview" style="font-size:22px;font-weight:600;margin-bottom:12px">Overview</h2>
       <p style="line-height:1.7;color:var(--text-2)">This is an original ChainPlus analysis comparing liquidity metrics across five major DeFi protocols: Uniswap V3, Curve, Aave, Compound, and MakerDAO. We examined Total Value Locked (TVL), 24-hour trading volume, capital efficiency ratios, and fee revenue. Data was collected from DefiLlama and protocol-specific APIs on November 5, 2026.</p>
       <p style="line-height:1.7;color:var(--text-2)"><strong>Key finding:</strong> Uniswap V3 leads in capital efficiency (volume/TVL ratio of 0.42) despite having lower TVL than Aave. Curve dominates stablecoin liquidity with $4.2B TVL but the lowest capital efficiency (0.08). Aave generates the highest fee revenue per dollar of TVL.</p>
     </section>
 
     <section style="margin-bottom:32px">
-      <h2 style="font-size:22px;font-weight:600;margin-bottom:12px">TVL and Capital Efficiency Comparison</h2>
+      <h2 id="tvl-and-capital-efficiency-comparison" style="font-size:22px;font-weight:600;margin-bottom:12px">TVL and Capital Efficiency Comparison</h2>
       <div style="margin:16px 0">
-        <svg width="700" height="240" viewBox="0 0 700 240" style="max-width:100%;height:auto">
+        <svg role="img" aria-labelledby="chart-title" width="700" height="240" viewBox="0 0 700 240" style="max-width:100%;height:auto"><title id="chart-title">Comparison of DeFi protocols by TVL, 24-hour volume, and capital efficiency</title>
   <rect width="700" height="240" fill="var(--surface)" rx="8"/>
   <text x="350" y="30" text-anchor="middle" fill="var(--text)" font-size="14" font-weight="600">DeFi Protocol Comparison (November 5, 2026)</text>
   <text x="100" y="60" fill="var(--muted)" font-size="11">Protocol</text>
@@ -175,7 +190,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </section>
 
     <section style="margin-bottom:32px">
-      <h2 style="font-size:22px;font-weight:600;margin-bottom:12px">Data &amp; Reproducibility</h2>
+      <h2 id="data-and-reproducibility" style="font-size:22px;font-weight:600;margin-bottom:12px">Data &amp; Reproducibility</h2>
       <ul style="line-height:1.8;color:var(--text-2);padding-left:20px">
         <li><strong>Data collection period:</strong> Single snapshot, November 5, 2026, 00:00 UTC.</li>
         <li><strong>Data sources:</strong> DefiLlama API (TVL, volume, fees), protocol-specific subgraphs (Uniswap, Curve, Aave, Compound, MakerDAO).</li>
@@ -183,22 +198,23 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <li><strong>Protocol snapshot table:</strong></li>
       </ul>
       <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;margin:12px 0;font-size:12px">
-        <thead><tr style="border-bottom:2px solid var(--border)"><th style="text-align:left;padding:6px">Protocol</th><th style="text-align:right;padding:6px">TVL (USD)</th><th style="text-align:right;padding:6px">24h Volume</th><th style="text-align:right;padding:6px">Vol/TVL</th><th style="text-align:right;padding:6px">7d Change</th></tr></thead>
+        <caption>DeFi protocol snapshot (November 5, 2026): TVL, 24-hour volume, and volume-to-TVL ratio.</caption>
+        <thead><tr style="border-bottom:2px solid var(--border)"><th scope="col" style="text-align:left;padding:6px">Protocol</th><th scope="col" style="text-align:right;padding:6px">TVL (USD)</th><th scope="col" style="text-align:right;padding:6px">24h Volume</th><th scope="col" style="text-align:right;padding:6px">Vol/TVL</th><th scope="col" style="text-align:right;padding:6px">7d Change</th></tr></thead>
         <tbody>
           <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px">Uniswap V3</td><td style="text-align:right;padding:6px">$3.8B</td><td style="text-align:right;padding:6px">$1.6B</td><td style="text-align:right;padding:6px">0.42</td><td style="text-align:right;padding:6px">+2.1%</td></tr>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px">Curve</td><td style="text-align:right;padding:6px">$4.2B</td><td style="text-align:right;padding:6px">$320M</td><td style="text-align:right;padding:6px">0.08</td><td style="text-align:right;padding:6px">-0.8%</td></tr>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px">Aave V3</td><td style="text-align:right;padding:6px">$12.1B</td><td style="text-align:right;padding:6px">N/A (lending)</td><td style="text-align:right;padding:6px">N/A</td><td style="text-align:right;padding:6px">+1.4%</td></tr>
-          <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px">Compound V3</td><td style="text-align:right;padding:6px">$2.8B</td><td style="text-align:right;padding:6px">N/A (lending)</td><td style="text-align:right;padding:6px">N/A</td><td style="text-align:right;padding:6px">+0.6%</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px">Curve</td><td style="text-align:right;padding:6px">$4.2B</td><td style="text-align:right;padding:6px">$340M</td><td style="text-align:right;padding:6px">0.08</td><td style="text-align:right;padding:6px">-0.8%</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px">Aave V3</td><td style="text-align:right;padding:6px">$12.1B</td><td style="text-align:right;padding:6px">$890M</td><td style="text-align:right;padding:6px">0.07</td><td style="text-align:right;padding:6px">+1.4%</td></tr>
+          <tr style="border-bottom:1px solid var(--border)"><td style="padding:6px">Compound V3</td><td style="text-align:right;padding:6px">$2.4B</td><td style="text-align:right;padding:6px">$120M</td><td style="text-align:right;padding:6px">0.05</td><td style="text-align:right;padding:6px">+0.6%</td></tr>
           <tr><td style="padding:6px">MakerDAO</td><td style="text-align:right;padding:6px">$5.8B</td><td style="text-align:right;padding:6px">$40M</td><td style="text-align:right;padding:6px">0.007</td><td style="text-align:right;padding:6px">-0.3%</td></tr>
         </tbody>
       </table></div>
       <ul style="line-height:1.8;color:var(--text-2);padding-left:20px">
-        <li><strong>Limitations:</strong> Single-point snapshot. Does not capture intraday variation. Lending protocols (Aave, Compound) and CDP protocols (MakerDAO) do not have comparable trading volume metrics.</li>
+        <li><strong>Limitations:</strong> Single-point snapshot. Does not capture intraday variation. Lending protocol volumes reflect borrowing activity rather than trading volume and are not directly comparable to DEX volumes.</li>
       </ul>
     </section>
 
     <section style="margin-bottom:32px">
-      <h2 style="font-size:22px;font-weight:600;margin-bottom:12px">Methodology</h2>
+      <h2 id="methodology" style="font-size:22px;font-weight:600;margin-bottom:12px">Methodology</h2>
       <ul style="line-height:1.8;color:var(--text-2);padding-left:20px">
         <li><strong>Data source:</strong> DefiLlama API (<code>/protocols</code>, <code>/tvl/{protocol}</code>, <code>/summary/fees/{protocol}</code>) + protocol-specific subgraphs. Snapshot: November 5, 2026, 00:00 UTC.</li>
         <li><strong>Protocols analyzed:</strong> Uniswap V3, Curve, Aave V3, Compound V3, MakerDAO (5 largest by TVL on Ethereum mainnet).</li>
@@ -210,7 +226,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </section>
 
     <section style="margin-bottom:32px">
-      <h2 style="font-size:22px;font-weight:600;margin-bottom:12px">Key Observations</h2>
+      <h2 id="key-observations" style="font-size:22px;font-weight:600;margin-bottom:12px">Key Observations</h2>
       <ol style="line-height:1.8;color:var(--text-2);padding-left:20px">
         <li><strong>Uniswap V3 leads in capital efficiency:</strong> Despite having lower TVL ($3.8B) than Aave ($12.1B) and MakerDAO ($5.8B), Uniswap V3 processes $1.6B in daily volume, giving it a capital efficiency ratio of 0.42 — 6x higher than Aave (0.07) and 60x higher than MakerDAO (0.007).</li>
         <li><strong>Curve dominates stablecoin liquidity:</strong> With $4.2B TVL, Curve is the largest stablecoin DEX. However, its capital efficiency is only 0.08, meaning most of its locked capital is idle at any given time. This is by design (concentrated liquidity for stable pairs).</li>
@@ -221,14 +237,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </section>
 
     <section style="margin-bottom:32px">
-      <h2 style="font-size:22px;font-weight:600;margin-bottom:12px">What This Means</h2>
+      <h2 id="what-this-means" style="font-size:22px;font-weight:600;margin-bottom:12px">What This Means</h2>
       <p style="line-height:1.7;color:var(--text-2)">Capital efficiency varies dramatically across DeFi protocols. DEXs like Uniswap V3 achieve high efficiency through concentrated liquidity, while lending protocols like Aave generate revenue through interest rates rather than trading volume. This means "TVL" alone is a misleading metric — a protocol with $12B TVL and 0.07 efficiency is not necessarily "better" than one with $3.8B TVL and 0.42 efficiency.</p>
       <p style="line-height:1.7;color:var(--text-2)">For users, the key takeaway is: when providing liquidity, consider both the TVL (depth of the pool) and the volume (how often it's used). High TVL with low volume means your capital is sitting idle. High volume with lower TVL means better returns but higher impermanent loss risk.</p>
       <p style="line-height:1.7;color:var(--text-2)">We recommend monitoring capital efficiency ratios alongside TVL when evaluating DeFi protocols, and being aware of the different revenue models (trading fees vs. interest rates) when comparing protocols.</p>
     </section>
 
     <section style="margin-bottom:32px">
-      <h2 style="font-size:22px;font-weight:600;margin-bottom:12px">Related Analysis</h2>
+      <h2 id="related-analysis" style="font-size:22px;font-weight:600;margin-bottom:12px">Related Analysis</h2>
       <ul style="line-height:1.8;color:var(--text-2);padding-left:20px">
         <li><a href="defi-explained.html" style="color:var(--accent)">DeFi Explained</a> — Decentralized finance for beginners</li>
         <li><a href="bitcoin-30-day-analysis.html" style="color:var(--accent)">Bitcoin 30-Day Price Analysis</a> — Data-backed BTC trend analysis</li>
@@ -237,7 +253,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </section>
 
     <section style="margin-bottom:32px">
-      <h2 style="font-size:22px;font-weight:600;margin-bottom:12px">Disclaimer</h2>
+      <h2 id="disclaimer" style="font-size:22px;font-weight:600;margin-bottom:12px">Disclaimer</h2>
       <p style="line-height:1.7;color:var(--muted);font-size:13px">This analysis is for educational and informational purposes only. It is not financial advice. ChainPlus does not recommend buying, selling, or holding any cryptocurrency. Always do your own research and consult a qualified financial advisor before making investment decisions. Data sourced from DefiLlama and protocol APIs. November 5, 2026.</p>
     </section>
   </div>
@@ -269,7 +285,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <a href="https://www.coingecko.com" target="_blank" rel="noopener">CoinGecko</a>
         <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
       </div>
-      <p class="footer-copy">© 2026 ChainPlus. All rights reserved.</p>
+      <p class="footer-copy">© 2026 ChainPlus. All rights reserved. Not financial advice.</p>
     </div>
   </footer>
 <!-- Consent Management -->

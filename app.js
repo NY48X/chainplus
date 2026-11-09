@@ -2,7 +2,8 @@
 (function(){
   'use strict';
 
-  const API = (window.CHAINPLUS_API) || (localStorage.getItem('cp-api-base')) || 'https://chainpulse-api.miketembo828.workers.dev';
+  function safeGetItem(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+  const API = (window.CHAINPLUS_API) || safeGetItem('cp-api-base') || 'https://chainpulse-api.miketembo828.workers.dev';
   const CG = 'https://api.coingecko.com/api/v3';
   const RSS_BACKUPS = [
     'https://www.coindesk.com/arc/outboundfeeds/rss/',
@@ -44,7 +45,9 @@
   const $$ = (s, r=document) => [...r.querySelectorAll(s)];
 
   /* ---------- helpers ---------- */
-  function esc(s){ return (s||'').replace(/[&<>\\"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\\"':'&quot;',"'":'&#39;'}[c])); }
+  function esc(s){ return (s||'').replace(/[&<>\\"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function validateUrl(u){ if(!u) return '#'; u=String(u).trim(); return /^https?:\/\//i.test(u) ? u : '#'; }
+  function _capCache(cache, max){ const keys=Object.keys(cache); if(keys.length>max){ keys.slice(0, keys.length-max).forEach(k=>{ delete cache[k]; }); } }
   function decodeEntities(s){
     if(!s) return '';
     // Decode numeric entities
@@ -172,8 +175,12 @@
   async function fetchRetry(url, opts={}, attempts=3){
     let last;
     for(let i=0;i<attempts;i++){
+      const ctrl = new AbortController();
+      const tid = setTimeout(()=>ctrl.abort(), 10000);
       try{
-        const r = await fetch(url, opts);
+        const r = await fetch(url, {...opts, signal: opts.signal || ctrl.signal});
+        clearTimeout(tid);
+        if(r.status===404){ throw new Error('HTTP 404'); }
         if(r.status===429 || r.status===403 || r.status>=500){
           last = new Error('HTTP '+r.status);
           await new Promise(res=>setTimeout(res, 700*(i+1)));
@@ -181,7 +188,12 @@
         }
         if(!r.ok) throw new Error('HTTP '+r.status);
         return r;
-      }catch(e){ last=e; await new Promise(res=>setTimeout(res, 700*(i+1))); }
+      }catch(e){
+        clearTimeout(tid);
+        last = (e && e.name==='AbortError') ? new Error('Request timeout') : e;
+        if(last && last.message==='HTTP 404') break;
+        if(i < attempts-1) await new Promise(res=>setTimeout(res, 700*(i+1)));
+      }
     }
     throw last || new Error('fetch failed');
   }
@@ -287,7 +299,7 @@ async function fetchRSSFallback(){
       } else if(opts.prepend){
         const fresh = arts.filter(a=>!state.knownLinks.has(a.link));
         if(fresh.length){
-          state.articles = fresh.concat(state.articles);
+          state.articles = fresh.concat(state.articles).slice(0, 200);
           fresh.forEach(a=>state.knownLinks.add(a.link));
           toast(`${fresh.length} new headline${fresh.length>1?'s':''}`);
 
@@ -373,7 +385,7 @@ async function fetchRSSFallback(){
     if(src) src.textContent = a.source || 'Unknown';
     if(time) time.textContent = a.timeAgo || timeAgo(a.pubDate);
     if(cat) cat.textContent = (a.category||'general').toUpperCase();
-    if(cta){ cta.href = a.link; }
+    if(cta){ cta.href = validateUrl(a.link); }
     if(rail){
       rail.innerHTML = state.articles.slice(1,5).map(a=>`
         <article class="rail-card" data-url="${esc(a.link)}">
@@ -449,7 +461,7 @@ async function fetchRSSFallback(){
     try{
       const data = await api('/api/breaking?limit=12');
       const arts = data.articles || [];
-      const html = arts.map(a=>`<a href="${esc(a.link)}" target="_blank" rel="noopener">${esc(decodeEntities(a.title))}</a>`).join('  ·  ');
+      const html = arts.map(a=>`<a href="${esc(validateUrl(a.link))}" target="_blank" rel="noopener">${esc(decodeEntities(a.title))}</a>`).join('  ·  ');
       const track = $('#tickerTrack');
       if(track) track.innerHTML = `<span class="ticker-item">${html}  ·  ${html}</span>`;
     }catch(e){ /* keep placeholder */ }
@@ -810,7 +822,6 @@ async function fetchRSSFallback(){
           // Small delay between pages to avoid rate limiting
           await new Promise(res => setTimeout(res, 1000));
         }
-        console.log('Total coins cached:', state.marketCoins.length);
       })();
     }catch(e){ console.error(e); toast('Markets unavailable'); }
   }
@@ -856,9 +867,6 @@ async function fetchRSSFallback(){
     const max = Math.max(...vals);
     const range = (max-min)||1;
     // If all prices are the same (stablecoin), show a note
-    if (max === min) {
-      console.log('[Chart] Stable price detected:', min);
-    }
     const ts = prices.map(p=>p.t);
     const tMin = ts[0], tMax = ts[ts.length-1];
     const tRange = (tMax-tMin)||1;
@@ -954,7 +962,7 @@ async function fetchRSSFallback(){
   function renderMarketStrip(filter){
     const el = $('#marketStrip'); if(!el || !state.markets) return;
     const q = (filter||'').toLowerCase().trim();
-    const coins = (state.marketCoins.length ? state.marketCoins : window.CP_DATA.coins.map(c=>({id:c.id,sym:c.sym,name:c.name})));
+    const coins = (state.marketCoins.length ? state.marketCoins : (window.CP_DATA && window.CP_DATA.coins ? window.CP_DATA.coins.map(c=>({id:c.id,sym:c.sym,name:c.name})) : []));
     const filtered = q ? coins.filter(c=>c.name.toLowerCase().includes(q)||c.sym.toLowerCase().includes(q)) : coins;
     el.innerHTML = filtered.map(c=>{
       const d = state.markets[c.id]; if(!d) return '';
@@ -1099,7 +1107,7 @@ async function fetchRSSFallback(){
     const el = $('#ossGrid'); if(!el) return;
     if(!state.oss.length){ el.innerHTML='<div class="empty" style="grid-column:1/-1">No repositories found.</div>'; return; }
     el.innerHTML = state.oss.map(r=>`
-      <a class="oss-card" href="${esc(r.url)}" target="_blank" rel="noopener">
+      <a class="oss-card" href="${esc(validateUrl(r.url))}" target="_blank" rel="noopener">
         <div class="oss-name">${esc(r.name)}</div>
         <div class="oss-desc">${esc(r.desc||'No description.')}</div>
         <div class="oss-meta">
@@ -1179,7 +1187,7 @@ const si = $('#searchInput');
                 seen.add((coin.name||'').toLowerCase());
                 extraItems.push({type:'coin', title: coin.name, meta: (coin.symbol||'').toUpperCase(), icon: (coin.symbol||'').slice(0,4).toUpperCase(), action: () => { window.location.href = 'markets.html'; }});
               });
-              state.searchCache[cacheKey] = extraItems;
+              state.searchCache[cacheKey] = extraItems; _capCache(state.searchCache, 100);
               if(si.value.toLowerCase().trim() === ql){
                 renderGlobalSugList([...items, ...extraItems], ql);
               }
@@ -1282,7 +1290,7 @@ const si = $('#searchInput');
     const modal = $('#modal'); const content = $('#modalContent');
     if(!modal||!content) return;
     const related = state.articles.filter(x=>x.link!==a.link && (x.category===a.category)).slice(0,3);
-    const relatedHtml = related.length ? `<div style="margin-top:16px"><h4 style="font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 8px">Related headlines</h4>${related.map(r=>`<div style="padding:6px 0;border-bottom:1px solid var(--border-soft);cursor:pointer" onclick="window.__openArticleByLink('${esc(r.link)}')"><span style="font-size:13px">${esc(r.title)}</span><span class="small muted" style="display:block">${esc(r.source||'')}</span></div>`).join('')}</div>` : '';
+    const relatedHtml = related.length ? `<div style="margin-top:16px"><h4 style="font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 8px">Related headlines</h4>${related.map(r=>`<div class="related-item" style="padding:6px 0;border-bottom:1px solid var(--border-soft);cursor:pointer" data-link="${esc(r.link)}"><span style="font-size:13px">${esc(r.title)}</span><span class="small muted" style="display:block">${esc(r.source||'')}</span></div>`).join('')}</div>` : '';
     // Connected intelligence: related insights + market context
     const coinMap = {bitcoin:'btc',ethereum:'eth',solana:'sol',cardano:'ada',ripple:'xrp',dogecoin:'doge'};
     const titleLow = (a.title||'').toLowerCase();
@@ -1306,11 +1314,11 @@ const si = $('#searchInput');
       <h2>${esc(decodeEntities(a.title))}</h2>
       <div class="modal-body">
         <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
-          <button class="chip" onclick="navigator.clipboard.writeText('${esc(a.link)}').then(()=>window.__toast('Link copied'))">Copy link</button>
+          <button class="chip" data-action="copy-link" data-link="${esc(a.link)}">Copy link</button>
           <a class="chip" href="https://twitter.com/intent/tweet?text=${encodeURIComponent(a.title)}&url=${encodeURIComponent(a.link)}" target="_blank" rel="noopener">Share on X</a>
-          <button class="chip bookmark-btn${saved?' saved':''}" onclick="window.__toggleBookmark('${esc(a.link)}')">${saved?'★ Saved':'☆ Save'}</button>
+          <button class="chip bookmark-btn${saved?' saved':''}" data-action="toggle-bookmark" data-link="${esc(a.link)}">${saved?'★ Saved':'☆ Save'}</button>
         </div>
-        <p><a href="${esc(a.link)}" target="_blank" rel="noopener" class="hero-cta" style="display:inline-flex;margin-top:12px">Open original source →</a></p>
+        <p><a href="${esc(validateUrl(a.link))}" target="_blank" rel="noopener" class="hero-cta" style="display:inline-flex;margin-top:12px">Open original source →</a></p>
       </div>
       <div class="ai-box" id="aiBox">
         <h4>Summary</h4>
@@ -1319,6 +1327,11 @@ const si = $('#searchInput');
       ${relatedHtml}${riHtml}${mktHtml}`;
     modal.classList.add('open'); modal.setAttribute('aria-hidden','false');
     document.body.style.overflow='hidden';
+    content.querySelectorAll('.related-item').forEach(el=>{ el.addEventListener('click', ()=> window.__openArticleByLink(el.dataset.link)); });
+    const copyBtn = content.querySelector('[data-action="copy-link"]');
+    if(copyBtn) copyBtn.addEventListener('click', ()=>{ if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(copyBtn.dataset.link).then(()=>window.__toast('Link copied')); } });
+    const bmBtn = content.querySelector('[data-action="toggle-bookmark"]');
+    if(bmBtn) bmBtn.addEventListener('click', ()=> window.__toggleBookmark(bmBtn.dataset.link));
     fetchSummary(a);
   }
   // Translation cache to avoid re-translating
@@ -1339,7 +1352,7 @@ const si = $('#searchInput');
         if(!r.ok) return text;
         const d = await r.json();
         const tr = (d[0]||[]).map(x=>x[0]).join('') || text;
-        _trCache[key] = tr;
+        _trCache[key] = tr; _capCache(_trCache, 500);
         return tr;
       }catch(e){ 
         if(attempt < 2) await new Promise(res=>setTimeout(res, 300*(attempt+1)));
@@ -1401,7 +1414,7 @@ const si = $('#searchInput');
         if(parts.length !== batch.length){
           for(const b of batch){
             const t = await translateText(b.text, target);
-            _trCache[_trKey(b.text, target)] = t;
+            _trCache[_trKey(b.text, target)] = t; _capCache(_trCache, 500);
             if(t && t !== b.text){
               b.node.nodeValue = b.original.replace(b.text, t);
             }
@@ -1409,7 +1422,7 @@ const si = $('#searchInput');
         } else {
           batch.forEach((b, idx)=>{
             const translated = (parts[idx] || b.text).trim();
-            _trCache[_trKey(b.text, target)] = translated;
+            _trCache[_trKey(b.text, target)] = translated; _capCache(_trCache, 500);
             if(translated && translated !== b.text){
               b.node.nodeValue = b.original.replace(b.text, translated);
             }
@@ -1499,7 +1512,7 @@ const si = $('#searchInput');
       const arts = (data.articles || []).filter(a=>!isGas(a));
       const fresh = arts.filter(a=>!state.knownLinks.has(a.link));
       if(fresh.length){
-        state.articles = fresh.concat(state.articles);
+        state.articles = fresh.concat(state.articles).slice(0, 200);
         fresh.forEach(a=>state.knownLinks.add(a.link));
         renderStories(); renderCompact(); renderHero();
         toast(`${fresh.length} new headline${fresh.length>1?'s':''} — flowed to top`);
@@ -1526,12 +1539,15 @@ const si = $('#searchInput');
   }
 
   /* ---------- reveal ---------- */
+  let _revealIO = null;
   function revealIn(){
     if(!('IntersectionObserver' in window)){ $$('.reveal').forEach(e=>e.classList.add('in')); return; }
-    const io = new IntersectionObserver((entries)=>{
-      entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
-    }, {threshold:0.08, rootMargin:'0px 0px -40px 0px'});
-    $$('.reveal:not(.in)').forEach(e=>io.observe(e));
+    if(!_revealIO){
+      _revealIO = new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); _revealIO.unobserve(e.target); } });
+      }, {threshold:0.08, rootMargin:'0px 0px -40px 0px'});
+    }
+    $$('.reveal:not(.in)').forEach(e=>_revealIO.observe(e));
   }
 
   window.__toast = toast;
@@ -1633,6 +1649,10 @@ const si = $('#searchInput');
     }
     revealIn();
     state.pollTimer = setInterval(livePoll, 45000);
+    document.addEventListener('visibilitychange', ()=>{
+      if(document.hidden){ if(state.pollTimer){ clearInterval(state.pollTimer); state.pollTimer = null; } }
+      else if(!state.pollTimer){ state.pollTimer = setInterval(livePoll, 45000); }
+    });
     // Auto-search if ?q= param present
     const _qp = new URLSearchParams(window.location.search).get('q');
     if(_qp){
@@ -1715,7 +1735,7 @@ const si = $('#searchInput');
       if(!ql){ sug.classList.remove('show'); return; }
 
       // 1. Search loaded coins immediately (synchronous)
-      const loadedCoins = (state.marketCoins.length ? state.marketCoins : window.CP_DATA.coins.map(c=>({id:c.id,sym:c.sym,name:c.name})));
+      const loadedCoins = (state.marketCoins.length ? state.marketCoins : (window.CP_DATA && window.CP_DATA.coins ? window.CP_DATA.coins.map(c=>({id:c.id,sym:c.sym,name:c.name})) : []));
       const scored = loadedCoins.map(c => {
         const sym = (c.sym||'').toLowerCase();
         const name = (c.name||'').toLowerCase();
@@ -1761,7 +1781,7 @@ const si = $('#searchInput');
                 else score = 10;
                 extraCoins.push({c:{id:coin.id, sym:(coin.symbol||'').toUpperCase(), name:coin.name, thumb:coin.thumb}, score, source:'search'});
               });
-              state.searchCache[cacheKey] = extraCoins;
+              state.searchCache[cacheKey] = extraCoins; _capCache(state.searchCache, 100);
               // Only update if query hasn't changed
               if(ms.value.toLowerCase().trim() === ql){
                 const merged = [...scored, ...extraCoins].sort((a,b) => b.score - a.score).slice(0, 10);

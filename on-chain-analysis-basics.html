@@ -33,8 +33,9 @@
     "datePublished": "2026-11-05",
     "dateModified": "2026-11-05",
     "author": {
-      "@type": "Organization",
-      "name": "Mike Tembo"
+      "@type": "Person",
+      "name": "Mike Tembo",
+      "url": "https://chainplus.tech/team.html"
     },
     "publisher": {
       "@type": "Organization",
@@ -120,9 +121,24 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <article>
         <h1>On-Chain Analysis: Reading the Blockchain</h1>
         <p class="meta" style="color:var(--text-3);font-size:14px;margin-bottom:24px">By <a href="team.html" style="color:var(--accent)">Mike Tembo</a> · November 5, 2026 · Analysis</p>
+    <nav class="toc" aria-label="Table of contents">
+      <p class="toc-heading" style="font-weight:600;margin:0 0 8px">Contents</p>
+      <ul style="margin:0;padding-left:20px;line-height:1.8">
+      <li><a href="#key-on-chain-metrics">Key On-Chain Metrics</a></li>
+      <li><a href="#limitations-of-on-chain-analysis">Limitations of On-Chain Analysis</a></li>
+      <li><a href="#getting-started">Getting Started</a></li>
+      <li><a href="#tools-for-on-chain-analysis">Tools for On-Chain Analysis</a></li>
+      <li><a href="#practical-application">Practical Application</a></li>
+      <li><a href="#common-on-chain-patterns">Common On-Chain Patterns</a></li>
+      <li><a href="#combining-on-chain-with-other-analysis">Combining On-Chain with Other Analysis</a></li>
+      <li><a href="#frequently-asked-questions">Frequently Asked Questions</a></li>
+      <li><a href="#related-articles">Related Articles</a></li>
+      </ul>
+    </nav>
+
         <p>The blockchain is the most transparent financial dataset ever created. Every transaction, every wallet movement, every token transfer is permanently recorded and publicly accessible. On-chain analysis is the practice of extracting insights from this data.</p>
 
-<h2>Key On-Chain Metrics</h2>
+<h2 id="key-on-chain-metrics">Key On-Chain Metrics</h2>
 <h3>Exchange Net Flows</h3>
 <p>When more coins leave exchanges than enter, it suggests accumulation (holders moving to cold storage). When more enter than leave, it suggests distribution (holders preparing to sell). This is one of the most reliable on-chain signals.</p>
 
@@ -138,7 +154,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <h3>MVRV Ratio</h3>
 <p>Market Value to Realized Value. Compares the current market cap to the "realized cap" (the price at which each coin last moved). When MVRV is high, the market is overvalued relative to historical cost basis. When low, it's undervalued.</p>
 
-<h2>Limitations of On-Chain Analysis</h2>
+<h2 id="limitations-of-on-chain-analysis">Limitations of On-Chain Analysis</h2>
 <ul>
 <li><strong>Noise:</strong> Most on-chain activity is noise — wash trading, arbitrage, MEV bots, and automated systems generate millions of transactions with no informational value.</li>
 <li><strong>Anonymity:</strong> While transactions are public, identities are not. Wallet clustering (grouping addresses that belong to the same entity) is difficult and imperfect.</li>
@@ -146,10 +162,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <li><strong>Context:</strong> On-chain data doesn't exist in a vacuum. It must be interpreted alongside market conditions, news, and macro factors.</li>
 </ul>
 
-<h2>Getting Started</h2>
+<h2 id="getting-started">Getting Started</h2>
 <p>Platforms like Glassnode, Nansen, and Arkham provide on-chain analytics dashboards. Start with simple metrics (exchange flows, active addresses) before diving into complex ones (MVRV, SOPR). And remember: on-chain data predicts behavior, not price. Use it for context, not predictions.</p>
       
-<h2>Tools for On-Chain Analysis</h2>
+<h2 id="tools-for-on-chain-analysis">Tools for On-Chain Analysis</h2>
 <ul>
 <li><strong>Glassnode:</strong> Comprehensive on-chain metrics and dashboards. Paid but has free tier.</li>
 <li><strong>Nansen:</strong> Wallet labeling and smart money tracking. Excellent for identifying whale behavior.</li>
@@ -158,7 +174,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <li><strong>DefiLlama:</strong> DeFi TVL and protocol metrics. Free and comprehensive.</li>
 </ul>
 
-<h2>Practical Application</h2>
+<h2 id="practical-application">Practical Application</h2>
 <p>Here's how to use on-chain data in practice:</p>
 <ol>
 <li><strong>Check exchange flows weekly.</strong> Consistent outflows suggest accumulation. Consistent inflows suggest distribution.</li>
@@ -167,7 +183,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <li><strong>Use MVRV for context.</strong> High MVRV = overvalued. Low MVRV = undervalued. Not a timing tool, but a valuation reference.</li>
 </ol>
 
-<h2>Common On-Chain Patterns</h2>
+<h2 id="common-on-chain-patterns">Common On-Chain Patterns</h2>
 <p>Here are some patterns that on-chain analysts look for:</p>
 <ul>
 <li><strong>Exchange outflows before price rises:</strong> When large amounts leave exchanges, it often precedes price increases. Holders are moving to cold storage, reducing sell pressure.</li>
@@ -176,7 +192,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <li><strong>Miner selling:</strong> When miners sell their rewards, it creates sell pressure. Tracking miner outflows can signal short-term price pressure.</li>
 </ul>
 
-<h2>Combining On-Chain with Other Analysis</h2>
+<h2 id="combining-on-chain-with-other-analysis">Combining On-Chain with Other Analysis</h2>
 <p>On-chain analysis is most powerful when combined with other forms of analysis:</p>
 <ul>
 <li><strong>Technical analysis:</strong> Use on-chain data to confirm or contradict technical signals.</li>
@@ -185,7 +201,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </ul>
 <p>No single analysis method is sufficient. The best investors combine multiple approaches and maintain intellectual humility about their limitations.</p>
 
-<h2>Frequently Asked Questions</h2>
+<h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
 <h3>Do I need to pay for on-chain analytics?</h3>
 <p>No. Free tools like Dune Analytics, DefiLlama, and Etherscan provide substantial on-chain data. Paid tools (Glassnode, Nansen) offer more sophisticated metrics and dashboards but aren't necessary for beginners.</p>
 <h3>Can on-chain analysis predict prices?</h3>
@@ -195,7 +211,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <h3>What's the best on-chain metric for beginners?</h3>
 <p>Exchange net flows. They're simple to understand, widely available, and historically reliable. When more coins leave exchanges than enter, it suggests accumulation. When more enter than leave, it suggests distribution.</p>
 
-<h2>Related Articles</h2>
+<h2 id="related-articles">Related Articles</h2>
 <ul style="padding-left:20px;line-height:2">
   <li><a href="crypto-market-cycles.html" style="color:var(--accent)">Market Cycles</a></li>
   <li><a href="mev-explained-simply.html" style="color:var(--accent)">MEV Explained</a></li>
@@ -233,7 +249,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <a href="https://www.coingecko.com" target="_blank" rel="noopener">CoinGecko</a>
         <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
       </div>
-      <p class="footer-copy">© 2026 ChainPlus. All rights reserved.</p>
+      <p class="footer-copy">© 2026 ChainPlus. All rights reserved. Not financial advice.</p>
     </div>
   </footer>
 <!-- Consent Management -->

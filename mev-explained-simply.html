@@ -33,8 +33,9 @@
     "datePublished": "2026-11-05",
     "dateModified": "2026-11-05",
     "author": {
-      "@type": "Organization",
-      "name": "Mike Tembo"
+      "@type": "Person",
+      "name": "Mike Tembo",
+      "url": "https://chainplus.tech/team.html"
     },
     "publisher": {
       "@type": "Organization",
@@ -120,16 +121,34 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <article>
         <h1>MEV Explained: The Hidden Tax on Crypto Transactions</h1>
         <p class="meta" style="color:var(--text-3);font-size:14px;margin-bottom:24px">By <a href="team.html" style="color:var(--accent)">Mike Tembo</a> · November 5, 2026 · Explainer</p>
+    <nav class="toc" aria-label="Table of contents">
+      <p class="toc-heading" style="font-weight:600;margin:0 0 8px">Contents</p>
+      <ul style="margin:0;padding-left:20px;line-height:1.8">
+      <li><a href="#what-is-mev">What Is MEV?</a></li>
+      <li><a href="#how-mev-works">How MEV Works</a></li>
+      <li><a href="#who-benefits">Who Benefits?</a></li>
+      <li><a href="#how-mev-affects-you">How MEV Affects You</a></li>
+      <li><a href="#what-can-you-do">What Can You Do?</a></li>
+      <li><a href="#the-bigger-picture">The Bigger Picture</a></li>
+      <li><a href="#mev-by-the-numbers">MEV by the Numbers</a></li>
+      <li><a href="#the-mev-supply-chain-in-detail">The MEV Supply Chain in Detail</a></li>
+      <li><a href="#mev-mitigation-strategies">MEV Mitigation Strategies</a></li>
+      <li><a href="#the-future-of-mev">The Future of MEV</a></li>
+      <li><a href="#frequently-asked-questions">Frequently Asked Questions</a></li>
+      <li><a href="#related-articles">Related Articles</a></li>
+      </ul>
+    </nav>
+
         <p>Every time you make a crypto transaction, someone might be extracting value from it. This is called MEV (Maximal Extractable Value), and it's one of the most important — and least understood — concepts in crypto.</p>
 
-<h2>What Is MEV?</h2>
+<h2 id="what-is-mev">What Is MEV?</h2>
 <p>MEV is the profit that can be extracted from users by reordering, inserting, or censoring transactions within a block. It's essentially a tax on every transaction that most users don't know they're paying.</p>
 
-<h2>How MEV Works</h2>
+<h2 id="how-mev-works">How MEV Works</h2>
 <p>When you submit a transaction to a blockchain, it goes to the mempool (a waiting area for pending transactions). Before your transaction is included in a block, sophisticated actors (called "searchers") can see it and act on it.</p>
 <p>The most common form is the sandwich attack: a bot sees your large trade, buys before you (front-running), lets your trade push the price up, then sells at the higher price (back-running). You get a worse execution price; the bot profits.</p>
 
-<h2>Who Benefits?</h2>
+<h2 id="who-benefits">Who Benefits?</h2>
 <p>The MEV supply chain involves multiple participants:</p>
 <ul>
 <li><strong>Searchers:</strong> Find MEV opportunities and construct profitable transaction bundles.</li>
@@ -138,14 +157,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </ul>
 <p>Each participant takes a share. The total MEV extracted on Ethereum alone exceeds $1 billion annually.</p>
 
-<h2>How MEV Affects You</h2>
+<h2 id="how-mev-affects-you">How MEV Affects You</h2>
 <ul>
 <li><strong>Worse execution prices:</strong> Sandwich attacks cost you money on every large trade.</li>
 <li><strong>Higher gas fees:</strong> Searchers bid up gas prices to get their transactions included first.</li>
 <li><strong>Failed transactions:</strong> Your transaction might be censored or delayed if it's not profitable for validators.</li>
 </ul>
 
-<h2>What Can You Do?</h2>
+<h2 id="what-can-you-do">What Can You Do?</h2>
 <ul>
 <li><strong>Use MEV-protected RPCs:</strong> Services like Flashbots Protect and MEV Blocker submit transactions privately, preventing front-running.</li>
 <li><strong>Split large trades:</strong> Smaller trades are less attractive targets for sandwich attacks.</li>
@@ -153,10 +172,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <li><strong>Be aware:</strong> Simply knowing MEV exists helps you understand why your trades sometimes get worse prices than expected.</li>
 </ul>
 
-<h2>The Bigger Picture</h2>
+<h2 id="the-bigger-picture">The Bigger Picture</h2>
 <p>MEV is a structural problem in blockchain design. As long as transactions are visible before inclusion, someone will extract value from them. The long-term solution is encrypted mempools or threshold encryption — technologies that are still in development but promise to eliminate MEV at the protocol level.</p>
       
-<h2>MEV by the Numbers</h2>
+<h2 id="mev-by-the-numbers">MEV by the Numbers</h2>
 <p>The scale of MEV is staggering:</p>
 <ul>
 <li>Over $1 billion in MEV extracted on Ethereum since 2020.</li>
@@ -165,13 +184,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <li>The most profitable MEV opportunities are in large DEX trades and liquidations.</li>
 </ul>
 
-<h2>The MEV Supply Chain in Detail</h2>
+<h2 id="the-mev-supply-chain-in-detail">The MEV Supply Chain in Detail</h2>
 <p><strong>Searchers</strong> are independent operators who run algorithms to find MEV opportunities. They compete in a priority gas auction (PGA) — whoever bids the most gas gets their transaction included first.</p>
 <p><strong>Builders</strong> (like Flashbots) aggregate searcher bundles and construct the most profitable block. They take a cut of the MEV and pass the rest to validators.</p>
 <p><strong>Validators</strong> select which block to propose. With MEV-Boost, validators can auction their block space to the highest bidder, maximizing their revenue.</p>
 <p>This supply chain has become highly sophisticated. What started as simple front-running has evolved into a multi-billion dollar industry with specialized infrastructure, algorithms, and market dynamics.</p>
 
-<h2>MEV Mitigation Strategies</h2>
+<h2 id="mev-mitigation-strategies">MEV Mitigation Strategies</h2>
 <p>Beyond using MEV-protected RPCs, here are additional strategies:</p>
 <ul>
 <li><strong>Time your transactions:</strong> MEV is more prevalent during high-volatility periods. Trading during calm periods reduces MEV exposure.</li>
@@ -180,7 +199,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <li><strong>Use private mempools:</strong> Some wallets and services offer private transaction submission that bypasses the public mempool entirely.</li>
 </ul>
 
-<h2>The Future of MEV</h2>
+<h2 id="the-future-of-mev">The Future of MEV</h2>
 <p>The MEV problem is being actively researched. Proposed solutions include:</p>
 <ul>
 <li><strong>Encrypted mempools:</strong> Transactions are encrypted until included in a block, preventing front-running.</li>
@@ -190,7 +209,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </ul>
 <p>These solutions are promising but not yet deployed at scale. MEV will remain a significant issue for the foreseeable future.</p>
 
-<h2>Frequently Asked Questions</h2>
+<h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
 <h3>How much does MEV cost the average user?</h3>
 <p>For small trades, MEV costs are minimal — a few cents to a few dollars. For large trades (>$10,000), MEV can cost hundreds or thousands of dollars. The average user probably loses $10-50 per year to MEV without knowing it.</p>
 <h3>Can I completely avoid MEV?</h3>
@@ -200,7 +219,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <h3>Does MEV affect Bitcoin?</h3>
 <p>MEV exists on Bitcoin but is less prevalent than on Ethereum. Bitcoin's simpler transaction model and different mempool structure make MEV extraction harder. The most significant MEV on Bitcoin is related to transaction ordering and fee sniping.</p>
 
-<h2>Related Articles</h2>
+<h2 id="related-articles">Related Articles</h2>
 <ul style="padding-left:20px;line-height:2">
   <li><a href="defi-explained.html" style="color:var(--accent)">DeFi Explained</a></li>
   <li><a href="on-chain-analysis-basics.html" style="color:var(--accent)">On-Chain Analysis</a></li>
@@ -238,7 +257,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <a href="https://www.coingecko.com" target="_blank" rel="noopener">CoinGecko</a>
         <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
       </div>
-      <p class="footer-copy">© 2026 ChainPlus. All rights reserved.</p>
+      <p class="footer-copy">© 2026 ChainPlus. All rights reserved. Not financial advice.</p>
     </div>
   </footer>
 <!-- Consent Management -->
