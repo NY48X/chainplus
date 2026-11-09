@@ -30,7 +30,7 @@
     "headline": "MEV Explained: The Hidden Tax on Crypto Transactions",
     "description": "What is MEV (Maximal Extractable Value), how does it affect you, and what can you do about it?",
     "url": "https://chainplus.tech/mev-explained-simply.html",
-    "datePublished": "2026-11-05",
+    "datePublished": "2026-10-30",
     "dateModified": "2026-11-05",
     "author": {
       "@type": "Person",
@@ -120,110 +120,138 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <div class="container page" style="max-width:720px">
       <article>
         <h1>MEV Explained: The Hidden Tax on Crypto Transactions</h1>
-        <p class="meta" style="color:var(--text-3);font-size:14px;margin-bottom:24px">By <a href="team.html" style="color:var(--accent)">Mike Tembo</a> · November 5, 2026 · Explainer</p>
+        <p class="meta" style="color:var(--text-3);font-size:14px;margin-bottom:24px">By <a href="team.html" style="color:var(--accent)">Mike Tembo</a> · October 30, 2026 · Explainer</p>
     <nav class="toc" aria-label="Table of contents">
       <p class="toc-heading" style="font-weight:600;margin:0 0 8px">Contents</p>
       <ul style="margin:0;padding-left:20px;line-height:1.8">
-      <li><a href="#what-is-mev">What Is MEV?</a></li>
-      <li><a href="#how-mev-works">How MEV Works</a></li>
-      <li><a href="#who-benefits">Who Benefits?</a></li>
-      <li><a href="#how-mev-affects-you">How MEV Affects You</a></li>
-      <li><a href="#what-can-you-do">What Can You Do?</a></li>
-      <li><a href="#the-bigger-picture">The Bigger Picture</a></li>
-      <li><a href="#mev-by-the-numbers">MEV by the Numbers</a></li>
-      <li><a href="#the-mev-supply-chain-in-detail">The MEV Supply Chain in Detail</a></li>
-      <li><a href="#mev-mitigation-strategies">MEV Mitigation Strategies</a></li>
-      <li><a href="#the-future-of-mev">The Future of MEV</a></li>
+      <li><a href="#summary">Summary: Key Takeaways</a></li>
+      <li><a href="#historical-context">Historical Context: How We Got Here</a></li>
+      <li><a href="#how-it-works">How MEV Works</a></li>
+      <li><a href="#data-at-a-glance">Data at a Glance</a></li>
+      <li><a href="#why-it-matters">Why It Matters</a></li>
+      <li><a href="#risks-and-checklist">Risks and Practical Checklist</a></li>
       <li><a href="#frequently-asked-questions">Frequently Asked Questions</a></li>
       <li><a href="#related-articles">Related Articles</a></li>
       </ul>
     </nav>
 
-        <p>Every time you make a crypto transaction, someone might be extracting value from it. This is called MEV (Maximal Extractable Value), and it's one of the most important — and least understood — concepts in crypto.</p>
+    <div class="summary-box" style="border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);padding:18px 20px;margin:20px 0">
+      <h2 id="summary" style="font-weight:600;font-size:18px;margin:0 0 10px">Summary: Key Takeaways</h2>
+      <p style="color:var(--text-2);line-height:1.7;margin:0 0 12px">Maximal Extractable Value (MEV) is profit earned by reordering, including, or excluding transactions inside a block — not by buying the underlying asset. It is the hidden tax that appears as worse prices, failed transactions, and liquidations you never saw coming. This guide explains where MEV came from, how each type extracts value, what the data shows, why the extraction matters for fairness, and what you can actually do about it.</p>
+      <ul style="color:var(--text-2);line-height:1.7;padding-left:20px;margin:0">
+        <li><strong>MEV is ordering power:</strong> whoever arranges transactions inside a block can profit from the order itself.</li>
+        <li><strong>Users pay it:</strong> sandwich attacks, front-running, and back-running show up as slippage and worse fills.</li>
+        <li><strong>Searchers compete, validators collect:</strong> bots bid for the right to be sequenced, and block builders keep the spread.</li>
+        <li><strong>Scale is large:</strong> cumulative extracted MEV on Ethereum is measured in billions, not thousands.</li>
+        <li><strong>Mitigation exists:</strong> private order flow, intent-based trading, and encrypted mempools reduce exposure.</li>
+      </ul>
+      <p style="font-size:13px;color:var(--muted);margin:12px 0 0">Last updated: November 5, 2026. Data sources: EigenPhi and MEV-Boost research, Ethereum mempool studies, and protocol documentation.</p>
+    </div>
 
-<h2 id="what-is-mev">What Is MEV?</h2>
-<p>MEV is the profit that can be extracted from users by reordering, inserting, or censoring transactions within a block. It's essentially a tax on every transaction that most users don't know they're paying.</p>
+    <h2 id="historical-context">Historical Context: How We Got Here</h2>
+    <p>MEV was named in 2019, but it existed as soon as blockchains had a public queue of pending transactions. The first academic paper to formalize it — “Flash Boys 2.0” (2019), by researchers including Ethereum co-founder Vitalik Buterin — described how miners on proof-of-work chains could front-run, back-run, and sandwich trades sitting in the public mempool. The DeFi Summer of 2020 turned the theory into an industry: DEX arbitrage, liquidation races, and sandwich bots became the most profitable activity on Ethereum, and gas wars — where bots outbid each other to land a transaction first — made visibility itself a product.</p>
+    <p>The infrastructure followed the money. Searcher bots multiplied, builders emerged to assemble the most profitable blocks, and relay networks appeared to pass those blocks to validators without revealing their contents prematurely. The Merge in September 2022 replaced miners with validators and institutionalized the flow as proposer-builder separation (PBS) and MEV-Boost: builders construct blocks, validators propose them, and the build value is split. By 2023, encrypted mempools and private order-flow services were common, and every major DEX was debating how much of its users' flow to route privately.</p>
+    <p>The research frontier moved with it. “Good MEV” — arbitrage that keeps DEX prices aligned — is distinguishable from “bad MEV” — sandwiching that taxes users — and the field now argues about where one ends and the other begins. That argument is the history in one sentence: the same ordering power that makes markets efficient can also make them unfair, and the line between the two is where crypto's infrastructure debates now live.</p>
 
-<h2 id="how-mev-works">How MEV Works</h2>
-<p>When you submit a transaction to a blockchain, it goes to the mempool (a waiting area for pending transactions). Before your transaction is included in a block, sophisticated actors (called "searchers") can see it and act on it.</p>
-<p>The most common form is the sandwich attack: a bot sees your large trade, buys before you (front-running), lets your trade push the price up, then sells at the higher price (back-running). You get a worse execution price; the bot profits.</p>
+    <h2 id="how-it-works">How MEV Works</h2>
+    <p>When you submit a trade to a public mempool, every node in the network can see it before it is included in a block. A searcher bot watches that queue, calculates what profit can be made from your transaction's position, and crafts its own transactions to sit before or after yours. A builder then assembles the most profitable ordering, and a validator proposes it. The profit flows from the trader's worse execution to the searcher, minus what the builder and validator take. You never see the intermediate steps; you just get a worse price than the market quoted.</p>
+    <h3>The main extraction types</h3>
+    <p>Arbitrage MEV captures price differences between venues: if token X is cheaper on one DEX than another, a bot buys low, sells high, and pockets the spread. This is generally “good” MEV because it aligns prices. Liquidation MEV races to claim under-collateralized positions in lending protocols, collecting the liquidation bonus — efficient, but it can cascade when many positions fall together. Sandwiching is the harmful core: a bot sees your large buy, buys first to push the price up (front-running), lets your trade execute at the inflated price, then sells (back-running). You receive fewer tokens for the same dollars, and the difference is the tax.</p>
+    <h3>Private flow, builders, and intent</h3>
+    <p>Defenses evolved around visibility. Private order-flow services route your transaction directly to a builder without broadcasting it to the public mempool, so bots cannot sandwich what they cannot see — at the cost of trusting the intermediary not to exploit it. Intent-based systems go further: you sign a statement of what you want (“swap 10 ETH for at least 9.8 USDC”) and solvers compete to fill it privately. Neither fixes the underlying ordering power; both hide the transaction from the extractors who would abuse it.</p>
 
-<h2 id="who-benefits">Who Benefits?</h2>
-<p>The MEV supply chain involves multiple participants:</p>
-<ul>
-<li><strong>Searchers:</strong> Find MEV opportunities and construct profitable transaction bundles.</li>
-<li><strong>Builders:</strong> Assemble blocks from transaction bundles, optimizing for profit.</li>
-<li><strong>Validators/Proposers:</strong> Select which block to publish and take a cut.</li>
-</ul>
-<p>Each participant takes a share. The total MEV extracted on Ethereum alone exceeds $1 billion annually.</p>
+    <h2 id="data-at-a-glance">Data at a Glance</h2>
+    <p>MEV measurement is methodologically hard because extraction is defined by counterfactuals: what would your price have been without the bots? Researchers estimate it by simulating orderings, clustering bot addresses, and measuring the spread between quoted and executed prices. The published estimates agree on the order of magnitude: cumulative MEV extracted on Ethereum since 2020 is in the low billions of dollars, with DEX arbitrage typically the largest category, liquidations second, and sandwiching the most salient per transaction. Daily MEV spikes with volatility — the same days that liquidate borrowers are the days that pay searchers.</p>
+    <p>The table below covers the types you will actually encounter. The “how you pay” column is the one to internalize.</p>
+    <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;margin:16px 0;font-size:13px">
+      <caption>MEV types: mechanism, who profits, how users pay, and mitigation</caption>
+      <thead>
+        <tr style="border-bottom:1px solid var(--border)">
+          <th scope="col" style="text-align:left;padding:6px">MEV type</th>
+          <th scope="col" style="text-align:left;padding:6px">Mechanism</th>
+          <th scope="col" style="text-align:left;padding:6px">Who profits</th>
+          <th scope="col" style="text-align:left;padding:6px">How you pay</th>
+          <th scope="col" style="text-align:left;padding:6px">Mitigation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid var(--border)">
+          <td style="padding:6px">DEX arbitrage</td>
+          <td style="padding:6px">Buy low on one venue, sell high on another</td>
+          <td style="padding:6px">Searchers, builders, validators</td>
+          <td style="padding:6px">Generally nothing — aligns prices</td>
+          <td style="padding:6px">None needed; keep it competitive</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border)">
+          <td style="padding:6px">Liquidation</td>
+          <td style="padding:6px">Race to close under-collateralized loans</td>
+          <td style="padding:6px">Liquidators, builders</td>
+          <td style="padding:6px">Borrower loses bonus plus position</td>
+          <td style="padding:6px">Health factor, partial liquidations</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border)">
+          <td style="padding:6px">Sandwiching</td>
+          <td style="padding:6px">Buy before and sell after a large trade</td>
+          <td style="padding:6px">Searchers, builders</td>
+          <td style="padding:6px">Worse price on large public trades</td>
+          <td style="padding:6px">Private flow, intents, tighter slippage</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border)">
+          <td style="padding:6px">Front-running</td>
+          <td style="padding:6px">Copy a profitable trade with a higher fee</td>
+          <td style="padding:6px">Copycat searchers</td>
+          <td style="padding:6px">You miss the trade or get worse fill</td>
+          <td style="padding:6px">Private mempool, commit-reveal</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border)">
+          <td style="padding:6px">Back-running</td>
+          <td style="padding:6px">Trade immediately after a price-moving tx</td>
+          <td style="padding:6px">Searchers, builders</td>
+          <td style="padding:6px">Price impact you created is harvested</td>
+          <td style="padding:6px">Batch auctions, encrypted mempools</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    <p style="font-size:13px;color:var(--muted)">Data sources: EigenPhi MEV analytics, MEV-Boost and PBS research, and academic mempool studies. Estimates vary by methodology; treat totals as orders of magnitude.</p>
+    <p>The pattern in the data is that extraction concentrates where visibility is highest and slippage tolerance is widest. Large public swaps on thin pools are the richest targets; small trades routed privately through intents and aggregators are the least exposed. That is why the practical advice below centers on routing and slippage, not on outbidding bots.</p>
 
-<h2 id="how-mev-affects-you">How MEV Affects You</h2>
-<ul>
-<li><strong>Worse execution prices:</strong> Sandwich attacks cost you money on every large trade.</li>
-<li><strong>Higher gas fees:</strong> Searchers bid up gas prices to get their transactions included first.</li>
-<li><strong>Failed transactions:</strong> Your transaction might be censored or delayed if it's not profitable for validators.</li>
-</ul>
+    <h2 id="why-it-matters">Why It Matters</h2>
+    <p>MEV matters because it is a tax on every public transaction, and taxes shape behavior. When traders know that large public trades will be sandwiched, they split orders, use private routing, or avoid DEXs entirely — all of which fragment liquidity and degrade the open market that DeFi promised. Liquidation MEV, for all its efficiency, means that a borrower's worst moment is an auction run by bots. The net effect is that the most sophisticated participants earn rent from the least sophisticated ones, at exactly the moments when sophistication should matter least.</p>
+    <p>It also matters to the security of the chain itself. When the value available from reordering a block exceeds the honest block reward, validators and builders are incentivized to extract rather than secure. Research on “consensus instability” showed that sufficiently large MEV can make reorganizations rational — rewind the chain, capture the value again — which undermines the finality that users rely on. PBS and encrypted mempools are not just trader protections; they are consensus protections.</p>
+    <p>Finally, MEV matters because it is an architectural choice, not a law of nature. Public mempools made ordering visible and therefore extractable. Alternative designs — fair sequencing, batch auctions, threshold encryption — make ordering blind. The long-term question for crypto infrastructure is which choice wins: open extraction or private competition. The answer will determine whether DeFi feels like a fair market or a casino run by insiders.</p>
 
-<h2 id="what-can-you-do">What Can You Do?</h2>
-<ul>
-<li><strong>Use MEV-protected RPCs:</strong> Services like Flashbots Protect and MEV Blocker submit transactions privately, preventing front-running.</li>
-<li><strong>Split large trades:</strong> Smaller trades are less attractive targets for sandwich attacks.</li>
-<li><strong>Use limit orders:</strong> DEXs like CoW Swap use batch auctions that are MEV-resistant.</li>
-<li><strong>Be aware:</strong> Simply knowing MEV exists helps you understand why your trades sometimes get worse prices than expected.</li>
-</ul>
+    <h2 id="risks-and-checklist">Risks and Practical Checklist</h2>
+    <p>The risks are specific and measurable. Sandwich risk grows with trade size, pool thinness, and slippage tolerance. Liquidation risk grows with leverage and collateral volatility. Back-running risk grows when your transaction itself moves the price. None of these is avoidable in a public mempool; all of them are reducible with routing.</p>
+    <ul>
+      <li><strong>Set tight slippage:</strong> reject trades that execute more than a few tenths of a percent worse than quoted.</li>
+      <li><strong>Split large trades:</strong> several small swaps are harder to sandwich than one large one.</li>
+      <li><strong>Use private routing:</strong> prefer aggregators and intents that route through private order flow over raw public mempool sends.</li>
+      <li><strong>Avoid thin pools for size:</strong> the smaller the pool relative to your trade, the richer the sandwich.</li>
+      <li><strong>Protect lending health factors:</strong> keep collateral ratios well above liquidation thresholds, especially in volatile markets.</li>
+      <li><strong>Do not chase gas wars:</strong> raising fees to outbid bots funds the extraction instead of escaping it.</li>
+    </ul>
+    <p>You cannot eliminate MEV from an open market, and some of it — arbitrage and orderly liquidation — is useful. What you can do is refuse to be the easiest target: public, large, and permissive. Tight slippage and private routing turn a tax into a rounding error.</p>
 
-<h2 id="the-bigger-picture">The Bigger Picture</h2>
-<p>MEV is a structural problem in blockchain design. As long as transactions are visible before inclusion, someone will extract value from them. The long-term solution is encrypted mempools or threshold encryption — technologies that are still in development but promise to eliminate MEV at the protocol level.</p>
-      
-<h2 id="mev-by-the-numbers">MEV by the Numbers</h2>
-<p>The scale of MEV is staggering:</p>
-<ul>
-<li>Over $1 billion in MEV extracted on Ethereum since 2020.</li>
-<li>Sandwich attacks alone cost users hundreds of millions.</li>
-<li>During peak DeFi activity, MEV can exceed 5% of total transaction value.</li>
-<li>The most profitable MEV opportunities are in large DEX trades and liquidations.</li>
-</ul>
+    <h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
+    <h3>What is MEV in simple terms?</h3>
+    <p>MEV is profit from the power to order transactions inside a block. It is not profit from buying a token; it is profit from deciding whether your trade happens before or after someone else's. Sandwiching, front-running, and liquidation races are all forms of it.</p>
+    <h3>Is MEV illegal or cheating?</h3>
+    <p>On most chains, MEV is not illegal — it is the predictable consequence of a public transaction queue. Whether it is fair is a different question, and the field distinguishes “good” MEV such as arbitrage, which aligns prices, from “bad” MEV such as sandwiching, which harms users. The debate is about design, not legality.</p>
+    <h3>How much MEV is there?</h3>
+    <p>Estimates vary by methodology, but cumulative extraction on Ethereum since 2020 is in the low billions of dollars. Daily amounts spike with volatility and DEX volume. Arbitrage is typically the largest category by value; sandwiching is the most visible per transaction.</p>
+    <h3>How can I protect myself from sandwiching?</h3>
+    <p>Use tight slippage limits, split large trades, and route through private order-flow or intent-based aggregators instead of the public mempool. None of these is perfect, but together they make your trade unprofitable to sandwich.</p>
+    <h3>What is proposer-builder separation (PBS)?</h3>
+    <p>PBS splits block building from block proposing. Specialized builders assemble the most profitable block; validators propose it and collect a share. It was designed to stop validators from needing to run extraction infrastructure themselves, and to make MEV flows transparent enough to mitigate.</p>
 
-<h2 id="the-mev-supply-chain-in-detail">The MEV Supply Chain in Detail</h2>
-<p><strong>Searchers</strong> are independent operators who run algorithms to find MEV opportunities. They compete in a priority gas auction (PGA) — whoever bids the most gas gets their transaction included first.</p>
-<p><strong>Builders</strong> (like Flashbots) aggregate searcher bundles and construct the most profitable block. They take a cut of the MEV and pass the rest to validators.</p>
-<p><strong>Validators</strong> select which block to propose. With MEV-Boost, validators can auction their block space to the highest bidder, maximizing their revenue.</p>
-<p>This supply chain has become highly sophisticated. What started as simple front-running has evolved into a multi-billion dollar industry with specialized infrastructure, algorithms, and market dynamics.</p>
-
-<h2 id="mev-mitigation-strategies">MEV Mitigation Strategies</h2>
-<p>Beyond using MEV-protected RPCs, here are additional strategies:</p>
-<ul>
-<li><strong>Time your transactions:</strong> MEV is more prevalent during high-volatility periods. Trading during calm periods reduces MEV exposure.</li>
-<li><strong>Use DEX aggregators:</strong> Services like 1inch and Matcha route trades across multiple DEXs to find the best price, making sandwich attacks harder.</li>
-<li><strong>Set slippage tolerance carefully:</strong> Too high a slippage tolerance makes you an easy target for sandwich attacks. Too low and your transaction fails.</li>
-<li><strong>Use private mempools:</strong> Some wallets and services offer private transaction submission that bypasses the public mempool entirely.</li>
-</ul>
-
-<h2 id="the-future-of-mev">The Future of MEV</h2>
-<p>The MEV problem is being actively researched. Proposed solutions include:</p>
-<ul>
-<li><strong>Encrypted mempools:</strong> Transactions are encrypted until included in a block, preventing front-running.</li>
-<li><strong>Threshold encryption:</strong> Multiple parties must cooperate to decrypt transactions, removing single points of failure.</li>
-<li><strong>MEV smoothing:</strong> Distribute MEV revenue across all validators, reducing the incentive to extract it.</li>
-<li><strong>Application-level protection:</strong> DEXs and protocols building MEV resistance into their design.</li>
-</ul>
-<p>These solutions are promising but not yet deployed at scale. MEV will remain a significant issue for the foreseeable future.</p>
-
-<h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
-<h3>How much does MEV cost the average user?</h3>
-<p>For small trades, MEV costs are minimal — a few cents to a few dollars. For large trades (>$10,000), MEV can cost hundreds or thousands of dollars. The average user probably loses $10-50 per year to MEV without knowing it.</p>
-<h3>Can I completely avoid MEV?</h3>
-<p>Not entirely. MEV is a structural feature of blockchain design. But you can significantly reduce your exposure by using MEV-protected RPCs, splitting large trades, and using MEV-resistant DEXs.</p>
-<h3>Is MEV illegal?</h3>
-<p>MEV is not illegal. It's a consequence of public mempools and deterministic execution. Some forms (like sandwich attacks) are ethically questionable but technically allowed by the protocol. Regulators have not yet addressed MEV specifically.</p>
-<h3>Does MEV affect Bitcoin?</h3>
-<p>MEV exists on Bitcoin but is less prevalent than on Ethereum. Bitcoin's simpler transaction model and different mempool structure make MEV extraction harder. The most significant MEV on Bitcoin is related to transaction ordering and fee sniping.</p>
-
-<h2 id="related-articles">Related Articles</h2>
-<ul style="padding-left:20px;line-height:2">
-  <li><a href="defi-explained.html" style="color:var(--accent)">DeFi Explained</a></li>
-  <li><a href="on-chain-analysis-basics.html" style="color:var(--accent)">On-Chain Analysis</a></li>
-</ul>
+    <h2 id="related-articles">Related Articles</h2>
+    <ul style="padding-left:20px;line-height:2">
+      <li><a href="defi-explained.html" style="color:var(--accent)">DeFi Explained: Decentralized Finance for Beginners</a></li>
+      <li><a href="on-chain-analysis-basics.html" style="color:var(--accent)">On-Chain Analysis: Reading the Blockchain</a></li>
+      <li><a href="understanding-ethereum.html" style="color:var(--accent)">Understanding Ethereum: Smart Contracts and DeFi</a></li>
+    </ul>
 </article>
       <div style="margin-top:40px;padding-top:24px;border-top:1px solid var(--border)">
         <a href="insights.html" style="color:var(--accent)">← Back to Insights</a>

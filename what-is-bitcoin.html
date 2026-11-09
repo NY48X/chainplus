@@ -30,8 +30,8 @@
     "headline": "What Is Bitcoin and How Does It Work?",
     "description": "A beginner-friendly guide to Bitcoin: what it is, how it works, why it matters, and how to think about it as a technology and asset.",
     "url": "https://chainplus.tech/what-is-bitcoin.html",
-    "datePublished": "2026-07-15",
-    "dateModified": "2026-07-15",
+    "datePublished": "2026-08-14",
+    "dateModified": "2026-08-20",
     "author": {
       "@type": "Person",
       "name": "Mike Tembo",
@@ -120,69 +120,68 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <div class="container page" style="max-width:720px">
       <article>
         <h1>What Is Bitcoin and How Does It Work?</h1>
-        <p class="meta" style="color:var(--text-3);font-size:14px;margin-bottom:24px">By <a href="team.html" style="color:var(--accent)">Mike Tembo</a> · July 15, 2026 · Explainer</p>
-    <nav class="toc" aria-label="Table of contents">
-      <p class="toc-heading" style="font-weight:600;margin:0 0 8px">Contents</p>
-      <ul style="margin:0;padding-left:20px;line-height:1.8">
-      <li><a href="#how-bitcoin-works">How Bitcoin Works</a></li>
-      <li><a href="#the-21-million-cap">The 21 Million Cap</a></li>
-      <li><a href="#why-bitcoin-matters">Why Bitcoin Matters</a></li>
-      <li><a href="#common-misconceptions">Common Misconceptions</a></li>
-      <li><a href="#how-to-think-about-bitcoin">How to Think About Bitcoin</a></li>
-      <li><a href="#bitcoins-environmental-impact">Bitcoin&#x27;s Environmental Impact</a></li>
-      <li><a href="#bitcoin-and-regulation">Bitcoin and Regulation</a></li>
-      <li><a href="#frequently-asked-questions">Frequently Asked Questions</a></li>
-      <li><a href="#related-articles">Related Articles</a></li>
-      </ul>
-    </nav>
+        <p class="meta" style="color:var(--text-3);font-size:14px;margin-bottom:24px">By <a href="team.html" style="color:var(--accent)">Mike Tembo</a> · August 14, 2026 · Explainer</p>
+        <nav class="toc" aria-label="Table of contents">
+<p class="toc-heading" style="font-weight:600;margin:0 0 8px">Contents</p>
+<ul style="margin:0;padding-left:20px;line-height:1.8">
+<li><a href="#how-bitcoin-works">How Bitcoin Works</a></li>
+<li><a href="#history">How We Got Here</a></li>
+<li><a href="#the-21-million-cap">The 21 Million Cap</a></li>
+<li><a href="#data-at-a-glance">The Numbers at a Glance</a></li>
+<li><a href="#why-bitcoin-matters">Why Bitcoin Matters</a></li>
+<li><a href="#common-misconceptions">Common Misconceptions</a></li>
+<li><a href="#frequently-asked-questions">Frequently Asked Questions</a></li>
+<li><a href="#related-articles">Related Articles</a></li>
+</ul>
+</nav>
 
-        <p>Bitcoin is the first and largest cryptocurrency, created in 2009 by an anonymous person or group using the name Satoshi Nakamoto. It is a decentralized digital currency that operates without a central bank or single administrator. Transactions are verified by a distributed network of computers and recorded on a public ledger called the blockchain.</p>
-
+        
+<p>Bitcoin is often introduced as "digital money" and then left as a mystery. The better starting point is simpler: it is a piece of software that lets strangers transfer value without trusting each other or a bank in the middle, and it is also the name of the asset that runs on that software. Those two ideas — the network and the coin — are related but not identical.</p>
+<div style="border:1px solid var(--accent-dim);background:var(--surface-2);border-radius:12px;padding:20px 22px;margin:24px 0">
+<p style="font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:0 0 8px">The short version — in plain English</p>
+<ul style="margin:0;padding-left:20px;line-height:1.6"><li style="margin-bottom:6px"><strong>What it is:</strong> A public, open-source network that records every Bitcoin transaction on a shared ledger called the blockchain. No single company runs it and no government can shut it down in one place.</li><li style="margin-bottom:6px"><strong>Why it has a price:</strong> There will only ever be 21 million bitcoin. As more people want to hold it, that fixed supply is what gives the market a price — the same way gold is valuable partly because you cannot print more of it easily.</li><li style="margin-bottom:6px"><strong>How it stays honest:</strong> A process called mining. Computers compete to confirm new batches of transactions about every ten minutes, and the winner is paid in newly created bitcoin.</li></ul>
+</div>
 <h2 id="how-bitcoin-works">How Bitcoin Works</h2>
-<p>Bitcoin operates on a peer-to-peer network. When you send Bitcoin to someone, the transaction is broadcast to the network, where miners (specialized computers) verify it by solving complex mathematical problems. Once verified, the transaction is added to a "block" and permanently recorded on the blockchain.</p>
-<p>The blockchain is a chain of blocks, each containing a batch of transactions. Each block references the previous one, creating an immutable record. This means no transaction can be altered or reversed once confirmed.</p>
-
-<h2 id="the-21-million-cap">The 21 Million Cap</h2>
-<p>Bitcoin has a hard supply cap of 21 million coins. This is coded into the protocol and cannot be changed without consensus from the entire network. New Bitcoin is created through mining, but the rate of creation halves approximately every four years (the "halving"). This makes Bitcoin deflationary over time — unlike fiat currencies, which can be printed without limit.</p>
-
+<p>Imagine a notebook that everyone in the world can read but nobody can rewrite. That is the Bitcoin blockchain. Every transaction — who sent how much to whom — is written into that notebook, and once a page is closed, it cannot be altered without redoing all the work that came after it. That makes the history of payments tamper-evident by design.</p>
+<p>To send bitcoin, your wallet signs a message with your private key, which is a secret only you hold. The network checks that the signature matches the coins you claim to own and that you have not already spent them — the famous "double-spend" problem that stopped digital money from working before. If the checks pass, miners include the transaction in the next block.</p>
+<p>Mining uses proof of work. Miners run a specialised search — trying billions of combinations of numbers until one produces a hash (a digital fingerprint) below a difficulty target set by the network. The first to find it broadcasts the block, and the rest of the network verifies the proof almost instantly. The puzzle is hard to solve but trivial to check, which is the entire trick.</p>
+<p>Every 210,000 blocks, roughly every four years, the reward for mining is cut in half. This is called the halving. It means the supply schedule is predictable down to the last coin: the final bitcoin is expected around the year 2140, after which miners will be paid only in transaction fees.</p>
+<h2 id="history">How We Got Here: A Short History With Dates</h2>
+<p>Bitcoin did not appear overnight, and it did not succeed in a straight line. Its history explains why the system behaves the way it does today — conservative, slow to change, and built to survive being attacked.</p>
+<p><strong>31 October 2008 — the whitepaper.</strong> A pseudonymous author calling himself Satoshi Nakamoto published "Bitcoin: A Peer-to-Peer Electronic Cash System" on a cryptography mailing list. It proposed a payment network with no central authority, using cryptography and proof of work to solve double-spending.</p>
+<p><strong>3 January 2009 — the genesis block.</strong> Nakamoto mined the first block, block 0, and embedded a headline from The Times: "Chancellor on brink of second bailout for banks." It was a timestamp and a statement of intent — money that could not be inflated away by bank rescues.</p>
+<p><strong>22 May 2010 — Bitcoin Pizza Day.</strong> A user in Florida paid 10,000 bitcoin for two pizzas. At the time that was a fair market price. It is now used as a reminder of how dramatically value has compound in the early network. No one knows what happened to Nakamoto — the protocol has run for over 17 years without a founder to change it.</p>
+<p><strong>2011 – 2013 — exchanges and the first boom.</strong> The Mt. Gox exchange brought trading to the public, the price crossed $1 in 2011, and the first major bubble and crash followed in 2013. Regulators began to pay attention, and the term "cryptocurrency" entered the press.</p>
+<p><strong>28 November 2012, 9 July 2016, 11 May 2020, 19 April 2024 — the four halvings.</strong> The mining reward fell from 50 to 25, then to 12.5, 6.25 and finally 3.125 BTC per block at block 840,000 in April 2024. Each halving halves the default inflation of the system, trending to the fixed 21 million cap.</p>
+<p><strong>January 2024 — US spot ETFs.</strong> The US Securities and Exchange Commission approved spot Bitcoin exchange-traded funds, letting investors hold bitcoin through a brokerage account without touching an exchange or a wallet. That was the largest institutional door-opening in the asset's history.</p>
+<div style="overflow-x:auto;margin:20px 0"><table style="width:100%;border-collapse:collapse;font-size:14px;line-height:1.5"><thead><tr style="background:var(--surface-2);border-bottom:1px solid var(--border)"><th style="text-align:left;padding:10px 12px;font-weight:600;color:var(--text)">Date</th><th style="text-align:left;padding:10px 12px;font-weight:600;color:var(--text)">Event</th><th style="text-align:left;padding:10px 12px;font-weight:600;color:var(--text)">Why it mattered</th></tr></thead><tbody><tr style="border-bottom:1px solid var(--border-soft)"><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">31 Oct 2008</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Whitepaper published</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Bitcoin goes from idea to working design</td></tr><tr style="border-bottom:1px solid var(--border-soft)"><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">3 Jan 2009</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Genesis block mined</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">First 50 BTC created; network goes live</td></tr><tr style="border-bottom:1px solid var(--border-soft)"><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">22 May 2010</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Bitcoin Pizza Day</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">First real-world commerce use</td></tr><tr style="border-bottom:1px solid var(--border-soft)"><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Nov 2012 – Apr 2024</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Four halvings (210,000 blocks each)</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Supply growth cut in half each time</td></tr><tr style="border-bottom:1px solid var(--border-soft)"><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Jan 2024</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">US spot Bitcoin ETFs approved</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Mainstream brokerage access</td></tr></tbody></table></div>
+<h2 id="the-21-million-cap">The 21 Million Cap and What It Really Means</h2>
+<p>Only 21 million bitcoin will ever exist. That is not a marketing claim; it is a rule in the software that every full node enforces. Changing it would require persuading the whole network to run different software, which the economic majority has never agreed to do. Scarcity, in Bitcoin's case, is enforced by code and verified by anyone who wants to check.</p>
+<p>Scarcity alone, however, does not create value. A rare token nobody wants is worth nothing. Bitcoin's price comes from the intersection of fixed supply and sustained demand — from people who value censorship resistance, from savers who want an asset outside the banking system, and from speculators who expect both groups to grow. Understanding that two-part equation keeps you from attributing every price move to a single cause.</p>
+<p>Of the 21 million, about 19.8 million had been mined by early 2026. The remaining coins will trickle out slowly over more than a century, which means the inflation rate is effectively under one percent a year and falling. That is why Bitcoin is often compared, carefully, to digital gold: both are scarce, durable and portable, but gold has thousands of years of cultural weight behind it and Bitcoin has about seventeen.</p>
+<h2 id="data-at-a-glance">The Numbers at a Glance</h2>
+<div style="overflow-x:auto;margin:20px 0"><table style="width:100%;border-collapse:collapse;font-size:14px;line-height:1.5"><thead><tr style="background:var(--surface-2);border-bottom:1px solid var(--border)"><th style="text-align:left;padding:10px 12px;font-weight:600;color:var(--text)">Fact</th><th style="text-align:left;padding:10px 12px;font-weight:600;color:var(--text)">Detail</th></tr></thead><tbody><tr style="border-bottom:1px solid var(--border-soft)"><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Ticker / Unit</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">BTC. Smallest unit is 1 satoshi = 0.00000001 BTC</td></tr><tr style="border-bottom:1px solid var(--border-soft)"><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Max supply</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">21,000,000 BTC — never more</td></tr><tr style="border-bottom:1px solid var(--border-soft)"><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Supplied by early 2026</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">~19.8 million BTC</td></tr><tr style="border-bottom:1px solid var(--border-soft)"><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Block time</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">~10 minutes; halving every 210,000 blocks (~4 years)</td></tr><tr style="border-bottom:1px solid var(--border-soft)"><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Consensus</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Proof of work (SHA-256). Miners secure the network</td></tr><tr style="border-bottom:1px solid var(--border-soft)"><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Last halving</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">19 April 2024 — reward now 3.125 BTC</td></tr><tr style="border-bottom:1px solid var(--border-soft)"><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Estimated final coin</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">~2140 — then fees only</td></tr></tbody></table></div>
 <h2 id="why-bitcoin-matters">Why Bitcoin Matters</h2>
-<p>Bitcoin introduced the concept of digital scarcity. Before Bitcoin, digital files could be copied infinitely. Bitcoin solved the "double-spend problem" — ensuring that digital money can't be spent twice — without requiring a trusted central authority.</p>
-<p>Bitcoin is often compared to "digital gold" because of its fixed supply and store-of-value properties. It is also used as a medium of exchange, though its price volatility makes it less practical for everyday transactions than stablecoins or traditional currencies.</p>
-
-<h2 id="common-misconceptions">Common Misconceptions</h2>
-<p><strong>Bitcoin is anonymous.</strong> Not exactly. Bitcoin transactions are pseudonymous — they're linked to wallet addresses, not names. But with enough analysis, transactions can often be traced to individuals. For true anonymity, privacy coins like Monero are designed differently.</p>
-<p><strong>Bitcoin is only used for illegal activity.</strong> Studies consistently show that the vast majority of Bitcoin transactions are for legitimate purposes. The transparent nature of the blockchain actually makes it easier to trace illicit activity than cash.</p>
-<p><strong>Bitcoin has no intrinsic value.</strong> This is a philosophical question. Bitcoin's value comes from network effects (more users = more valuable), scarcity (fixed supply), and utility (store of value, transfer mechanism). Whether that constitutes "intrinsic value" depends on your definition.</p>
-
-<h2 id="how-to-think-about-bitcoin">How to Think About Bitcoin</h2>
-<p>Bitcoin is best understood as an experiment in decentralized money. It has survived for over 15 years, weathered multiple crashes, and gained institutional adoption. Whether it succeeds long-term depends on continued adoption, regulatory treatment, and technological development.</p>
-<p>For anyone interested in crypto, understanding Bitcoin is essential. It is the foundation of the entire cryptocurrency ecosystem — most other cryptocurrencies are either forks of Bitcoin or built in response to its limitations.</p>
-      
-<h2 id="bitcoins-environmental-impact">Bitcoin's Environmental Impact</h2>
-<p>Bitcoin mining consumes significant energy. The proof-of-work consensus mechanism requires miners to solve complex mathematical problems, which demands substantial computational power. Critics argue this is wasteful and environmentally harmful.</p>
-<p>Proponents counter that much of Bitcoin mining uses renewable energy (hydro, solar, wind) and that the energy consumption is justified by the security it provides. The debate is ongoing, with both sides presenting valid points.</p>
-<p>It's worth noting that traditional banking and gold mining also consume significant energy. The comparison depends on which metrics you prioritize and how you account for externalities.</p>
-
-<h2 id="bitcoin-and-regulation">Bitcoin and Regulation</h2>
-<p>Bitcoin's regulatory status varies by country. Some nations (El Salvador) have adopted it as legal tender. Others (China) have banned it. Most countries treat it as property for tax purposes.</p>
-<p>Regulatory clarity is improving but remains fragmented. The US is developing frameworks for crypto taxation, custody, and trading. The EU's MiCA regulation provides a comprehensive framework for crypto assets. These developments will shape Bitcoin's future adoption and use.</p>
-
+<p>Bitcoin proved that digital scarcity is possible without a central issuer. That sounds abstract, but it is a genuinely new primitive in economics. Before Bitcoin, every digital thing could be copied perfectly and infinitely. Bitcoin showed how to create a digital object that cannot be copied and double-spent, while being transferable across borders in minutes.</p>
+<p>For people living under capital controls, inflation or sanctions, that transferability is not theoretical. For everyone else, the lesson is institutional: you can build a monetary network that no single party can freeze, seize or re-write, at the cost of slower transactions and more volatile prices. Whether that trade is worth it depends on what you value — which is why Bitcoin has both passionate advocates and legitimate sceptics.</p>
+<p>It also matters well beyond its own price. Every major cryptocurrency since 2009 has been a response to Bitcoin's limitations — faster blocks, programmable contracts, privacy, or scale. You cannot understand the rest of the ecosystem without understanding the system it was all built to improve on, or to escape from.</p>
+<h2 id="common-misconceptions">Common Misconceptions, Straightened Out</h2>
+<p><strong>"Bitcoin is anonymous."</strong> It is pseudonymous. Addresses are not labelled with names, but every transaction is public forever. Investigators routinely trace funds through that public trail. If anonymity is the goal, tools designed for privacy are a different conversation.</p>
+<p><strong>"Bitcoin is mostly for crime."</strong> The transparent ledger is actively hostile to large-scale crime compared with cash, and studies of on-chain flows have consistently found that illicit activity is a small minority of volume. Small retail payments should not be conflated with the network's main use.</p>
+<p><strong>"Bitcoin will replace the dollar next year."</strong> There is no timetable like that in the protocol. Adoption has been gradual, cycle-driven and reversible, and Bitcoin competes with — rather than simply replaces — existing monetary systems.</p>
 <h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
-<h3>Is Bitcoin a good investment?</h3>
-<p>Bitcoin has historically been a high-risk, high-reward asset. It has delivered significant returns over long periods but with extreme volatility. Whether it's a good investment depends on your risk tolerance, time horizon, and portfolio diversification. Never invest more than you can afford to lose.</p>
-<h3>How do I buy Bitcoin?</h3>
-<p>You can buy Bitcoin on cryptocurrency exchanges like Coinbase, Kraken, or Binance. You'll need to create an account, verify your identity, and deposit funds. You can also buy Bitcoin through Bitcoin ATMs or peer-to-peer platforms.</p>
-<h3>Can Bitcoin be hacked?</h3>
-<p>The Bitcoin network itself has never been hacked. However, exchanges, wallets, and individual users can be compromised. The security of your Bitcoin depends on how you store it. Hardware wallets are the most secure option for significant holdings.</p>
-<h3>What happens when all 21 million Bitcoin are mined?</h3>
-<p>The last Bitcoin is expected to be mined around 2140. After that, miners will be compensated solely by transaction fees. The network is designed to transition smoothly to a fee-based security model.</p>
-
+<h3>Is Bitcoin a good investment?</h3><p>It has been among the highest-returning assets over multi-year periods and among the most volatile, with drawdowns of 70% or more in past cycles. That makes it a high-risk asset that is unsuitable as a core holding for most people. Anyone considering it should treat it as speculation, size it small, and never invest money they cannot afford to lose.</p>
+<h3>How do I buy bitcoin safely?</h3><p>Most people start on a regulated exchange, verify their identity, buy, and then withdraw to a self-custody wallet for larger amounts. For meaningful holdings, a hardware wallet with a securely backed-up recovery phrase is the standard. The exchange is the place most hacks happen — the Bitcoin network itself has never been hacked.</p>
+<h3>What happens when all 21 million are mined?</h3><p>Mining rewards will then come only from transaction fees. The network was designed with that transition in mind, and fee markets have grown as usage has increased. Whether fees alone will be sufficient to secure the network in 2140 is an open research question that current fee levels do not yet settle.</p>
+<h3>Is Bitcoin anonymous and untraceable?</h3><p>No. Transactions are permanent and public. Privacy can be improved with techniques like CoinJoin, but the base layer is an open ledger by design.</p>
 <h2 id="related-articles">Related Articles</h2>
 <ul style="padding-left:20px;line-height:2">
   <li><a href="understanding-ethereum.html" style="color:var(--accent)">Understanding Ethereum</a></li>
   <li><a href="crypto-market-cycles.html" style="color:var(--accent)">Crypto Market Cycles</a></li>
+  <li><a href="how-to-read-crypto-market-data.html" style="color:var(--accent)">How to Read Crypto Market Data</a></li>
 </ul>
-</article>
+
+      </article>
       <div style="margin-top:40px;padding-top:24px;border-top:1px solid var(--border)">
         <a href="insights.html" style="color:var(--accent)">← Back to Insights</a>
       </div>

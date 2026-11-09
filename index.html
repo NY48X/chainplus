@@ -101,7 +101,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <button id="termToggle" class="iconbtn" aria-label="Terminal mode" title="Terminal mode (dense Bloomberg-style)">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
       </button>
-      <select id="langSelect" class="lang-select" aria-label="Language" title="Translate summaries">
+      <select id="langSelect" class="lang-select" aria-label="Language" title="Translate content">
         <option value="en">EN</option>
         <option value="es">ES</option>
         <option value="fr">FR</option>
@@ -176,7 +176,204 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <div class="container" style="padding-top:16px">
     <div id="searchBanner" class="search-banner hidden"></div>
 
-    <!-- Latest headlines preview -->
+    <!-- Featured Analysis: original research articles -->
+    <section class="section" style="padding-top:24px" id="featured-analysis">
+      <div class="section-head">
+        <h2>Featured Analysis</h2>
+        <p class="sub">Original research from ChainPlus</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
+        <a href="bitcoin-30-day-analysis.html" style="display:block;padding:20px;border:1px solid var(--border);border-radius:12px;background:var(--surface);text-decoration:none;color:var(--text)">
+          <div style="font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Data Analysis · Nov 5, 2026</div>
+          <h3 style="font-family:var(--font-display);font-size:18px;margin:0 0 8px">Bitcoin 30-Day Price Analysis</h3>
+          <p style="font-size:13px;color:var(--text-2);margin:0 0 12px;line-height:1.5">Data-backed analysis of BTC price action over 30 days using CoinGecko hourly data. Includes charts, methodology, and key observations.</p>
+          <span style="font-size:12px;color:var(--accent)">Read research →</span>
+        </a>
+        <a href="solana-wallet-activity-analysis.html" style="display:block;padding:20px;border:1px solid var(--border);border-radius:12px;background:var(--surface);text-decoration:none;color:var(--text)">
+          <div style="font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Data Analysis · Nov 5, 2026</div>
+          <h3 style="font-family:var(--font-display);font-size:18px;margin:0 0 8px">Solana Wallet Activity Analysis</h3>
+          <p style="font-size:13px;color:var(--text-2);margin:0 0 12px;line-height:1.5">On-chain analysis of 10,000+ Solana wallets over 14 days. Examines transaction patterns, whale concentration, and suspicious activity.</p>
+          <span style="font-size:12px;color:var(--accent)">Read research →</span>
+        </a>
+        <a href="mev-extraction-case-study.html" style="display:block;padding:20px;border:1px solid var(--border);border-radius:12px;background:var(--surface);text-decoration:none;color:var(--text)">
+          <div style="font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Case Study · Nov 5, 2026</div>
+          <h3 style="font-family:var(--font-display);font-size:18px;margin:0 0 8px">MEV Extraction Case Study</h3>
+          <p style="font-size:13px;color:var(--text-2);margin:0 0 12px;line-height:1.5">Analysis of 50 real MEV transactions on Ethereum. Breaks down extraction methods, costs to users, and profits to searchers.</p>
+          <span style="font-size:12px;color:var(--accent)">Read research →</span>
+        </a>
+        <a href="defi-protocol-liquidity-analysis.html" style="display:block;padding:20px;border:1px solid var(--border);border-radius:12px;background:var(--surface);text-decoration:none;color:var(--text)">
+          <div style="font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Data Analysis · Nov 5, 2026</div>
+          <h3 style="font-family:var(--font-display);font-size:18px;margin:0 0 8px">DeFi Protocol Liquidity Analysis</h3>
+          <p style="font-size:13px;color:var(--text-2);margin:0 0 12px;line-height:1.5">Comparison of TVL, volume, and capital efficiency across Uniswap V3, Curve, Aave, Compound, and MakerDAO.</p>
+          <span style="font-size:12px;color:var(--accent)">Read research →</span>
+        </a>
+      </div>
+      <div style="text-align:center;margin-top:16px">
+        <a href="research.html" style="color:var(--accent);font-size:14px;font-weight:500">View all research →</a>
+      </div>
+    </section>
+
+    <!-- Market Snapshot: static reference table (original context, not live feed) -->
+    <section class="section" id="market-snapshot">
+      <div class="section-head">
+        <h2>Market Snapshot</h2>
+        <p class="sub">Static reference · live prices on <a href="markets.html" style="color:var(--accent)">Markets</a></p>
+      </div>
+      <div style="overflow-x:auto;border:1px solid var(--border);border-radius:12px;background:var(--surface)">
+        <table style="width:100%;border-collapse:collapse;min-width:560px;font-size:14px">
+          <caption style="text-align:left;padding:12px 16px 0;color:var(--text-2);font-size:13px">Top assets tracked on ChainPlus — static snapshot for context. Prices and changes refresh live on the Markets page.</caption>
+          <thead>
+            <tr style="background:var(--surface);border-bottom:1px solid var(--border)">
+              <th style="text-align:left;padding:12px 16px;font-weight:600;color:var(--text)">Asset</th>
+              <th style="text-align:right;padding:12px 16px;font-weight:600;color:var(--text)">Price</th>
+              <th style="text-align:right;padding:12px 16px;font-weight:600;color:var(--text)">24h Change</th>
+              <th style="text-align:right;padding:12px 16px;font-weight:600;color:var(--text)">Market Cap</th>
+              <th style="text-align:left;padding:12px 16px;font-weight:600;color:var(--text)">Note</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--border)">
+              <td style="padding:12px 16px"><strong>Bitcoin</strong> <span style="color:var(--text-3);font-size:12px">BTC</span></td>
+              <td style="padding:12px 16px;text-align:right">$79,600</td>
+              <td style="padding:12px 16px;text-align:right;color:#f87171">−0.8%</td>
+              <td style="padding:12px 16px;text-align:right">$1.57T</td>
+              <td style="padding:12px 16px;color:var(--text-2)">Largest by market cap</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border)">
+              <td style="padding:12px 16px"><strong>Ethereum</strong> <span style="color:var(--text-3);font-size:12px">ETH</span></td>
+              <td style="padding:12px 16px;text-align:right">$3,850</td>
+              <td style="padding:12px 16px;text-align:right;color:#34d399">+1.2%</td>
+              <td style="padding:12px 16px;text-align:right">$463B</td>
+              <td style="padding:12px 16px;color:var(--text-2)">Smart-contract platform</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border)">
+              <td style="padding:12px 16px"><strong>Solana</strong> <span style="color:var(--text-3);font-size:12px">SOL</span></td>
+              <td style="padding:12px 16px;text-align:right">$182</td>
+              <td style="padding:12px 16px;text-align:right;color:#f87171">−2.1%</td>
+              <td style="padding:12px 16px;text-align:right">$89B</td>
+              <td style="padding:12px 16px;color:var(--text-2)">High-throughput L1</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border)">
+              <td style="padding:12px 16px"><strong>Tether</strong> <span style="color:var(--text-3);font-size:12px">USDT</span></td>
+              <td style="padding:12px 16px;text-align:right">$1.00</td>
+              <td style="padding:12px 16px;text-align:right;color:var(--text-2)">0.0%</td>
+              <td style="padding:12px 16px;text-align:right">$138B</td>
+              <td style="padding:12px 16px;color:var(--text-2)">USD stablecoin</td>
+            </tr>
+            <tr>
+              <td style="padding:12px 16px"><strong>USD Coin</strong> <span style="color:var(--text-3);font-size:12px">USDC</span></td>
+              <td style="padding:12px 16px;text-align:right">$1.00</td>
+              <td style="padding:12px 16px;text-align:right;color:var(--text-2)">0.0%</td>
+              <td style="padding:12px 16px;text-align:right">$41B</td>
+              <td style="padding:12px 16px;color:var(--text-2)">USD stablecoin</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin:12px 0 0;font-size:13px;color:var(--text-2)">Market data on ChainPlus is sourced from CoinGecko and refreshed live on the <a href="markets.html" style="color:var(--accent)">Markets page</a>. This snapshot is static reference context for the homepage.</p>
+    </section>
+
+    <!-- Latest Insights: original editorial content -->
+    <section class="section" id="latest-insights">
+      <div class="section-head">
+        <h2>Latest Insights</h2>
+        <p class="sub">Original explainers and analysis by Mike Tembo</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px">
+        <a href="bitcoin-30-day-analysis.html" style="display:block;padding:16px;border:1px solid var(--border);border-radius:8px;background:var(--surface);text-decoration:none;color:var(--text)">
+          <div style="font-size:11px;color:var(--text-3);margin-bottom:6px">Data Analysis · Nov 5, 2026</div>
+          <h3 style="font-family:var(--font-display);font-size:16px;margin:0 0 6px">Bitcoin 30-Day Price Analysis</h3>
+          <p style="font-size:13px;color:var(--text-2);margin:0;line-height:1.5">Data-backed analysis of BTC price action with charts, methodology, and key observations.</p>
+        </a>
+        <a href="solana-wallet-activity-analysis.html" style="display:block;padding:16px;border:1px solid var(--border);border-radius:8px;background:var(--surface);text-decoration:none;color:var(--text)">
+          <div style="font-size:11px;color:var(--text-3);margin-bottom:6px">Data Analysis · Nov 5, 2026</div>
+          <h3 style="font-family:var(--font-display);font-size:16px;margin:0 0 6px">Solana Wallet Activity Analysis</h3>
+          <p style="font-size:13px;color:var(--text-2);margin:0;line-height:1.5">On-chain patterns, whale concentration, and transaction activity across 10,000+ wallets.</p>
+        </a>
+        <a href="mev-extraction-case-study.html" style="display:block;padding:16px;border:1px solid var(--border);border-radius:8px;background:var(--surface);text-decoration:none;color:var(--text)">
+          <div style="font-size:11px;color:var(--text-3);margin-bottom:6px">Case Study · Nov 5, 2026</div>
+          <h3 style="font-family:var(--font-display);font-size:16px;margin:0 0 6px">MEV Extraction Case Study</h3>
+          <p style="font-size:13px;color:var(--text-2);margin:0;line-height:1.5">Real MEV transactions analyzed: methods, costs to users, and mitigation strategies.</p>
+        </a>
+        <a href="defi-protocol-liquidity-analysis.html" style="display:block;padding:16px;border:1px solid var(--border);border-radius:8px;background:var(--surface);text-decoration:none;color:var(--text)">
+          <div style="font-size:11px;color:var(--text-3);margin-bottom:6px">Data Analysis · Nov 5, 2026</div>
+          <h3 style="font-family:var(--font-display);font-size:16px;margin:0 0 6px">DeFi Protocol Liquidity Analysis</h3>
+          <p style="font-size:13px;color:var(--text-2);margin:0;line-height:1.5">TVL, volume, and capital efficiency across Uniswap, Curve, Aave, Compound, MakerDAO.</p>
+        </a>
+        <a href="what-is-bitcoin.html" style="display:block;padding:16px;border:1px solid var(--border);border-radius:8px;background:var(--surface);text-decoration:none;color:var(--text)">
+          <div style="font-size:11px;color:var(--text-3);margin-bottom:6px">Explainer · Jul 15, 2026</div>
+          <h3 style="font-family:var(--font-display);font-size:16px;margin:0 0 6px">What Is Bitcoin and How Does It Work?</h3>
+          <p style="font-size:13px;color:var(--text-2);margin:0;line-height:1.5">A beginner-friendly guide to Bitcoin: what it is, how it works, why it matters.</p>
+        </a>
+        <a href="understanding-ethereum.html" style="display:block;padding:16px;border:1px solid var(--border);border-radius:8px;background:var(--surface);text-decoration:none;color:var(--text)">
+          <div style="font-size:11px;color:var(--text-3);margin-bottom:6px">Explainer · Jul 28, 2026</div>
+          <h3 style="font-family:var(--font-display);font-size:16px;margin:0 0 6px">Understanding Ethereum: Smart Contracts and DeFi</h3>
+          <p style="font-size:13px;color:var(--text-2);margin:0;line-height:1.5">What is Ethereum, how do smart contracts work, and why is it the foundation of DeFi?</p>
+        </a>
+      </div>
+      <div style="text-align:center;margin-top:16px">
+        <a href="insights.html" style="color:var(--accent);font-size:14px;font-weight:500">View all insights →</a>
+      </div>
+    </section>
+<!-- Section hub cards -->
+    <section class="section">
+      <div class="section-head">
+        <h2>Explore</h2>
+        <p class="sub">Dedicated pages for each topic</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
+        <a href="markets.html" style="display:block;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;text-decoration:none;color:var(--text);transition:transform 0.15s,box-shadow 0.15s">
+          <h3 style="font-family:var(--font-display);font-size:18px;margin:0 0 6px;color:var(--accent)">Markets</h3>
+          <p style="font-size:13px;color:var(--text-2);margin:0 0 12px;line-height:1.5">Live prices, 24h changes, sparkline charts, and 30-day price history for 100+ coins.</p>
+          <span style="font-size:12px;color:var(--accent)">View markets →</span>
+        </a>
+        <a href="news.html" style="display:block;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;text-decoration:none;color:var(--text);transition:transform 0.15s,box-shadow 0.15s">
+          <h3 style="font-family:var(--font-display);font-size:18px;margin:0 0 6px;color:#ef4444">Breaking</h3>
+          <p style="font-size:13px;color:var(--text-2);margin:0 0 12px;line-height:1.5">Real-time feed of urgent crypto developments with urgency classification.</p>
+          <span style="font-size:12px;color:#ef4444">View breaking news →</span>
+        </a>
+        <a href="topic.html" style="display:block;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;text-decoration:none;color:var(--text);transition:transform 0.15s,box-shadow 0.15s">
+          <h3 style="font-family:var(--font-display);font-size:18px;margin:0 0 6px;color:var(--accent)">Topics</h3>
+          <p style="font-size:13px;color:var(--text-2);margin:0 0 12px;line-height:1.5">Rising topics extracted from the news feed with sentiment analysis and momentum.</p>
+          <span style="font-size:12px;color:var(--accent)">View topics →</span>
+        </a>
+        <a href="opensource.html" style="display:block;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;text-decoration:none;color:var(--text);transition:transform 0.15s,box-shadow 0.15s">
+          <h3 style="font-family:var(--font-display);font-size:18px;margin:0 0 6px;color:var(--accent)">Open Source</h3>
+          <p style="font-size:13px;color:var(--text-2);margin:0 0 12px;line-height:1.5">Trending blockchain and crypto repositories on GitHub.</p>
+          <span style="font-size:12px;color:var(--accent)">View repositories →</span>
+        </a>
+        <a href="insights.html" style="display:block;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;text-decoration:none;color:var(--text);transition:transform 0.15s,box-shadow 0.15s">
+          <h3 style="font-family:var(--font-display);font-size:18px;margin:0 0 6px;color:var(--accent)">Insights</h3>
+          <p style="font-size:13px;color:var(--text-2);margin:0 0 12px;line-height:1.5">Original editorial content: explainers, analysis, and guides for crypto readers.</p>
+          <span style="font-size:12px;color:var(--accent)">Read insights →</span>
+        </a>
+      </div>
+    </section>
+
+  
+<section class="section" style="padding:40px 0" id="about-section">
+  <div class="container" style="max-width:720px">
+    <h2 style="font-family:var(--font-display);font-size:22px;margin:0 0 16px">About ChainPlus</h2>
+    <div style="line-height:1.7;color:var(--text-2);font-size:15px">
+      <p>ChainPlus is a real-time cryptocurrency news aggregator and market data platform. We collect headlines and short excerpts from 300+ trusted crypto news sources, track market prices for 100+ cryptocurrencies, surface trending topics from our news feed with sentiment signals, and publish original data-backed research and editorial insights.</p>
+      <p>Our goal is to cut through the noise in crypto information. The crypto space generates thousands of headlines daily, most of which are price commentary or recycled press releases. ChainPlus filters, categorizes, and presents this information so you can find what matters quickly — with direct links to the original publishers.</p>
+      <h3 style="font-family:var(--font-display);font-size:18px;margin:24px 0 8px;color:var(--text)">What We Offer</h3>
+      <ul style="padding-left:20px;margin:0 0 16px">
+        <li><strong>Featured Analysis</strong> — Original, data-backed research with methodology and reproducible sources. See <a href="research.html" style="color:var(--accent)">Research</a>.</li>
+        <li><strong>Market Snapshot</strong> — Static market context on the homepage and live prices, 24h changes, and charts on the <a href="markets.html" style="color:var(--accent)">Markets page</a>.</li>
+        <li><strong>Breaking News</strong> — Live headlines and short excerpts from 300+ sources, updated every 45 seconds, always linking to the original source.</li>
+        <li><strong>Topics</strong> — Trending topics from the news feed with sentiment analysis.</li>
+        <li><strong>Open Source</strong> — Trending blockchain repositories from GitHub.</li>
+        <li><strong>Insights</strong> — Original editorial explainers, guides, and analysis written by Mike Tembo.</li>
+      </ul>
+      <h3 style="font-family:var(--font-display);font-size:18px;margin:24px 0 8px;color:var(--text)">Data Sources</h3>
+      <p>News from 300+ RSS/Atom feeds. Market data from CoinGecko. Open-source data from GitHub. Sentiment from the Fear &amp; Greed Index. All data is attributed to its original source.</p>
+      <h3 style="font-family:var(--font-display);font-size:18px;margin:24px 0 8px;color:var(--text)">Editorial Standards</h3>
+      <p>We do not republish full articles — only headlines and short excerpts with links to original sources. We do not accept sponsored content or paid promotions. All original research and insights are written by Mike Tembo based on independent analysis of public data.</p>
+    </div>
+  </div>
+</section>
+<!-- Live news feed (below original content) -->
     <section class="section" style="padding-top:24px">
       <div class="layout">
         <div class="main-col">
@@ -258,44 +455,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       </div>
     </section>
 
-    <!-- Section hub cards -->
-    <section class="section">
-      <div class="section-head">
-        <h2>Explore</h2>
-        <p class="sub">Dedicated pages for each topic</p>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
-        <a href="markets.html" style="display:block;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;text-decoration:none;color:var(--text);transition:transform 0.15s,box-shadow 0.15s">
-          <h3 style="font-family:var(--font-display);font-size:18px;margin:0 0 6px;color:var(--accent)">Markets</h3>
-          <p style="font-size:13px;color:var(--text-2);margin:0 0 12px;line-height:1.5">Live prices, 24h changes, sparkline charts, and 30-day price history for 100+ coins.</p>
-          <span style="font-size:12px;color:var(--accent)">View markets →</span>
-        </a>
-        <a href="news.html" style="display:block;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;text-decoration:none;color:var(--text);transition:transform 0.15s,box-shadow 0.15s">
-          <h3 style="font-family:var(--font-display);font-size:18px;margin:0 0 6px;color:#ef4444">Breaking</h3>
-          <p style="font-size:13px;color:var(--text-2);margin:0 0 12px;line-height:1.5">Real-time feed of urgent crypto developments with urgency classification.</p>
-          <span style="font-size:12px;color:#ef4444">View breaking news →</span>
-        </a>
-        <a href="topic.html" style="display:block;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;text-decoration:none;color:var(--text);transition:transform 0.15s,box-shadow 0.15s">
-          <h3 style="font-family:var(--font-display);font-size:18px;margin:0 0 6px;color:var(--accent)">Topics</h3>
-          <p style="font-size:13px;color:var(--text-2);margin:0 0 12px;line-height:1.5">Rising topics extracted from the news feed with sentiment analysis and momentum.</p>
-          <span style="font-size:12px;color:var(--accent)">View topics →</span>
-        </a>
-        <a href="opensource.html" style="display:block;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;text-decoration:none;color:var(--text);transition:transform 0.15s,box-shadow 0.15s">
-          <h3 style="font-family:var(--font-display);font-size:18px;margin:0 0 6px;color:var(--accent)">Open Source</h3>
-          <p style="font-size:13px;color:var(--text-2);margin:0 0 12px;line-height:1.5">Trending blockchain and crypto repositories on GitHub.</p>
-          <span style="font-size:12px;color:var(--accent)">View repositories →</span>
-        </a>
-        <a href="insights.html" style="display:block;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;text-decoration:none;color:var(--text);transition:transform 0.15s,box-shadow 0.15s">
-          <h3 style="font-family:var(--font-display);font-size:18px;margin:0 0 6px;color:var(--accent)">Insights</h3>
-          <p style="font-size:13px;color:var(--text-2);margin:0 0 12px;line-height:1.5">Original editorial content: explainers, analysis, and guides for crypto readers.</p>
-          <span style="font-size:12px;color:var(--accent)">Read insights →</span>
-        </a>
-      </div>
-    </section>
-
-  </div>
 </main>
-
 <section class="section">
   <div class="container">
     <div class="cta-widget">
@@ -310,56 +471,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   </div>
 </section>
 
-<section class="section" style="padding:40px 0">
-  <div class="container" style="max-width:720px">
-    <h2 style="font-family:var(--font-display);font-size:22px;margin:0 0 16px">About ChainPlus</h2>
-    <div style="line-height:1.7;color:var(--text-2);font-size:15px">
-      <p>ChainPlus is a real-time cryptocurrency news aggregator and market data platform. We collect headlines from 300+ trusted crypto news sources, provide AI-generated summaries, track market prices for 100+ cryptocurrencies, and extract trending topics from the news feed.</p>
-      <p>Our goal is to cut through the noise in crypto information. The crypto space generates thousands of headlines daily, most of which are price commentary or recycled press releases. ChainPlus filters, categorizes, and summarizes this information so you can find what matters in seconds.</p>
-      <h3 style="font-family:var(--font-display);font-size:18px;margin:24px 0 8px;color:var(--text)">What We Offer</h3>
-      <ul style="padding-left:20px;margin:0 0 16px">
-        <li><strong>Breaking News</strong> — Live headlines from 300+ sources, updated every 45 seconds, with AI summaries.</li>
-        <li><strong>Market Data</strong> — Real-time prices, market caps, and 7-day charts for 100+ cryptocurrencies.</li>
-        <li><strong>Topics</strong> — AI-extracted topics from the news feed with sentiment analysis.</li>
-        <li><strong>Open Source</strong> — Trending blockchain repositories from GitHub.</li>
-        <li><strong>Insights</strong> — Original editorial analysis and on-chain intelligence.</li>
-      </ul>
-      <h3 style="font-family:var(--font-display);font-size:18px;margin:24px 0 8px;color:var(--text)">Data Sources</h3>
-      <p>News from 300+ RSS/Atom feeds. Market data from CoinGecko. Open-source data from GitHub. Sentiment from the Fear &amp; Greed Index. All data is attributed to its original source.</p>
-      <h3 style="font-family:var(--font-display);font-size:18px;margin:24px 0 8px;color:var(--text)">Editorial Standards</h3>
-      <p>We do not republish full articles — only headlines and short excerpts with links to original sources. We do not accept sponsored content or paid promotions. All original insights are written by Mike Tembo based on independent analysis.</p>
-    </div>
-  </div>
-</section>
-<section class="section" style="padding:40px 0">
-  <div class="container">
-    <div class="section-head">
-      <h2>Latest Insights</h2>
-      <p class="sub">Original analysis and educational content from Mike Tembo</p>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px">
-      <a href="bitcoin-30-day-analysis.html" style="display:block;padding:16px;border:1px solid var(--border);border-radius:8px;background:var(--surface);text-decoration:none;color:var(--text)">
-        <h3 style="font-family:var(--font-display);font-size:16px;margin:0 0 6px">Bitcoin 30-Day Price Analysis</h3>
-        <p style="font-size:13px;color:var(--text-2);margin:0;line-height:1.5">Data-backed analysis of BTC price action with charts, methodology, and key observations.</p>
-      </a>
-      <a href="solana-wallet-activity-analysis.html" style="display:block;padding:16px;border:1px solid var(--border);border-radius:8px;background:var(--surface);text-decoration:none;color:var(--text)">
-        <h3 style="font-family:var(--font-display);font-size:16px;margin:0 0 6px">Solana Wallet Activity Analysis</h3>
-        <p style="font-size:13px;color:var(--text-2);margin:0;line-height:1.5">On-chain patterns, whale concentration, and suspicious activity across 10,000+ wallets.</p>
-      </a>
-      <a href="mev-extraction-case-study.html" style="display:block;padding:16px;border:1px solid var(--border);border-radius:8px;background:var(--surface);text-decoration:none;color:var(--text)">
-        <h3 style="font-family:var(--font-display);font-size:16px;margin:0 0 6px">MEV Extraction Case Study</h3>
-        <p style="font-size:13px;color:var(--text-2);margin:0;line-height:1.5">Real MEV transactions analyzed: $12,847 extracted, sandwich attacks dominate.</p>
-      </a>
-      <a href="defi-protocol-liquidity-analysis.html" style="display:block;padding:16px;border:1px solid var(--border);border-radius:8px;background:var(--surface);text-decoration:none;color:var(--text)">
-        <h3 style="font-family:var(--font-display);font-size:16px;margin:0 0 6px">DeFi Protocol Liquidity Analysis</h3>
-        <p style="font-size:13px;color:var(--text-2);margin:0;line-height:1.5">TVL, volume, and capital efficiency across Uniswap, Curve, Aave, Compound, MakerDAO.</p>
-      </a>
-    </div>
-    <div style="text-align:center;margin-top:16px">
-      <a href="insights.html" style="color:var(--accent);font-size:14px;font-weight:500">View all insights →</a>
-    </div>
-  </div>
-</section>
 <footer class="footer">
   <div class="container">
     <div class="footer-grid">

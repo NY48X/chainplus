@@ -30,8 +30,8 @@
     "headline": "Understanding Stablecoins: USDT, USDC, and Beyond",
     "description": "What are stablecoins, how do they work, and what are the risks? A guide to USDT, USDC, DAI, and other major stablecoins.",
     "url": "https://chainplus.tech/understanding-stablecoins.html",
-    "datePublished": "2026-09-05",
-    "dateModified": "2026-09-05",
+    "datePublished": "2026-09-11",
+    "dateModified": "2026-09-17",
     "author": {
       "@type": "Person",
       "name": "Mike Tembo",
@@ -120,87 +120,63 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <div class="container page" style="max-width:720px">
       <article>
         <h1>Understanding Stablecoins: USDT, USDC, and Beyond</h1>
-        <p class="meta" style="color:var(--text-3);font-size:14px;margin-bottom:24px">By <a href="team.html" style="color:var(--accent)">Mike Tembo</a> · September 5, 2026 · Explainer</p>
-    <nav class="toc" aria-label="Table of contents">
-      <p class="toc-heading" style="font-weight:600;margin:0 0 8px">Contents</p>
-      <ul style="margin:0;padding-left:20px;line-height:1.8">
-      <li><a href="#why-stablecoins-matter">Why Stablecoins Matter</a></li>
-      <li><a href="#types-of-stablecoins">Types of Stablecoins</a></li>
-      <li><a href="#choosing-a-stablecoin">Choosing a Stablecoin</a></li>
-      <li><a href="#stablecoins-in-defi">Stablecoins in DeFi</a></li>
-      <li><a href="#regulatory-outlook">Regulatory Outlook</a></li>
-      <li><a href="#stablecoin-risks-in-detail">Stablecoin Risks in Detail</a></li>
-      <li><a href="#the-future-of-stablecoins">The Future of Stablecoins</a></li>
-      <li><a href="#frequently-asked-questions">Frequently Asked Questions</a></li>
-      <li><a href="#related-articles">Related Articles</a></li>
-      </ul>
-    </nav>
+        <p class="meta" style="color:var(--text-3);font-size:14px;margin-bottom:24px">By <a href="team.html" style="color:var(--accent)">Mike Tembo</a> · September 11, 2026 · Explainer</p>
+        <nav class="toc" aria-label="Table of contents">
+<p class="toc-heading" style="font-weight:600;margin:0 0 8px">Contents</p>
+<ul style="margin:0;padding-left:20px;line-height:1.8">
+<li><a href="#why-stablecoins-matter">Why Stablecoins Matter</a></li>
+<li><a href="#history">How We Got Here</a></li>
+<li><a href="#types-of-stablecoins">Three Designs, Three Kinds of Risk</a></li>
+<li><a href="#data-at-a-glance">The Major Stablecoins at a Glance</a></li>
+<li><a href="#why-it-matters">Why It Matters</a></li>
+<li><a href="#frequently-asked-questions">Frequently Asked Questions</a></li>
+<li><a href="#related-articles">Related Articles</a></li>
+</ul>
+</nav>
 
-        <p>Stablecoins are cryptocurrencies designed to maintain a stable value, typically pegged to the US dollar. They serve as the bridge between traditional finance and crypto, providing stability in volatile markets.</p>
-
+        
+<p>Stablecoins are cryptocurrencies designed to stay at one dollar. That single design goal quietly underpins almost everything in crypto: trading, lending, payments and remittances all need a unit that does not swing 10% overnight. Remove the volatility and you remove the biggest obstacle to using blockchains for real money.</p>
+<div style="border:1px solid var(--accent-dim);background:var(--surface-2);border-radius:12px;padding:20px 22px;margin:24px 0">
+<p style="font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:0 0 8px">The short version — in plain English</p>
+<ul style="margin:0;padding-left:20px;line-height:1.6"><li style="margin-bottom:6px"><strong>What they are:</strong> Tokens pegged to $1, backed in different ways — by cash and Treasuries, by crypto collateral, or by algorithms (dangerously). The backing is the whole story.</li><li style="margin-bottom:6px"><strong>The big three:</strong> USDT (Tether) has the deepest liquidity, USDC (Circle) the strongest transparency and compliance, and DAI (now USDS) the most decentralised design.</li><li style="margin-bottom:6px"><strong>The lesson of the last decade:</strong> A peg is a promise, not a law of physics. Every stablecoin, including well-backed ones, has depegged at least briefly when confidence broke.</li></ul>
+</div>
 <h2 id="why-stablecoins-matter">Why Stablecoins Matter</h2>
-<p>Crypto markets are volatile. Bitcoin can drop 10% in a day. Stablecoins solve this by maintaining a fixed value — 1 USDT = $1, 1 USDC = $1. This makes them useful for:</p>
-<ul>
-<li><strong>Trading:</strong> Move in and out of volatile assets without converting to fiat.</li>
-<li><strong>Remittances:</strong> Send money across borders instantly and cheaply.</li>
-<li><strong>DeFi:</strong> Provide liquidity, earn yield, and collateralize loans.</li>
-<li><strong>Savings:</strong> Hold dollar-equivalent value in crypto wallets.</li>
-</ul>
-
-<h2 id="types-of-stablecoins">Types of Stablecoins</h2>
-<h3>Fiat-Backed (USDT, USDC)</h3>
-<p>These are backed by reserves of fiat currency and short-term government securities. For every token in circulation, the issuer holds $1 in reserves. Tether (USDT) and Circle (USDC) are the largest fiat-backed stablecoins.</p>
-<p><strong>Risk:</strong> Reserve transparency. Tether has historically been opaque about its reserves. Circle is more transparent but still relies on traditional banking infrastructure.</p>
-
-<h3>Crypto-Backed (DAI)</h3>
-<p>DAI is backed by crypto collateral (primarily Ethereum). Users deposit crypto into smart contracts and mint DAI against it. The collateral ratio is typically 150%+ — you need to deposit $150 of ETH to mint $100 of DAI.</p>
-<p><strong>Risk:</strong> Collateral volatility. If the collateral drops in value, the position can be liquidated. This happened during the March 2020 crash.</p>
-
-<h3>Algorithmic (UST - collapsed)</h3>
-<p>Algorithmic stablecoins maintain their peg through code, not reserves. Terra's UST used a burn/mint mechanism with its sister token LUNA. When confidence broke, the mechanism failed catastrophically — UST depegged to near zero and LUNA collapsed.</p>
-<p><strong>Lesson:</strong> Algorithmic stablecoins are extremely risky. The UST collapse wiped out $40+ billion in value and is the largest failure in crypto history.</p>
-
-<h2 id="choosing-a-stablecoin">Choosing a Stablecoin</h2>
-<p>For most users, USDC is the safest choice due to its transparency and regulatory compliance. USDT has the highest liquidity and is widely accepted on exchanges. DAI is the most decentralized option but has more complex risks.</p>
-<p>Avoid algorithmic stablecoins unless you fully understand the mechanism and accept the risk of total loss.</p>
-      
-<h2 id="stablecoins-in-defi">Stablecoins in DeFi</h2>
-<p>Stablecoins are the backbone of DeFi. Most lending protocols, DEXs, and yield farms use stablecoins as their primary unit of account. Without stablecoins, DeFi would be impractical — no one wants to take out a loan denominated in a volatile asset.</p>
-<p>USDC and DAI are the most used stablecoins in DeFi. USDC is preferred for its stability and transparency. DAI is preferred by those who want a decentralized option. USDT is widely used but less trusted in DeFi due to transparency concerns.</p>
-
-<h2 id="regulatory-outlook">Regulatory Outlook</h2>
-<p>Stablecoin regulation is coming. The EU's MiCA framework requires stablecoin issuers to hold reserves in approved assets and undergo regular audits. The US is considering similar legislation. This will likely benefit established players (Circle, Tether) who can afford compliance, while making it harder for new entrants.</p>
-<p>The key question is whether regulation will foster innovation or protect incumbents. If regulation is too strict, it could drive stablecoin activity to less regulated jurisdictions. If too loose, it could allow another Terra-style collapse.</p>
-
-<h2 id="stablecoin-risks-in-detail">Stablecoin Risks in Detail</h2>
-<p>Beyond the type-specific risks, all stablecoins share common vulnerabilities:</p>
-<ul>
-<li><strong>Depegging:</strong> Any stablecoin can lose its peg if confidence breaks. Even fiat-backed stablecoins have depegged temporarily during market stress.</li>
-<li><strong>Regulatory risk:</strong> Governments could restrict or ban stablecoins. This would affect their usability and value.</li>
-<li><strong>Counterparty risk:</strong> Fiat-backed stablecoins depend on the issuer's honesty and the banking system's stability.</li>
-<li><strong>Smart contract risk:</strong> Crypto-backed and algorithmic stablecoins depend on smart contracts that can have bugs.</li>
-</ul>
-
-<h2 id="the-future-of-stablecoins">The Future of Stablecoins</h2>
-<p>Stablecoins are likely to become more regulated and more integrated with traditional finance. Central bank digital currencies (CBDCs) may compete with or complement private stablecoins. The key question is whether stablecoins will remain a crypto-native innovation or become absorbed into the traditional financial system.</p>
-<p>For users, the practical advice is: diversify across stablecoin types, monitor reserve transparency, and stay informed about regulatory developments. Stablecoins are useful tools but not risk-free.</p>
-
+<p>Without stablecoins, every crypto transaction carried exchange-rate risk. If you wanted to move money from one exchange to another, lend it out, or send it to family abroad, you either used a volatile token or went back through a bank. Stablecoins close that gap: a dollar on a blockchain that settles in minutes and costs cents to move.</p>
+<p>They are also the plumbing of DeFi. Most lending markets, exchanges and yield strategies are denominated in stablecoins because no sane lender wants their loan repaid in an asset that could fall 20% before the loan is due. And they are the largest holders of US Treasury bills among non-sovereign entities — a fact that increasingly matters to regulators and to the dollar itself.</p>
+<h2 id="history">How We Got Here: A Short History With Dates</h2>
+<p><strong>October 2014 — Tether (USDT) launches.</strong> Founded as Realcoin by a group including Bitfinex, Tether promised each token was backed by real dollars. That promise, and years of disputes about what actually sits in the reserves, defined the stablecoin debate ever since.</p>
+<p><strong>December 2017 — MakerDAO launches DAI.</strong> The first major crypto-collateralised stablecoin. Users locked Ethereum into contracts and minted DAI against it, over-collateralised to survive price swings. It proved a stablecoin could exist with no bank involved.</p>
+<p><strong>September 2018 — Circle launches USDC.</strong> Backed by Coinbase and Goldman Sachs, USDC competed on transparency and regulation from day one. That positioning made it the default choice for institutions and DeFi protocols that want an auditable dollar.</p>
+<p><strong>May 2022 — the Terra UST collapse.</strong> Terra's algorithmic stablecoin, which maintained its peg through a mint-and-burn relationship with the LUNA token, unravelled in days and erased over $40 billion. It remains the largest failure in crypto history and the reason "algorithmic" now carries a warning label.</p>
+<p><strong>March 2023 — USDC depegs to $0.87.</strong> When Silicon Valley Bank failed, Circle disclosed that part of its reserves were stuck there. USDC fell sharply for days before recovering. Even the most conservative stablecoin is only as safe as the banks holding its reserves.</p>
+<p><strong>2024 – 2026 — regulation arrives.</strong> The EU's MiCA framework and successive US proposals moved stablecoins into a compliance regime: authorised issuers, eligible reserves, regular attestations. Scale now favours the issuers who can afford to comply.</p>
+<div style="overflow-x:auto;margin:20px 0"><table style="width:100%;border-collapse:collapse;font-size:14px;line-height:1.5"><thead><tr style="background:var(--surface-2);border-bottom:1px solid var(--border)"><th style="text-align:left;padding:10px 12px;font-weight:600;color:var(--text)">Date</th><th style="text-align:left;padding:10px 12px;font-weight:600;color:var(--text)">Event</th><th style="text-align:left;padding:10px 12px;font-weight:600;color:var(--text)">Lesson</th></tr></thead><tbody><tr style="border-bottom:1px solid var(--border-soft)"><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Oct 2014</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Tether launches</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Reserves transparency becomes the core debate</td></tr><tr style="border-bottom:1px solid var(--border-soft)"><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Dec 2017</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">DAI launches</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Crypto-collateralised stability is possible</td></tr><tr style="border-bottom:1px solid var(--border-soft)"><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Sep 2018</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">USDC launches</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Compliance-first dollars win institutional use</td></tr><tr style="border-bottom:1px solid var(--border-soft)"><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">May 2022</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Terra UST collapses</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Algorithmic pegs can spiral to zero</td></tr><tr style="border-bottom:1px solid var(--border-soft)"><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Mar 2023</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">USDC depegs (SVB)</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Even good reserves depend on banks</td></tr></tbody></table></div>
+<h2 id="types-of-stablecoins">Three Designs, Three Kinds of Risk</h2>
+<p><strong>Fiat-backed (USDT, USDC).</strong> For every token, the issuer holds a dollar's worth of cash and short-term government securities. The risk is not the design but the audit: do the reserves exist, are they what is claimed, and are they reachable in a crisis? USDC publishes monthly attestations; Tether's history of partial disclosures is why many DeFi protocols prefer USDC.</p>
+<p><strong>Crypto-backed (DAI / USDS).</strong> Users deposit crypto into contracts and mint stablecoins against it, typically at 130–150% collateral. The system is over-collateralised so that even sharp drops should not break the peg. The risk is complexity: smart contract bugs and cascading liquidations in extreme markets.</p>
+<p><strong>Algorithmic (UST and successors).</strong> No reserves, only code balancing supply against demand. When confidence held, the peg held. When it broke in May 2022, the balancing mechanism accelerated the collapse. The consensus since then is that algorithmic stability without reserves is not stability at all.</p>
+<h2 id="data-at-a-glance">The Major Stablecoins at a Glance</h2>
+<div style="overflow-x:auto;margin:20px 0"><table style="width:100%;border-collapse:collapse;font-size:14px;line-height:1.5"><thead><tr style="background:var(--surface-2);border-bottom:1px solid var(--border)"><th style="text-align:left;padding:10px 12px;font-weight:600;color:var(--text)">Stablecoin</th><th style="text-align:left;padding:10px 12px;font-weight:600;color:var(--text)">Issuer</th><th style="text-align:left;padding:10px 12px;font-weight:600;color:var(--text)">Backing</th><th style="text-align:left;padding:10px 12px;font-weight:600;color:var(--text)">Known for</th></tr></thead><tbody><tr style="border-bottom:1px solid var(--border-soft)"><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">USDT (Tether)</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Tether / Bitfinex</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Mixed reserves; largest supply</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Deepest exchange liquidity</td></tr><tr style="border-bottom:1px solid var(--border-soft)"><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">USDC</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Circle</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Cash & short-term Treasuries</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Transparency, compliance, DeFi default</td></tr><tr style="border-bottom:1px solid var(--border-soft)"><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">DAI / USDS</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">MakerDAO (Sky)</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Crypto collateral + RWAs</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Decentralised; over-collateralised</td></tr><tr style="border-bottom:1px solid var(--border-soft)"><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">FDUSD</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">First Digital</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Cash & equivalents</td><td style="padding:10px 12px;color:var(--text-2);vertical-align:top">Asian exchange settlement</td></tr></tbody></table></div>
+<h2 id="why-it-matters">Why It Matters</h2>
+<p>Stablecoins are where crypto meets the traditional financial system. They move real dollars, hold real Treasuries, and are now subject to real regulation in major jurisdictions. For users in countries with inflation or capital controls, a stablecoin in a self-custody wallet is often the most practical financial tool crypto has produced.</p>
+<p>For the industry, the implication is that the most important competition is no longer stablecoin versus stablecoin — it is private stablecoins versus central bank digital currencies, and compliant issuers versus offshore ones. The winners will be decided as much in legislatures and audits as in code.</p>
+<h2 id="reading-reserves">How to Read a Stablecoin Reserve Report</h2>
+<p>If you hold a fiat-backed stablecoin in size, the reserve report is the document that matters most. A good report answers four questions plainly. First, what exactly is held — cash, bank deposits, Treasury bills, commercial paper, or something riskier — and in what proportions? Second, who holds it, and are those custodians insured, regulated and independent of the issuer? Third, how often is it checked — monthly attestations by an accounting firm are the baseline, and "trust us" is not an attestation. Fourth, what happens in a crisis: can reserves be redeemed at par quickly, or are they locked in instruments that would need to be sold at a loss?</p>
+<p>The same discipline applies to crypto-backed designs, with different questions. What is the collateral composition, how quickly are liquidations executed when prices fall, and what share of the collateral is itself a stablecoin or other complex asset? DAI and its successor USDS have published these parameters for years, which is why decentralised stablecoins are easier to evaluate than their marketing suggests — the numbers are on-chain.</p>
+<p>Two habits follow from this. Diversify across at least two backing models if you hold large balances, so that a failure in one design does not take out all of your dollar exposure. And treat any stablecoin that cannot answer the four questions above in one page as a trading tool at best, not as a place to park savings. The peg is only as good as the evidence behind it.</p>
 <h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
-<h3>Which stablecoin is the safest?</h3>
-<p>USDC is generally considered the safest due to its transparency, regulatory compliance, and reserve composition (primarily cash and short-term Treasuries). USDT has higher liquidity but less transparency. DAI is the most decentralized but has more complex risks.</p>
-<h3>Can stablecoins lose their peg?</h3>
-<p>Yes. Even fiat-backed stablecoins have temporarily depegged during market stress. In 2023, USDC depegged to $0.87 when Silicon Valley Bank (where Circle held reserves) failed. It recovered within days, but the incident showed that stablecoins are not risk-free.</p>
-<h3>Are stablecoins a good investment?</h3>
-<p>Stablecoins are not investments — they're tools for stability. They don't appreciate in value. They're useful for trading, remittances, and DeFi, but holding stablecoins long-term means losing purchasing power to inflation.</p>
-<h3>What's the difference between USDT and USDC?</h3>
-<p>USDT (Tether) has higher liquidity and is more widely accepted on exchanges. USDC (Circle) is more transparent and regulatory compliant. USDT's reserves include a mix of assets; USDC's are primarily cash and Treasuries. For DeFi, USDC is generally preferred.</p>
-
+<h3>Which stablecoin is safest?</h3><p>On transparency and regulation, USDC. On liquidity, USDT. On decentralisation, DAI/USDS. 'Safest' depends on which risk you fear most — reserve opacity, bank exposure, or smart contract failure — which is why holding one type and understanding its specific risk matters more than picking a winner.</p>
+<h3>Can stablecoins lose their peg?</h3><p>Yes, and most major ones have, at least briefly. USDC fell to $0.87 in March 2023. The size and duration of a depeg depends on how quickly confidence returns, which depends on how credible the reserves are.</p>
+<h3>Are stablecoins an investment?</h3><p>They are a tool, not an investment. They do not grow, so holding them long-term loses purchasing power to inflation. Their value is stability and speed, not return.</p>
+<h3>What is the difference between USDT and USDC?</h3><p>USDT has more liquidity and broader exchange acceptance but a less transparent reserve history. USDC is more regulated and auditable, which is why DeFi protocols and institutions generally prefer it. Both aim to be one dollar; they differ in how much you have to trust the issuer.</p>
 <h2 id="related-articles">Related Articles</h2>
 <ul style="padding-left:20px;line-height:2">
   <li><a href="defi-explained.html" style="color:var(--accent)">DeFi Explained</a></li>
-  <li><a href="how-to-read-crypto-market-data.html" style="color:var(--accent)">Read Market Data</a></li>
+  <li><a href="how-to-read-crypto-market-data.html" style="color:var(--accent)">How to Read Crypto Market Data</a></li>
+  <li><a href="understanding-ethereum.html" style="color:var(--accent)">Understanding Ethereum</a></li>
 </ul>
-</article>
+
+      </article>
       <div style="margin-top:40px;padding-top:24px;border-top:1px solid var(--border)">
         <a href="insights.html" style="color:var(--accent)">← Back to Insights</a>
       </div>
